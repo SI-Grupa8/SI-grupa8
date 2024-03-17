@@ -1,0 +1,12 @@
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication1/DAL/bin/Debug/net8.0/DAL.deps.json
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication1/DAL/bin/Debug/net8.0/DAL.dll
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication1/DAL/bin/Debug/net8.0/DAL.pdb
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication1/DAL/obj/Debug/net8.0/DAL.GeneratedMSBuildEditorConfig.editorconfig
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication1/DAL/obj/Debug/net8.0/DAL.AssemblyInfoInputs.cache
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication1/DAL/obj/Debug/net8.0/DAL.AssemblyInfo.cs
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication1/DAL/obj/Debug/net8.0/DAL.csproj.CoreCompileInputs.cache
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication1/DAL/obj/Debug/net8.0/DAL.sourcelink.json
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication1/DAL/obj/Debug/net8.0/DAL.dll
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication1/DAL/obj/Debug/net8.0/refint/DAL.dll
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication1/DAL/obj/Debug/net8.0/DAL.pdb
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication1/DAL/obj/Debug/net8.0/ref/DAL.dll

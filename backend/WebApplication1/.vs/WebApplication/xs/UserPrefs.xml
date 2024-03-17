@@ -1,0 +1,21 @@
+﻿<Properties StartupConfiguration="{E0638A4F-55A7-48D0-9482-1512901C5E2B}|https">
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.API PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="WebApplication1/Controllers/TestClass.cs">
+    <Files>
+      <File FileName="WebApplication1/Controllers/EmptyClass.cs" Line="19" Column="40" />
+      <File FileName="BLL/Class1.cs" Line="1" Column="1" />
+      <File FileName="DAL/Class1.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MultiItemStartupConfigurations />
+</Properties>
