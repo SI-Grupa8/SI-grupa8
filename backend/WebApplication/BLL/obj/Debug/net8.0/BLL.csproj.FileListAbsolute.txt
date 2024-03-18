@@ -1,0 +1,16 @@
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/bin/Debug/net8.0/BLL.deps.json
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/bin/Debug/net8.0/BLL.dll
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/bin/Debug/net8.0/BLL.pdb
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/bin/Debug/net8.0/DAL.dll
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/bin/Debug/net8.0/DAL.pdb
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/Debug/net8.0/BLL.csproj.AssemblyReference.cache
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/Debug/net8.0/BLL.GeneratedMSBuildEditorConfig.editorconfig
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/Debug/net8.0/BLL.AssemblyInfoInputs.cache
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/Debug/net8.0/BLL.AssemblyInfo.cs
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/Debug/net8.0/BLL.csproj.CoreCompileInputs.cache
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/Debug/net8.0/BLL.sourcelink.json
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/Debug/net8.0/BLL.csproj.Up2Date
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/Debug/net8.0/BLL.dll
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/Debug/net8.0/refint/BLL.dll
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/Debug/net8.0/BLL.pdb
+/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/Debug/net8.0/ref/BLL.dll
