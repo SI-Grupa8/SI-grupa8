@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Log in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+   
+    <div class="container">
+              <div class="side-text" >
+                    <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(156, 48%, 87%)">
+                    Vehicle  <br />
+                    <span style="color: hsl(156, 48%, 87%)">Tracking system</span>
+                    </h1>
+                    <p class="mb-4 opacity-70" style="color:hsl(156, 48%, 87%)">
+                        The system aims to provide fleet managers with real-time visibility into the location and status of vehicles  used by delivery drivers, enabling efficient route planning, monitoring, and reporting.
+                    </p>
+              </div>
+            <div class="forma" *ngIf="temp">
+                <form [formGroup]="loginForm" (ngSubmit)="onClick()">
+                    <input type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;" formControlName="usermail">
+                    <div *ngIf="loginForm.get('usermail')?.errors && (loginForm.get('usermail')?.dirty || loginForm.get('usermail')?.touched)">
+                        <div *ngIf="loginForm.get('usermail')?.hasError('required')">Email or phone number is required.</div>
+                        <div *ngIf="loginForm.get('usermail')?.hasError('pattern')">Invalid input.</div>
+                      </div>
+                    <input type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;" formControlName="pass">
+                    <div *ngIf="loginForm?.get('pass')?.dirty || loginForm?.get('pass')?.touched">
+                        <div *ngIf="loginForm.get('pass')?.hasError('pass')">Password is required
+                        </div>
+                    </div>
+                    
+                    <a href="#" (click)="forgotPass()">Forgot password?</a>
+                
+                    <button type="submit" style="margin-top: 40px; margin-bottom: 5px;">LOG IN</button>
+                </form>
+                
+            </div>
+
+            <div class="twoauth" *ngIf="!temp">
+                <h2 style="margin-top: -20px; margin-bottom: 40px;">Two-Factor Authentication</h2>
+                <form id="authForm" >
+                    <label for="pin" style="margin-top: 5px; margin-bottom: 5px;">Enter the six digit code:</label>
+                    <div class="digit-group">
+                        <input type="text" id="digit-1" name="digit-1" maxlength="1" pattern="[0-9]{1}">
+                        <input type="text" id="digit-2" name="digit-2" maxlength="1" pattern="[0-9]{1}">
+                        <input type="text" id="digit-3" name="digit-3" maxlength="1" pattern="[0-9]{1}">
+                        <input type="text" id="digit-4" name="digit-4" maxlength="1" pattern="[0-9]{1}">
+                        <input type="text" id="digit-5" name="digit-5" maxlength="1" pattern="[0-9]{1}">
+                        <input type="text" id="digit-6" name="digit-6" maxlength="1" pattern="[0-9]{1}">
+                    </div>
+                    
+                    <button type="submit" style="margin-top: 5px; margin-bottom: 5px;">Verify</button>
+                </form>
+            </div>
+    </div>
+
+    
+</body>
+
+</html>
