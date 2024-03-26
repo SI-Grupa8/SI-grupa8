@@ -28,11 +28,14 @@ namespace BLL.Services
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
                 PasswordSalt = [],
-                RoleID = 1
+                RoleID = 0
             };
             _userRepository.Add(user);
-            var userDto = _mapper.Map<UserDto>(user);
-            return userDto;
+
+            await _userRepository.SaveChangesAsync();
+
+            var userDto =  _mapper.Map<UserDto>(user);
+            return  userDto;
 
         }
 

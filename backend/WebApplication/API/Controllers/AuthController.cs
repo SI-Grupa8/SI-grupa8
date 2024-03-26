@@ -26,44 +26,29 @@ namespace API.Controllers
         private readonly AppDbContext _context;
 
         IUserService _userService;
-        /* public AuthController(IUserService userService)
+         public AuthController(IUserService userService)
          {
              _userService = userService;
          }
-        */
-        public AuthController(AppDbContext context)
+        
+        /*public AuthController(AppDbContext context)
         {
             _context = context;
         }
-        
+        */
 
        [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(UserRegisterDto userRegisterDto)
         {
-
-            // UserDto registeredUser = await _userService.AddUser(userRegisterDto);
-
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegisterDto.Password);
-
-            User user = new User
-            {
-                Email = userRegisterDto.Email,
-                PhoneNumber = userRegisterDto.PhoneNumber,
-                PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
-                PasswordSalt = [],
-                RoleID = 0
-            };
-
-            _context.Users.Add(user);
-           await _context.SaveChangesAsync();
-            return Ok(user);
+            var userDto = await _userService.AddUser(userRegisterDto);
+            return Ok(userDto);
         }
         [HttpPost("login")]
         public async Task<ActionResult<User>> Login(UserRegisterDto request)
         {
-            //List<User> users = await _userService.GetAll();
+            List<User> users = await _userService.GetAll();
 
-            List<User> users = await _context.Users.ToListAsync();
+           //List<User> users = await _context.Users.ToListAsync();
             User user = users.FirstOrDefault(u => u.Email == request.Email);
             if (user == null) { return BadRequest("User not found"); }
             string hash = Encoding.UTF8.GetString(user.PasswordHash);

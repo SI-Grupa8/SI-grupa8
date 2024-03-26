@@ -17,7 +17,6 @@ namespace DAL.Repositories
         public void Add(User user)
         {
             _context.Users.Add(user);
-            _context.SaveChangesAsync();
             
         }
 
