@@ -3,9 +3,8 @@ using DAL.Entities;
 
 namespace DAL.Interfaces
 {
-	public interface IUserRepository : IRepository<User>
+	public interface IRoleRepository : IRepository<Role>
 	{
-		
 	}
 }
 

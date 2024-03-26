@@ -17,9 +17,11 @@ builder.Services.AddSwaggerGen();
 
 //Services
 builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
+builder.Services.AddScoped(typeof(IRoleService), typeof(RoleService));
 
 //Repositories
 builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
+builder.Services.AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
 
 //Db context
 builder.Services.AddDbContext<AppDbContext>(options =>
