@@ -1,7 +1,7 @@
 ﻿using System;
 namespace BLL.Interfaces
 {
-	public interface Example
+	public interface IUserService
 	{
 	}
 }

@@ -1,5 +1,9 @@
-﻿using BLL.Mapper;
+﻿using BLL.Interfaces;
+using BLL.Mapper;
+using BLL.Services;
 using DAL;
+using DAL.Interfaces;
+using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +15,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Services
+builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
+
+//Repositories
+builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
+
+//Db context
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionDatabase"));
@@ -31,6 +42,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors();
 
 app.Run();
 

@@ -8,7 +8,8 @@ namespace BLL.Mapper
 		public MapperProfile()
 		{
 			CreateMap<DAL.Entities.User, DTOs.UserDto>().ReverseMap();
-		}
+            CreateMap<DAL.Entities.Role, DTOs.RoleDto>().ReverseMap();
+        }
 	}
 }
 
