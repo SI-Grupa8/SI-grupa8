@@ -12,6 +12,9 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection.Metadata.Ecma335;
+using DAL;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -20,27 +23,52 @@ namespace API.Controllers
     public class AuthController : ControllerBase
     {
         public static User user =new User();
-        IUserService _userService;
-        public AuthController(IUserService userService)
-        {
-            _userService = userService;
-        }
+        private readonly AppDbContext _context;
 
-        [HttpPost("register")]
+        IUserService _userService;
+        /* public AuthController(IUserService userService)
+         {
+             _userService = userService;
+         }
+        */
+        public AuthController(AppDbContext context)
+        {
+            _context = context;
+        }
+        
+
+       [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(UserRegisterDto userRegisterDto)
         {
 
-            UserDto registeredUser = await _userService.AddUser(userRegisterDto);
+            // UserDto registeredUser = await _userService.AddUser(userRegisterDto);
 
-            return Ok(registeredUser);
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegisterDto.Password);
+
+            User user = new User
+            {
+                Email = userRegisterDto.Email,
+                PhoneNumber = userRegisterDto.PhoneNumber,
+                PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
+                PasswordSalt = [],
+                RoleID = 0
+            };
+
+            _context.Users.Add(user);
+           await _context.SaveChangesAsync();
+            return Ok(user);
         }
         [HttpPost("login")]
         public async Task<ActionResult<User>> Login(UserRegisterDto request)
         {
-            List<User> users = await _userService.GetAll();
+            //List<User> users = await _userService.GetAll();
+
+            List<User> users = await _context.Users.ToListAsync();
             User user = users.FirstOrDefault(u => u.Email == request.Email);
             if (user == null) { return BadRequest("User not found"); }
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash.ToString()))
+            string hash = Encoding.UTF8.GetString(user.PasswordHash);
+
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, Encoding.UTF8.GetString( user.PasswordHash)))
             {
                 return BadRequest("Wrong password.");
             }
@@ -56,8 +84,8 @@ namespace API.Controllers
                 new Claim(ClaimTypes.Email, user.Name)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("top secret key"));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("my top secret key is currently very long"));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
                 claims:claims,
                 expires:DateTime.Now.AddDays(1),
