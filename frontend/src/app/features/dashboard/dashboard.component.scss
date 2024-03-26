@@ -2,7 +2,8 @@
     width: calc(100% - 200px);
     margin-top: 60px;
     margin-left: 200px;
-    background-color: #ffffff;
+    min-height: calc(100vh - 60px);
+    background-color: #f0f1f3;
     display: flex;
     flex-direction: column;
     .home-header {

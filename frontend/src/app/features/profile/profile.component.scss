@@ -1,9 +1,12 @@
 :host {
-    width: calc(100% - 50px);
+    width: calc(100% - 250px);
+    height: calc(100% - 60px);
     margin-left: 200px;
     display: flex;
     flex-direction: column;
     padding-left: 50px;
+    margin-top: 60px;
+    background-color: #f0f1f3;
     #title {
         margin-top: 40px;
         font-size: 20px;

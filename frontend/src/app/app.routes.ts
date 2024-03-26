@@ -5,6 +5,6 @@ import { ProfileComponent } from './features/profile/profile.component';
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent},
-    {path:'login',component:LoginComponent},
+    {path:'login',component:LoginComponent, data: {showHeaderAndSidebar: false}},
     {path:'profile',  component:ProfileComponent}
 ];
