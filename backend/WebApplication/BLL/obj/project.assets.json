@@ -2354,32 +2354,34 @@
     ]
   },
   "packageFolders": {
-    "/Users/hanabisevac/.nuget/packages/": {}
+    "C:\\Users\\38762\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/BLL.csproj",
+      "projectUniqueName": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj",
       "projectName": "BLL",
-      "projectPath": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/BLL.csproj",
-      "packagesPath": "/Users/hanabisevac/.nuget/packages/",
-      "outputPath": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/",
+      "projectPath": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj",
+      "packagesPath": "C:\\Users\\38762\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\BLL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/hanabisevac/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\38762\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/DAL/DAL.csproj": {
-              "projectPath": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/DAL/DAL.csproj"
+            "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj": {
+              "projectPath": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj"
             }
           }
         }
@@ -2388,6 +2390,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -2435,7 +2442,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.203/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
