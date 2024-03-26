@@ -44,7 +44,8 @@ namespace API.Controllers
             {
                 return BadRequest("Wrong password.");
             }
-            return Ok(user);
+            string token = CreateToken(user);
+            return Ok(token);
 
         }
 
