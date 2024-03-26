@@ -18,6 +18,19 @@
           }
         }
       },
+      "BCrypt.Net-Next/4.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/BCrypt.Net-Next.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/BCrypt.Net-Next.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
@@ -374,16 +387,16 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Tools/7.0.0": {
+      "Microsoft.EntityFrameworkCore.Tools/8.0.3": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Design": "7.0.0"
+          "Microsoft.EntityFrameworkCore.Design": "8.0.3"
         },
         "compile": {
-          "lib/net6.0/_._": {}
+          "lib/net8.0/_._": {}
         },
         "runtime": {
-          "lib/net6.0/_._": {}
+          "lib/net8.0/_._": {}
         }
       },
       "Microsoft.Extensions.Caching.Abstractions/8.0.0": {
@@ -897,6 +910,7 @@
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "AutoMapper": "13.0.1",
+          "BCrypt.Net-Next": "4.0.3",
           "Microsoft.EntityFrameworkCore": "8.0.3",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.2"
         },
@@ -923,6 +937,37 @@
         "icon.png",
         "lib/net6.0/AutoMapper.dll",
         "lib/net6.0/AutoMapper.xml"
+      ]
+    },
+    "BCrypt.Net-Next/4.0.3": {
+      "sha512": "W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
+      "type": "package",
+      "path": "bcrypt.net-next/4.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "bcrypt.net-next.4.0.3.nupkg.sha512",
+        "bcrypt.net-next.nuspec",
+        "ico.png",
+        "lib/net20/BCrypt.Net-Next.dll",
+        "lib/net20/BCrypt.Net-Next.xml",
+        "lib/net35/BCrypt.Net-Next.dll",
+        "lib/net35/BCrypt.Net-Next.xml",
+        "lib/net462/BCrypt.Net-Next.dll",
+        "lib/net462/BCrypt.Net-Next.xml",
+        "lib/net472/BCrypt.Net-Next.dll",
+        "lib/net472/BCrypt.Net-Next.xml",
+        "lib/net48/BCrypt.Net-Next.dll",
+        "lib/net48/BCrypt.Net-Next.xml",
+        "lib/net5.0/BCrypt.Net-Next.dll",
+        "lib/net5.0/BCrypt.Net-Next.xml",
+        "lib/net6.0/BCrypt.Net-Next.dll",
+        "lib/net6.0/BCrypt.Net-Next.xml",
+        "lib/netstandard2.0/BCrypt.Net-Next.dll",
+        "lib/netstandard2.0/BCrypt.Net-Next.xml",
+        "lib/netstandard2.1/BCrypt.Net-Next.dll",
+        "lib/netstandard2.1/BCrypt.Net-Next.xml",
+        "readme.md"
       ]
     },
     "Humanizer.Core/2.14.1": {
@@ -1472,17 +1517,18 @@
         "microsoft.entityframeworkcore.relational.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Tools/7.0.0": {
-      "sha512": "DtLJ0usm8NdPbRDxvNUBAYgnvqhodr/HPb461I+jrgHw5ZKF0vRTaokNth2Zy9xiw1ZTpT4c+S40f7AHWakODg==",
+    "Microsoft.EntityFrameworkCore.Tools/8.0.3": {
+      "sha512": "jKczLbj13jY6TvYsXgAYqfhkIow6VdqumCv0m8EvNr3vU1+nJ6LKoG+6pPKnkVOHycXHGy5DEhH0GN0ldmx7Kw==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.tools/7.0.0",
+      "path": "microsoft.entityframeworkcore.tools/8.0.3",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
-        "lib/net6.0/_._",
-        "microsoft.entityframeworkcore.tools.7.0.0.nupkg.sha512",
+        "docs/PACKAGE.md",
+        "lib/net8.0/_._",
+        "microsoft.entityframeworkcore.tools.8.0.3.nupkg.sha512",
         "microsoft.entityframeworkcore.tools.nuspec",
         "tools/EntityFrameworkCore.PS2.psd1",
         "tools/EntityFrameworkCore.PS2.psm1",
@@ -2346,40 +2392,43 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "AutoMapper >= 13.0.1",
+      "BCrypt.Net-Next >= 4.0.3",
       "DAL >= 1.0.0",
       "Microsoft.EntityFrameworkCore >= 8.0.3",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.3",
-      "Microsoft.EntityFrameworkCore.Tools >= 7.0.0",
+      "Microsoft.EntityFrameworkCore.Tools >= 8.0.3",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 8.0.2"
     ]
   },
   "packageFolders": {
-    "/Users/hanabisevac/.nuget/packages/": {}
+    "C:\\Users\\Asmir\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/BLL.csproj",
+      "projectUniqueName": "C:\\Users\\Asmir\\source\\repos\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj",
       "projectName": "BLL",
-      "projectPath": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/BLL.csproj",
-      "packagesPath": "/Users/hanabisevac/.nuget/packages/",
-      "outputPath": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/",
+      "projectPath": "C:\\Users\\Asmir\\source\\repos\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj",
+      "packagesPath": "C:\\Users\\Asmir\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Asmir\\source\\repos\\SI-grupa8\\backend\\WebApplication\\BLL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/hanabisevac/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Asmir\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/DAL/DAL.csproj": {
-              "projectPath": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/DAL/DAL.csproj"
+            "C:\\Users\\Asmir\\source\\repos\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj": {
+              "projectPath": "C:\\Users\\Asmir\\source\\repos\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj"
             }
           }
         }
@@ -2388,6 +2437,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -2397,6 +2451,10 @@
           "AutoMapper": {
             "target": "Package",
             "version": "[13.0.1, )"
+          },
+          "BCrypt.Net-Next": {
+            "target": "Package",
+            "version": "[4.0.3, )"
           },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
@@ -2412,7 +2470,7 @@
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
             "target": "Package",
-            "version": "[7.0.0, )"
+            "version": "[8.0.3, )"
           },
           "Npgsql.EntityFrameworkCore.PostgreSQL": {
             "target": "Package",
@@ -2435,7 +2493,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.203/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

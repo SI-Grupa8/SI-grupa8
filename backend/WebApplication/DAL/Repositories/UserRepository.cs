@@ -1,6 +1,7 @@
 ﻿using System;
 using DAL.Entities;
 using DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
@@ -12,6 +13,17 @@ namespace DAL.Repositories
 		{
 			_context = context;
 		}
-	}
+
+        public void Add(User user)
+        {
+            _context.Users.Add(user);
+        }
+
+        public async Task<List<User>> GetAll()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
+    }
 }
 
