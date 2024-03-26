@@ -45,4 +45,7 @@ export class LoginComponent {
   forgotPass(): void{
     console.log("Link is clicked, must add logic.")
   }
+
+
+
 }

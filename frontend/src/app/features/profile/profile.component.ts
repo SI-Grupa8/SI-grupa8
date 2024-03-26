@@ -18,4 +18,15 @@ export class ProfileComponent {
   openEnable2fa(): void {
     this.openEnable2faService.openEnable2fa();
   }
+  openRemove2fa(): void {
+    this.openEnable2faService.openRemove2fa();
+  }
+
+  toggleChanged(event: any) {
+    if (event.target.checked) {
+      this.openEnable2fa();
+    } else {
+      this.openRemove2fa();
+    }
+  }
 }
