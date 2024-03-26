@@ -31,32 +31,49 @@ namespace API.Controllers
              _userService = userService;
          }
         
-        /*public AuthController(AppDbContext context)
-        {
-            _context = context;
-        }
-        */
 
        [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(UserRegisterDto userRegisterDto)
+            
         {
+            //Check if input contains at least an email or a phone number
+
+            if (userRegisterDto.Email.IsNullOrEmpty() && userRegisterDto.PhoneNumber.IsNullOrEmpty())
+                return BadRequest("Cannot register without at least an email or a phone number!");
             var userDto = await _userService.AddUser(userRegisterDto);
             return Ok(userDto);
         }
+
+
         [HttpPost("login")]
         public async Task<ActionResult<User>> Login(UserRegisterDto request)
         {
-            List<User> users = await _userService.GetAll();
+            //Check if input contains at least an email or a phone number
+            if (request.Email.IsNullOrEmpty() && request.PhoneNumber.IsNullOrEmpty())
+                return BadRequest("Cannot login without at least an email or a phone number!");
 
-           //List<User> users = await _context.Users.ToListAsync();
-            User user = users.FirstOrDefault(u => u.Email == request.Email);
-            if (user == null) { return BadRequest("User not found"); }
+            List<User> users = await _userService.GetAll();
+            User user = new User();
+
+            //Look for a user by email
+            if (!request.Email.IsNullOrEmpty()) {
+                user = users.FirstOrDefault(u => u.Email == request.Email);
+                if (user == null) { return BadRequest("User not found"); }
+            }
+            //Look for a user by phone number
+            else if (!request.PhoneNumber.IsNullOrEmpty())
+            {
+                user = users.FirstOrDefault(u => u.PhoneNumber == request.PhoneNumber);
+                if (user == null) { return BadRequest("User not found"); }
+            }
+
             string hash = Encoding.UTF8.GetString(user.PasswordHash);
 
             if (!BCrypt.Net.BCrypt.Verify(request.Password, Encoding.UTF8.GetString( user.PasswordHash)))
             {
                 return BadRequest("Wrong password.");
             }
+
             string token = CreateToken(user);
             return Ok(token);
 
