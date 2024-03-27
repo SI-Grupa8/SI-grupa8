@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgIf } from '@angular/common'; 
 import { FormBuilder,FormControl,FormGroup,Validators,ReactiveFormsModule } from '@angular/forms';
+import { CodeInputComponent, CodeInputModule } from 'angular-code-input';
 
 
 function emailOrPhoneValidator(control: FormControl) {
@@ -15,7 +16,7 @@ function emailOrPhoneValidator(control: FormControl) {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule],
+  imports: [NgIf, ReactiveFormsModule, CodeInputModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -47,5 +48,12 @@ export class LoginComponent {
   }
 
 
+  //code related
+  onCodeChanged(code: string) {
+
+  }
+  onCodeCompleted(code: string) {
+    
+  }
 
 }

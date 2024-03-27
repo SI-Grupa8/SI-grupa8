@@ -95,6 +95,9 @@ html {
         form{
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
+            //background-color: red;
+            height: 180px;
             .digit-group {
                 padding: 8px 10px;
                 padding-left: 40px;
@@ -102,7 +105,7 @@ html {
                 background-size: 25px; 
                 background-position: 10px center; 
                 margin: 8px 0;
-               
+            
             input {
                 width: 30px;
                 height: 30px;
@@ -118,8 +121,9 @@ html {
                     background-color: rgba(255, 255, 255, 0.7);
                 }
             }
-            }
-        button {
+        }
+        .verify {
+            //top: 20px;
             background-color: #1e5631;
             color: #fdf1d3;
             padding: 12px 20px;

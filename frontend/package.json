@@ -19,6 +19,7 @@
     "@angular/platform-browser": "^17.2.0",
     "@angular/platform-browser-dynamic": "^17.2.0",
     "@angular/router": "^17.2.0",
+    "angular-code-input": "^2.0.0",
     "angularx-qrcode": "^17.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
