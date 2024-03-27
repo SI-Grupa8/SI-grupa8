@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 namespace DAL.Entities
 {
 	public class User
@@ -13,7 +14,11 @@ namespace DAL.Entities
 		public int RoleID { get; set; }
 
 		public Role Role { get; set; }
-		
-	}
+
+        [StringLength(30)] public string TwoFactorKey { get; set; }
+
+        public bool TwoFactorEnabled { get; set; } = false;
+
+    }
 }
 
