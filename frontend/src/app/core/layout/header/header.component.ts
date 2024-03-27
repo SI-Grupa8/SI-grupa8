@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
@@ -16,5 +16,15 @@ export class HeaderComponent {
 
   toggleProfileMenu(): void {    
     this.isProfileClicked = !this.isProfileClicked;
+  }
+
+  // close profile menu if clicked anywhere else in the app
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    // Check if the click target is inside the profile menu or the profile container
+    if (!target.closest('.profile-menu') && !target.closest('.profile-container')) {
+      this.isProfileClicked = false;
+    }
   }
 }

@@ -10,11 +10,20 @@ export class OpenEnable2faService {
 
   constructor(private dialog: MatDialog) { }
   openEnable2fa(): void {
-    this.dialog.open(EnableTwofaComponent, {});
+    this.dialog.open(EnableTwofaComponent, { disableClose: true, });
+  }
+
+  closeEnable2fa(): void {
+    this.dialog.closeAll();
   }
 
   openRemove2fa(): void {
-    this.dialog.open(RemoveTwofaComponent, {});
+    this.dialog.closeAll();
+    this.dialog.open(RemoveTwofaComponent, { disableClose: true, });
+  }
+
+  closeRemove2fa(): void {
+    this.dialog.closeAll();
   }
   
 }

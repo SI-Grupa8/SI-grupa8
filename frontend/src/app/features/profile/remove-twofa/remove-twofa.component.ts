@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { OpenEnable2faService } from '../../../core/services/dialogs/open-enable-2fa.service';
 
 @Component({
   selector: 'app-remove-twofa',
@@ -10,10 +11,11 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class RemoveTwofaComponent {
   constructor(
-    private dialogRef: MatDialogRef<RemoveTwofaComponent>,
+    //private dialogRef: MatDialogRef<RemoveTwofaComponent>,
+    private twofaService: OpenEnable2faService
     ) {}
 
   closeDialog(): void {
-    this.dialogRef.close();
+    this.twofaService.closeRemove2fa();
   }
 }

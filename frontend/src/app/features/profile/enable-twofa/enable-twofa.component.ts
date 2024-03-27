@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { QRCodeModule } from 'angularx-qrcode';
+import { OpenEnable2faService } from '../../../core/services/dialogs/open-enable-2fa.service';
 
 @Component({
   selector: 'app-enable-twofa',
@@ -12,10 +13,12 @@ import { QRCodeModule } from 'angularx-qrcode';
 export class EnableTwofaComponent {
   public myAngularxQrCode: string = window.location.href
   constructor(
-    private dialogRef: MatDialogRef<EnableTwofaComponent>,
+    private twofaService: OpenEnable2faService
+    //private dialogRef: MatDialogRef<EnableTwofaComponent>,
     ) {}
 
   closeDialog(): void {
-    this.dialogRef.close();
+    //this.dialogRef.close();
+    this.twofaService.closeEnable2fa();
   }
 }
