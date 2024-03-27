@@ -15,7 +15,7 @@ namespace DAL.Entities
 
 		public Role Role { get; set; }
 
-        [StringLength(30)] public string TwoFactorKey { get; set; }
+        [StringLength(30)] public string TwoFactorKey { get; set; } = string.Empty;
 
         public bool TwoFactorEnabled { get; set; } = false;
 

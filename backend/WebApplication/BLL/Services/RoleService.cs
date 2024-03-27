@@ -6,16 +6,16 @@ using DAL.Interfaces;
 
 namespace BLL.Services
 {
-	public class RoleService : IRoleService
-	{
+    public class RoleService : IRoleService
+    {
         private readonly IMapper _mapper;
         private readonly IRoleRepository _roleRepository;
 
-		public RoleService(IRoleRepository roleRepository, IMapper mapper)
-		{
+        public RoleService(IRoleRepository roleRepository, IMapper mapper)
+        {
             _roleRepository = roleRepository;
             _mapper = mapper;
-		}
+        }
 
         public async Task<RoleDto> GetRoleByID(int id)
         {
@@ -25,4 +25,3 @@ namespace BLL.Services
         }
     }
 }
-

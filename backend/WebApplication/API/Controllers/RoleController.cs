@@ -4,14 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using BLL.DTOs;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace API.Controllers
 {
+    
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]"),Authorize]
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
