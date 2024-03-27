@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,7 +36,9 @@ namespace DAL.Migrations
                     Surname = table.Column<string>(type: "text", nullable: false),
                     PasswordHash = table.Column<byte[]>(type: "bytea", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "bytea", nullable: false),
-                    RoleID = table.Column<int>(type: "integer", nullable: false)
+                    RoleID = table.Column<int>(type: "integer", nullable: false),
+                    TwoFactorKey = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
