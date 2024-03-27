@@ -1,6 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 
 
 function emailOrPhoneValidator(control: FormControl) {
@@ -16,7 +17,7 @@ function emailOrPhoneValidator(control: FormControl) {
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf],
+  imports: [ReactiveFormsModule, NgIf, RouterModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -24,13 +25,16 @@ export class RegisterComponent {
   temp=true;
 
   registerForm: FormGroup;
-  constructor(private f: FormBuilder){
+  constructor(private f: FormBuilder, private router: Router){
     this.registerForm = this.f.group({
       usermail: ['', [Validators.required, emailOrPhoneValidator]],
       pass:['', [Validators.required]]
     });
   }
 
+  click(): void {
+    this.router.navigateByUrl('/profile');
+  }
 
   onClick(): void{
     this.temp=!this.temp;
