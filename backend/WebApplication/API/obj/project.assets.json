@@ -3539,19 +3539,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\EdisJasarevic\\.nuget\\packages\\": {}
+    "C:\\Users\\38762\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\API\\API.csproj",
+      "projectUniqueName": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\API\\API.csproj",
       "projectName": "API",
-      "projectPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\API\\API.csproj",
-      "packagesPath": "C:\\Users\\EdisJasarevic\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\API\\obj\\",
+      "projectPath": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\API\\API.csproj",
+      "packagesPath": "C:\\Users\\38762\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\EdisJasarevic\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\38762\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3565,11 +3565,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj": {
-              "projectPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj"
+            "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj": {
+              "projectPath": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj"
             },
-            "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj": {
-              "projectPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj"
+            "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj": {
+              "projectPath": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj"
             }
           }
         }
@@ -3665,7 +3665,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BLL.DTOs;
 using BLL.Interfaces;
+using BLL.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,11 @@ namespace API.Controllers
         public async Task<ActionResult<RoleDto>> GetRoleByID(int id)
         {
             return await _roleService.GetRoleByID(id);
+        }
+
+        public IRoleService GetRoleService()
+        {
+            return _roleService;
         }
     }
 }
