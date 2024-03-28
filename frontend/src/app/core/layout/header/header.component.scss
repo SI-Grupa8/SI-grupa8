@@ -1,0 +1,167 @@
+:host {
+    width: calc(100% - 200px);
+    margin-left: 200px;
+    height: 60px;
+    display: flex;
+    position: fixed;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 9999;
+    p {
+        margin-left: 30px;
+        font-size: 20px;
+    }
+    .nav {
+        width: 230px;
+        height: 40px;
+        display: flex;
+        margin-right: 20px;
+        align-items: center;
+        justify-content: flex-end;
+        .profile-container {
+            border-radius: 5px;
+            height: 50px;
+            width: 190px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            position: absolute;
+            right: 20px;
+            cursor: pointer;
+            .profile-img {
+                height: 30px;
+                width: 30px;
+                display: flex;
+                border-radius: 50%;
+                background: url("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
+                background-size: cover;
+            }
+            .profile-data {
+                width: 110px;
+                height: 40px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                #profile-name {
+                    font-size: 13px;
+                    margin: 0;
+                    padding-left: 0;
+                }
+                #profile-role {
+                    font-size: 12px;
+                    margin-left: 0;
+                    padding-left: 0;
+                    color: grey;
+                }
+            }
+            svg {
+                width: 13px;
+                height: 13px;
+                fill: grey;
+            }
+        }
+        .profile-container:hover {
+            border: 0.5px solid #e5e3e3; 
+            margin-right: -1px;
+        }
+    }
+}
+.profile-menu {
+    position: absolute;
+    z-index: 9999;
+    width: 190px;
+    display: none;
+    top: 62px;
+    right: 20px;
+    &.active-profile-menu {
+        display: flex;
+        border-radius: 5px;
+        border: 0.5px solid rgb(232, 231, 231);
+        background-color: white;
+        ul {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            li {
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                width: 100%;
+                height: 40px;
+                //border-bottom: 1px solid grey;
+                
+                p {
+                    font-size: 13px;
+                }
+            }
+            li:hover {
+                background-color: rgb(232, 232, 232);
+            }
+            #dark-mode {
+                display: flex;
+                gap: 10px;
+                .switch {
+                    position: relative;
+                    display: inline-block;
+                    width: 50px;
+                    height: 25px;
+                  }
+                  
+                  /* Hide default HTML checkbox */
+                  .switch input {
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                  }
+                  
+                  /* The slider */
+                  .slider {
+                    position: absolute;
+                    cursor: pointer;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: #ccc;
+                    -webkit-transition: .4s;
+                    transition: .4s;
+                  }
+                  
+                  .slider:before {
+                    position: absolute;
+                    content: "";
+                    height: 24px;
+                    width: 24px;
+                    left: 1px;
+                    bottom: 1px;
+                    background-color: white;
+                    -webkit-transition: .4s;
+                    transition: .4s;
+                  }
+                  
+                  input:checked + .slider {
+                    background-color: #2196F3;
+                  }
+                  
+                  input:focus + .slider {
+                    box-shadow: 0 0 1px #2196F3;
+                  }
+                  
+                  input:checked + .slider:before {
+                    -webkit-transform: translateX(24px);
+                    -ms-transform: translateX(24px);
+                    transform: translateX(24px);
+                  }
+                  
+                  /* Rounded sliders */
+                  .slider.round {
+                    border-radius: 21px;
+                  }
+                  
+                  .slider.round:before {
+                    border-radius: 50%;
+                  }
+            }
+        }
+    }
+}
