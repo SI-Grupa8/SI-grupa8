@@ -1,33 +1,35 @@
 {
   "format": 1,
   "restore": {
-    "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/BLL.csproj": {}
+    "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj": {}
   },
   "projects": {
-    "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/BLL.csproj": {
+    "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/BLL.csproj",
+        "projectUniqueName": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj",
         "projectName": "BLL",
-        "projectPath": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/BLL.csproj",
-        "packagesPath": "/Users/hanabisevac/.nuget/packages/",
-        "outputPath": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/BLL/obj/",
+        "projectPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj",
+        "packagesPath": "C:\\Users\\EdisJasarevic\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\BLL\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/hanabisevac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\EdisJasarevic\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/DAL/DAL.csproj": {
-                "projectPath": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/DAL/DAL.csproj"
+              "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj": {
+                "projectPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj"
               }
             }
           }
@@ -36,11 +38,54 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "GoogleAuthenticator": {
+              "target": "Package",
+              "version": "[3.2.0, )"
+            },
+            "Microsoft.AspNetCore.Cors": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.3, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -57,26 +102,28 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/DAL/DAL.csproj": {
+    "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/DAL/DAL.csproj",
+        "projectUniqueName": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj",
         "projectName": "DAL",
-        "projectPath": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/DAL/DAL.csproj",
-        "packagesPath": "/Users/hanabisevac/.nuget/packages/",
-        "outputPath": "/Users/hanabisevac/Documents/GitHub/SI-grupa8/backend/WebApplication/DAL/obj/",
+        "projectPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj",
+        "packagesPath": "C:\\Users\\EdisJasarevic\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/hanabisevac/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\EdisJasarevic\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -89,11 +136,54 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "GoogleAuthenticator": {
+              "target": "Package",
+              "version": "[3.2.0, )"
+            },
+            "Microsoft.AspNetCore.Cors": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.3, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -110,7 +200,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
