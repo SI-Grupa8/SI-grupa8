@@ -63,6 +63,7 @@ toggleChecked: any;
       })
     } else {
       this.checked = !this.checked;
+      this.openEnable2faService.openEnable2fa();
     }
   }
 
