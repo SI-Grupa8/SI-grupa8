@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace BLL.DTOs
 {
@@ -11,6 +12,10 @@ namespace BLL.DTOs
 		public int RoleID { get; set; }
 
 		public RoleDto Role { get; set; }
-	}
+
+        [StringLength(30)] public string TwoFactorKey { get; set; } = string.Empty;
+
+        public bool TwoFactorEnabled { get; set; } = false;
+    }
 }
 
