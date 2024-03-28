@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-	public class UserRepository : Repository<User>,  IUserRepository
+    public class UserRepository : Repository<User>, IUserRepository
 	{
 		private readonly AppDbContext _context;
 
@@ -14,17 +14,25 @@ namespace DAL.Repositories
 			_context = context;
 		}
 
-        public void Add(User user)
-        {
-            _context.Users.Add(user);
-            
-        }
-
         public async Task<List<User>> GetAll()
         {
             return await _context.Users.ToListAsync();
         }
 
+		public async Task<User> FindByEmail(string email)
+		{
+			return await _context.Users.FirstAsync(x => x.Email == email);
+		}
+
+        public async Task<User> FindByPhoneNumber(string phoneNumber)
+        {
+			return await _context.Users.FirstAsync(x => x.PhoneNumber == phoneNumber);
+        }
+
+        public async Task<User> GetByToken(string token)
+        {
+            return await _context.Users.FirstAsync(x => x.RefreshToken == token);
+        }
     }
 }
 
