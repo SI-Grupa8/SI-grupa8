@@ -17,6 +17,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   register(registerRequest: RegisterRequest) {
+    console.log(registerRequest);
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, registerRequest);
   }
 

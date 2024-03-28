@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { QRCodeModule } from 'angularx-qrcode';
 import { OpenEnable2faService } from '../../../core/services/dialogs/open-enable-2fa.service';
@@ -13,12 +13,14 @@ import { OpenEnable2faService } from '../../../core/services/dialogs/open-enable
 export class EnableTwofaComponent {
   public myAngularxQrCode: string = window.location.href
 
-  public imageUrl: string = '';
+  @Input() public imageUrl: string = localStorage.getItem("qrcode") as string;
   constructor(
     private twofaService: OpenEnable2faService
     //private dialogRef: MatDialogRef<EnableTwofaComponent>,
     ) {
       console.log("Loaded: " + this.imageUrl);
+      this.imageUrl = localStorage.getItem("qrcode") as string; 
+      
     }
 
   closeDialog(): void {

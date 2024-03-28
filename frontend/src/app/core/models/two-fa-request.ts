@@ -1,4 +1,4 @@
 export interface TwoFaRequest {
-    email?: string;
+    email?: string | undefined | null;
     phone?: string;
 }

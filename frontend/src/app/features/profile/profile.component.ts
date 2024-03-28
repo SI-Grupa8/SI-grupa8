@@ -31,22 +31,27 @@ qrCode: string = '';
     private dialog: MatDialog,
     private authService: AuthService
   ) {
-    //this.twoFaRequest.email = 
+    this.twoFaRequest.email = localStorage.getItem("email");
    }
 
   twoFaRequest: TwoFaRequest = {}
   twoFaResponse: TwoFaResponse = {}
   message='';
   openEnable2fa(): void {
-    if (this.allow2faDialogOpen) {
+   
       //this.openEnable2faService.openEnable2fa();
       //this.dialog.open(EnableTwofaComponent, { disableClose: true, });
+      console.log("code:" + this.twoFaResponse.qrCodeImageUrl);
       const dialogRef = this.dialog.open(EnableTwofaComponent, {
         data: {
           imageUrl: this.twoFaResponse.qrCodeImageUrl
+  
         }
+        
       });
-    }
+      
+      
+    
   }
 
   //openRemove2fa(): void {
@@ -83,17 +88,25 @@ qrCode: string = '';
       this.checked = !this.checked;
       //this.openEnable2faService.openEnable2fa();
       console.log("aha?")
+  
       this.enable2fa();
+      //this.openEnable2fa();
     }
   }
 
   enable2fa(): void {
+    console.log(this.twoFaRequest.email)
+    this.allow2faDialogOpen = true;
+
     this.authService.enable2fa(this.twoFaRequest).subscribe({
       next: (response) => {
         if(response) {
+          this.allow2faDialogOpen = true;
           this.twoFaResponse = response;
+          localStorage.setItem("qrcode", this.twoFaResponse.qrCodeImageUrl as string);
           console.log("key: " +this.twoFaResponse.manualEntryKey);
           console.log("image:" + this.twoFaResponse.qrCodeImageUrl);
+          this.openEnable2fa();
         }
         else {
           console.log("nothing");

@@ -68,6 +68,7 @@ export class LoginComponent {
         next: (response) => {
           this.authResponse = response;
           if (!this.authResponse.twoFaEnabled) {
+            localStorage.setItem('email', this.authResponse.email as string);
             localStorage.setItem('token', this.authResponse.token as string);
             this.router.navigate(['profile']);
           }

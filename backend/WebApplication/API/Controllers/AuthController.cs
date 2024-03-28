@@ -90,7 +90,7 @@ namespace API.Controllers
             {
                 token = token,
                 twoFaEnabled = user.TwoFactorEnabled,
-                User = user
+                email = user.Email
             });
 
         }

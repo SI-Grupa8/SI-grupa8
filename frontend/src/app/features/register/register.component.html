@@ -33,8 +33,8 @@
 
             <div class="forma"  *ngIf="temp">
                 <form  (ngSubmit)="register()">
-                    <input [(ngModel)]="registerRequest.firstname" ngModel type="text" placeholder="First name" [ngModelOptions]="{standalone: true}" >
-                    <input [(ngModel)]="registerRequest.lastname" type="text" placeholder="Last name" [ngModelOptions]="{standalone: true}">
+                    <input [(ngModel)]="registerRequest.name" ngModel type="text" placeholder="First name" [ngModelOptions]="{standalone: true}" >
+                    <input [(ngModel)]="registerRequest.surname" type="text" placeholder="Last name" [ngModelOptions]="{standalone: true}">
                     <input [(ngModel)]="registerRequest.email" type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}" >
                     
                     <input [(ngModel)]="registerRequest.password" type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}">
