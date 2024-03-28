@@ -10,12 +10,14 @@ namespace BLL.DTOs
 		public string Email { get; set; } = string.Empty;
 		public string PhoneNumber { get; set; } = string.Empty;
 		public int RoleID { get; set; }
-
-		public RoleDto Role { get; set; }
-
         [StringLength(30)] public string TwoFactorKey { get; set; } = string.Empty;
-
         public bool TwoFactorEnabled { get; set; } = false;
+        public string RefreshToken { get; set; } = string.Empty;
+        public DateTime TokenCreated { get; set; }
+        public DateTime TokenExpires { get; set; }
+
+        public RoleDto Role { get; set; }
+
     }
 }
 

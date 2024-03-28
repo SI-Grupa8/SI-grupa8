@@ -12,13 +12,14 @@ namespace DAL.Entities
 		public byte[] PasswordHash { get; set; }
 		public byte[] PasswordSalt { get; set; }
 		public int RoleID { get; set; }
-
-		public Role Role { get; set; }
-
         [StringLength(30)] public string TwoFactorKey { get; set; } = string.Empty;
-
         public bool TwoFactorEnabled { get; set; } = false;
+        public string RefreshToken { get; set; } = string.Empty;
+        public DateTime TokenCreated { get; set; }
+        public DateTime TokenExpires { get; set; }
 
+
+        public Role Role { get; set; }
     }
 }
 
