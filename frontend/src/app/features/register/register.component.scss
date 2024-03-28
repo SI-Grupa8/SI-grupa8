@@ -1,12 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-html {
+
+.container {
     background-color: #1e5631;
 
     font-family: Montserrat !important;
-}
-
-.container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,7 +19,7 @@ html {
 }
     .forma {
         width: 310px;
-        height: 250px;
+        height: 350px;
         background-color: rgba(255, 255, 255, 0.7);
         padding: 50px;
         border-radius: 20px;
@@ -31,6 +29,40 @@ html {
         form {
             display: flex;
             flex-direction: column;
+            input[formControlName="firstname"] {
+                padding: 8px 10px;
+                padding-left: 40px;
+                background: url("../../../assets/images/user.png") no-repeat; 
+                background-size: 25px; 
+                background-position: 10px center; 
+                margin: 8px 0;
+                border: none;
+                border-bottom: 1px solid #1e5631;
+                 outline: none;
+                background-color: transparent;
+                transition: border-bottom 0.3s;
+                height: 30px;
+                &:focus {
+                    background-color: rgba(255, 255, 255, 0.7);
+                }
+            }
+            input[formControlName="lastname"] {
+                padding: 8px 10px;
+                padding-left: 40px;
+                background: url("../../../assets/images/user.png") no-repeat; 
+                background-size: 25px; 
+                background-position: 10px center; 
+                margin: 8px 0;
+                border: none;
+                border-bottom: 1px solid #1e5631;
+                 outline: none;
+                background-color: transparent;
+                transition: border-bottom 0.3s;
+                height: 30px;
+                &:focus {
+                    background-color: rgba(255, 255, 255, 0.7);
+                }
+            }
             input[formControlName="usermail"] {
                 padding: 8px 10px;
                 padding-left: 40px;

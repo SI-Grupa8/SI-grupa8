@@ -1,18 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Log in</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-</head>
-
-<body>
-   
-    <div class="container">
+<div class="container">
               <div class="side-text" >
                     <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(156, 48%, 87%)">
                     Vehicle  <br />
@@ -24,6 +10,8 @@
               </div>
             <div class="forma" *ngIf="temp">
                 <form [formGroup]="registerForm" (ngSubmit)="onClick()">
+                    <input type="text" placeholder="First name" formControlName="firstname">
+                    <input type="text" placeholder="Last name" formControlName="lastname">
                     <input type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;" formControlName="usermail">
                     <div *ngIf="registerForm.get('usermail')?.errors && (registerForm.get('usermail')?.dirty || registerForm.get('usermail')?.touched)">
                         <div *ngIf="registerForm.get('usermail')?.hasError('required')">Email or phone number is required.</div>
@@ -59,8 +47,3 @@
                 </form>
             </div>-->
     </div>
-
-    
-</body>
-
-</html>
