@@ -30,10 +30,7 @@ namespace API.Controllers
             return await _roleService.GetRoleByID(id);
         }
 
-        public IRoleService GetRoleService()
-        {
-            return _roleService;
-        }
+        
     }
 }
 

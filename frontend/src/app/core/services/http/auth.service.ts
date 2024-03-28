@@ -32,8 +32,8 @@ export class AuthService {
     (`${this.apiUrl}/verify`, verificationRequest);
   }
 
-  enable2fa(TwoFaRequest: TwoFaRequest) {
+  enable2fa(twoFaRequest: TwoFaRequest) {
     return this.http.post<TwoFaResponse>
-    (`${this.apiUrl}/enable-tfa`, TwoFaRequest);
+    (`${this.apiUrl}/enable-tfa`, twoFaRequest);
   }
 }

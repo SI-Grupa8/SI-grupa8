@@ -30,7 +30,9 @@ qrCode: string = '';
     private openEnable2faService: OpenEnable2faService,
     private dialog: MatDialog,
     private authService: AuthService
-  ) { }
+  ) {
+    //this.twoFaRequest.email = 
+   }
 
   twoFaRequest: TwoFaRequest = {}
   twoFaResponse: TwoFaResponse = {}
@@ -79,7 +81,9 @@ qrCode: string = '';
       })
     } else {
       this.checked = !this.checked;
-      this.openEnable2faService.openEnable2fa();
+      //this.openEnable2faService.openEnable2fa();
+      console.log("aha?")
+      this.enable2fa();
     }
   }
 
@@ -88,8 +92,12 @@ qrCode: string = '';
       next: (response) => {
         if(response) {
           this.twoFaResponse = response;
+          console.log("key: " +this.twoFaResponse.manualEntryKey);
+          console.log("image:" + this.twoFaResponse.qrCodeImageUrl);
         }
-        
+        else {
+          console.log("nothing");
+        }
       }
     })
   }

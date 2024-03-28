@@ -7,7 +7,7 @@
 <p class="text">Step 1: Visit the App Store to get an authenticator app like Google Authenticator or Authy, then follow the app’s instructions to set up an account with them.</p>
 <p class="text">Step 2: Use your authenticator app to scan the barcode below</p>
 <div style="text-align:center">
-  <qrcode [qrdata]="myAngularxQrCode" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+  <qrcode [qrdata]="imageUrl" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
   </div>
 <input type="text" name="new-category" id="new-category">
 <button class="send-code">Complete setup</button>

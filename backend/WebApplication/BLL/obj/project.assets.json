@@ -2688,19 +2688,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\38762\\.nuget\\packages\\": {}
+    "C:\\Users\\EdisJasarevic\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj",
+      "projectUniqueName": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj",
       "projectName": "BLL",
-      "projectPath": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj",
-      "packagesPath": "C:\\Users\\38762\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\BLL\\obj\\",
+      "projectPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\BLL\\BLL.csproj",
+      "packagesPath": "C:\\Users\\EdisJasarevic\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\BLL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\38762\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\EdisJasarevic\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2714,8 +2714,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj": {
-              "projectPath": "C:\\Users\\38762\\Desktop\\Ljetni\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj"
+            "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj": {
+              "projectPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj"
             }
           }
         }
@@ -2788,7 +2788,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

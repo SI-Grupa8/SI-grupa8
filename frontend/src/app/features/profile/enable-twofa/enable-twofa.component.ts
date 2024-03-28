@@ -13,12 +13,13 @@ import { OpenEnable2faService } from '../../../core/services/dialogs/open-enable
 export class EnableTwofaComponent {
   public myAngularxQrCode: string = window.location.href
 
-  //public imageUrl: string = '';
+  public imageUrl: string = '';
   constructor(
-    
     private twofaService: OpenEnable2faService
     //private dialogRef: MatDialogRef<EnableTwofaComponent>,
-    ) {}
+    ) {
+      console.log("Loaded: " + this.imageUrl);
+    }
 
   closeDialog(): void {
     //this.dialogRef.close();

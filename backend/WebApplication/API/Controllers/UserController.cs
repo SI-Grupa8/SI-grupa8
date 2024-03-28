@@ -15,10 +15,7 @@ namespace API.Controllers
 			_userService = userService;
 		}
 
-        public IUserService GetUserService()
-        {
-            return _userService;
-        }
+        
     }
 }
 
