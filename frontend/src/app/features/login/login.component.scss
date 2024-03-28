@@ -29,9 +29,19 @@ html {
         margin-left: 30px;
         margin-right: 200px;
         form {
+            a{
+                color: #5c7fda;
+                text-decoration: none;
+                margin-top: 10px;
+              }
+              
+              a:hover {
+                text-decoration: underline;
+              }
             display: flex;
             flex-direction: column;
             input[formControlName="usermail"] {
+                //border-radius: 8px 8px 0 0;
                 padding: 8px 10px;
                 padding-left: 40px;
                 background: url("../../../assets/images/user.png") no-repeat; 
@@ -98,6 +108,7 @@ html {
             justify-content: space-between;
             //background-color: red;
             height: 180px;
+            
             .digit-group {
                 padding: 8px 10px;
                 padding-left: 40px;

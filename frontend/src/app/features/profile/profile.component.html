@@ -44,10 +44,12 @@
                 <p class="section-item-subtitle">Help protect your account (even if someone gets your password) by requiring a verification code and a password to log in.</p>
             </div>
             <div class="grid-item">
+                <!--
                 <label class="switch">
                     <input  (click)="openEnable2fa()" type="checkbox" (change)="toggleChanged($event)">
                     <span class="slider round"></span>
-                  </label>
+                  </label>-->
+                  <mat-slide-toggle color="primary" (change)="change($event)" [checked]="checked"></mat-slide-toggle>
             </div>
         </div>
     </div>
