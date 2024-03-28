@@ -89,7 +89,8 @@ namespace API.Controllers
             return Ok(new
             {
                 token = token,
-                twoFaEnabled = user.TwoFactorEnabled
+                twoFaEnabled = user.TwoFactorEnabled,
+                User = user
             });
 
         }
