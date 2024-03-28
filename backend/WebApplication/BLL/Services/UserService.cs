@@ -45,6 +45,8 @@ namespace BLL.Services
 
             User user = new User
             {
+                Name = userRegisterDto.Name,
+                Surname = userRegisterDto.Surname,
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),

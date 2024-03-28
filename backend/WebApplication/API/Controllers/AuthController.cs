@@ -165,7 +165,7 @@ namespace API.Controllers
         }
 
         [HttpPost("login/tfa")]
-        public async Task<ActionResult<string>> LoginTfa(UserRegisterDto request)
+        public async Task<ActionResult<string>> LoginTfa(UserLoginTfa request)
         {
             List<User> users = await _userService.GetAll();
             User user = new User();
@@ -186,7 +186,7 @@ namespace API.Controllers
             if (user.TwoFactorEnabled)
             {
                 var twoFactorAuthenticator = new TwoFactorAuthenticator();
-                bool isValid = twoFactorAuthenticator.ValidateTwoFactorPIN(user.TwoFactorKey, request.TwoFactorCode);
+                bool isValid = twoFactorAuthenticator.ValidateTwoFactorPIN(user.TwoFactorKey, request.TwoFactorCodeSix);
                 if (!isValid)
                 {
                     return BadRequest("Invalid 2FA code.");
@@ -197,7 +197,7 @@ namespace API.Controllers
         }
 
         [HttpPost("enable-tfa")]
-        public async Task<ActionResult> EnableTwoFactorAuthentication(UserRegisterDto request)
+        public async Task<ActionResult<object>> EnableTwoFactorAuthentication(UserPhoneOrMail request)
         {
             List<User> users = await _userService.GetAll();
             User user = new User();
@@ -215,7 +215,7 @@ namespace API.Controllers
 
             if (user == null) return BadRequest("User not found");
             var setup = await _userService.SetupCode(user);
-            return (ActionResult)Results.Ok(new
+            return Ok(new
             {
                 setup.ManualEntryKey,
                 QRCodeImageUrl = await _userService.GenerateQRCodeImageUrl(user, setup)
