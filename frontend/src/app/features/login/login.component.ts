@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { NgIf } from '@angular/common'; 
-import { FormBuilder,FormControl,FormGroup,Validators,ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder,FormControl,FormGroup,Validators,ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CodeInputComponent, CodeInputModule } from 'angular-code-input';
 import { AuthRequest } from '../../core/models/auth-request';
 import { AuthService } from '../../core/services/http/auth.service';
+import { AuthResponse } from '../../core/models/auth-response';
+import { Route, Router } from '@angular/router';
 
 
 function emailOrPhoneValidator(control: FormControl) {
@@ -18,7 +20,7 @@ function emailOrPhoneValidator(control: FormControl) {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, CodeInputModule],
+  imports: [NgIf, ReactiveFormsModule, CodeInputModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -28,7 +30,8 @@ export class LoginComponent {
   authRequest: AuthRequest = {};
 
   loginForm: FormGroup;
-  constructor(private f: FormBuilder, private authService: AuthService){
+  authResponse: AuthResponse = {};
+  constructor(private f: FormBuilder, private authService: AuthService, private router: Router){
     this.loginForm = this.f.group({
       usermail: ['', [Validators.required, emailOrPhoneValidator]],
       pass:['', [Validators.required]]
@@ -59,8 +62,18 @@ export class LoginComponent {
   onCodeCompleted(code: string) {
     
   }
-  login(): void {
-    this.authService.login(this.authRequest);
+  login() {
+    this.authService.login(this.authRequest)
+      .subscribe({
+        next: (response) => {
+          this.authResponse = response;
+          if (!this.authResponse.twoFaEnabled) {
+            localStorage.setItem('token', this.authResponse.token as string);
+            this.router.navigate(['profile']);
+          }
+        }
+      });
   }
+
 
 }

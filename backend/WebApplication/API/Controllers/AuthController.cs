@@ -50,7 +50,7 @@ namespace API.Controllers
 
 
         [HttpPost("login")]
-        public async Task<ActionResult<User>> Login(UserRegisterDto request)
+        public async Task<ActionResult<object>> Login(UserRegisterDto request)
         {
             //Check if input contains at least an email or a phone number
             if (request.Email.IsNullOrEmpty() && request.PhoneNumber.IsNullOrEmpty())
@@ -86,7 +86,11 @@ namespace API.Controllers
             };
             await _userService.RefreshUserToken(user.UserID, refresh);
 
-            return Ok(token);
+            return Ok(new
+            {
+                token = token,
+                twoFaEnabled = user.TwoFactorEnabled
+            });
 
         }
 

@@ -50,8 +50,7 @@ namespace BLL.Services
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
-                Surname = userRegisterDto.Surname,
-                Name = userRegisterDto.Name,
+                
                 PasswordSalt = [],
                 RoleID = 0
             };

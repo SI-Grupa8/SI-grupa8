@@ -8,6 +8,7 @@
                         The system aims to provide fleet managers with real-time visibility into the location and status of vehicles  used by delivery drivers, enabling efficient route planning, monitoring, and reporting.
                     </p>
               </div>
+              <!--
             <div class="forma" (ngSubmit)="register()" *ngIf="temp">
                 <form [formGroup]="registerForm" (ngSubmit)="onClick()">
                     <input [(ngModel)]="registerRequest.firstname" ngModel type="text" placeholder="First name" formControlName="firstname">
@@ -21,7 +22,23 @@
                     <div *ngIf="registerForm?.get('pass')?.dirty || registerForm?.get('pass')?.touched">
                         <div *ngIf="registerForm.get('pass')?.hasError('pass')">Password is required
                         </div>
-                    </div>
+                    </div>-->
+                    
+                    <!--<a href="#" (click)="forgotPass()">Forgot password?</a>-->
+                
+                    <!--<button   type="submit" style="margin-top: 40px; margin-bottom: 5px;">REGISTER</button>
+                </form>
+                
+            </div>-->
+
+            <div class="forma"  *ngIf="temp">
+                <form  (ngSubmit)="register()">
+                    <input [(ngModel)]="registerRequest.firstname" ngModel type="text" placeholder="First name" [ngModelOptions]="{standalone: true}" >
+                    <input [(ngModel)]="registerRequest.lastname" type="text" placeholder="Last name" [ngModelOptions]="{standalone: true}">
+                    <input [(ngModel)]="registerRequest.email" type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}" >
+                    
+                    <input [(ngModel)]="registerRequest.password" type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}">
+                    
                     
                     <!--<a href="#" (click)="forgotPass()">Forgot password?</a>-->
                 

@@ -71,6 +71,12 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseAuthentication();
 
+app.UseCors(options =>
+{
+    options.AllowAnyOrigin();
+    options.AllowAnyHeader();
+    options.AllowAnyMethod();
+});
 app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())

@@ -6,6 +6,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatDialog } from '@angular/material/dialog';
 import { RemoveTwofaComponent } from './remove-twofa/remove-twofa.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { AuthService } from '../../core/services/http/auth.service';
+import { TwoFaRequest } from '../../core/models/two-fa-request';
+import { TwoFaResponse } from '../../core/models/two-fa-response';
+import { EnableTwofaComponent } from './enable-twofa/enable-twofa.component';
 
 @Component({
   selector: 'app-profile',
@@ -20,14 +24,26 @@ export class ProfileComponent {
   private allow2faDialogOpen: boolean = true;
 toggleChecked: any;
 
+qrCode: string = '';
+
   constructor(
     private openEnable2faService: OpenEnable2faService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: AuthService
   ) { }
 
+  twoFaRequest: TwoFaRequest = {}
+  twoFaResponse: TwoFaResponse = {}
+  message='';
   openEnable2fa(): void {
     if (this.allow2faDialogOpen) {
-      this.openEnable2faService.openEnable2fa();
+      //this.openEnable2faService.openEnable2fa();
+      //this.dialog.open(EnableTwofaComponent, { disableClose: true, });
+      const dialogRef = this.dialog.open(EnableTwofaComponent, {
+        data: {
+          imageUrl: this.twoFaResponse.qrCodeImageUrl
+        }
+      });
     }
   }
 
@@ -67,5 +83,14 @@ toggleChecked: any;
     }
   }
 
-  
+  enable2fa(): void {
+    this.authService.enable2fa(this.twoFaRequest).subscribe({
+      next: (response) => {
+        if(response) {
+          this.twoFaResponse = response;
+        }
+        
+      }
+    })
+  }
 }

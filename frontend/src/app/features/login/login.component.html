@@ -22,22 +22,17 @@
                         The system aims to provide fleet managers with real-time visibility into the location and status of vehicles  used by delivery drivers, enabling efficient route planning, monitoring, and reporting.
                     </p>
               </div>
-            <div class="forma" (ngSubmit)="login()" *ngIf="temp">
-                <form [formGroup]="loginForm" (ngSubmit)="onClick()">
-                    <input [(ngModel)]="authRequest.email" type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;" formControlName="usermail">
-                    <div *ngIf="loginForm.get('usermail')?.errors && (loginForm.get('usermail')?.dirty || loginForm.get('usermail')?.touched)">
-                        <div *ngIf="loginForm.get('usermail')?.hasError('required')">Email or phone number is required.</div>
-                        <div *ngIf="loginForm.get('usermail')?.hasError('pattern')">Invalid input.</div>
-                      </div>
-                    <input [(ngModel)]="authRequest.password" type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;" formControlName="pass">
-                    <div *ngIf="loginForm?.get('pass')?.dirty || loginForm?.get('pass')?.touched">
-                        <div *ngIf="loginForm.get('pass')?.hasError('pass')">Password is required
-                        </div>
-                    </div>
+              <div class="forma"  *ngIf="temp">
+                <form  (ngSubmit)="login()">
                     
-                    <a href="#" (click)="forgotPass()">Forgot password?</a>
+                    <input [(ngModel)]="authRequest.email" type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}" >
+                    
+                    <input [(ngModel)]="authRequest.password" type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}">
+                    
+                    
+                    <!--<a href="#" (click)="forgotPass()">Forgot password?</a>-->
                 
-                    <button type="submit" style="margin-top: 40px; margin-bottom: 5px;">LOG IN</button>
+                    <button   type="submit" style="margin-top: 40px; margin-bottom: 5px;">LOGIN</button>
                 </form>
                 
             </div>
