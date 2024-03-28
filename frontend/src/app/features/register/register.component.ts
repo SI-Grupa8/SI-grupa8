@@ -2,6 +2,8 @@ import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../core/services/http/auth.service';
+import { RegisterRequest } from '../../core/models/register-request';
 
 
 function emailOrPhoneValidator(control: FormControl) {
@@ -24,8 +26,10 @@ function emailOrPhoneValidator(control: FormControl) {
 export class RegisterComponent {
   temp=true;
 
+  registerRequest: RegisterRequest = {};
+
   registerForm: FormGroup;
-  constructor(private f: FormBuilder, private router: Router){
+  constructor(private f: FormBuilder, private router: Router, private authService: AuthService){
     this.registerForm = this.f.group({
       usermail: ['', [Validators.required, emailOrPhoneValidator]],
       pass:['', [Validators.required]]
@@ -49,5 +53,8 @@ export class RegisterComponent {
 
   forgotPass(): void{
     console.log("Link is clicked, must add logic.")
+  }
+  register(): void {
+    this.authService.register(this.registerRequest);
   }
 }

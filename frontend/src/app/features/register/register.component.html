@@ -8,16 +8,16 @@
                         The system aims to provide fleet managers with real-time visibility into the location and status of vehicles  used by delivery drivers, enabling efficient route planning, monitoring, and reporting.
                     </p>
               </div>
-            <div class="forma" *ngIf="temp">
+            <div class="forma" (ngSubmit)="register()" *ngIf="temp">
                 <form [formGroup]="registerForm" (ngSubmit)="onClick()">
-                    <input type="text" placeholder="First name" formControlName="firstname">
-                    <input type="text" placeholder="Last name" formControlName="lastname">
-                    <input type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;" formControlName="usermail">
+                    <input [(ngModel)]="registerRequest.firstname" ngModel type="text" placeholder="First name" formControlName="firstname">
+                    <input [(ngModel)]="registerRequest.lastname" type="text" placeholder="Last name" formControlName="lastname">
+                    <input [(ngModel)]="registerRequest.email" type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;" formControlName="usermail">
                     <div *ngIf="registerForm.get('usermail')?.errors && (registerForm.get('usermail')?.dirty || registerForm.get('usermail')?.touched)">
                         <div *ngIf="registerForm.get('usermail')?.hasError('required')">Email or phone number is required.</div>
                         <div *ngIf="registerForm.get('usermail')?.hasError('pattern')">Invalid input.</div>
                       </div>
-                    <input type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;" formControlName="pass">
+                    <input [(ngModel)]="registerRequest.password" type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;" formControlName="pass">
                     <div *ngIf="registerForm?.get('pass')?.dirty || registerForm?.get('pass')?.touched">
                         <div *ngIf="registerForm.get('pass')?.hasError('pass')">Password is required
                         </div>
@@ -25,7 +25,7 @@
                     
                     <a href="#" (click)="forgotPass()">Forgot password?</a>
                 
-                    <button (click)="click()"   type="submit" style="margin-top: 40px; margin-bottom: 5px;">REGISTER</button>
+                    <button   type="submit" style="margin-top: 40px; margin-bottom: 5px;">REGISTER</button>
                 </form>
                 
             </div>
