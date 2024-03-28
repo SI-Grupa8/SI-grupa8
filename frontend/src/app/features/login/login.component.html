@@ -22,14 +22,14 @@
                         The system aims to provide fleet managers with real-time visibility into the location and status of vehicles  used by delivery drivers, enabling efficient route planning, monitoring, and reporting.
                     </p>
               </div>
-            <div class="forma" *ngIf="temp">
+            <div class="forma" (ngSubmit)="login()" *ngIf="temp">
                 <form [formGroup]="loginForm" (ngSubmit)="onClick()">
-                    <input type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;" formControlName="usermail">
+                    <input [(ngModel)]="authRequest.email" type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;" formControlName="usermail">
                     <div *ngIf="loginForm.get('usermail')?.errors && (loginForm.get('usermail')?.dirty || loginForm.get('usermail')?.touched)">
                         <div *ngIf="loginForm.get('usermail')?.hasError('required')">Email or phone number is required.</div>
                         <div *ngIf="loginForm.get('usermail')?.hasError('pattern')">Invalid input.</div>
                       </div>
-                    <input type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;" formControlName="pass">
+                    <input [(ngModel)]="authRequest.password" type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;" formControlName="pass">
                     <div *ngIf="loginForm?.get('pass')?.dirty || loginForm?.get('pass')?.touched">
                         <div *ngIf="loginForm.get('pass')?.hasError('pass')">Password is required
                         </div>

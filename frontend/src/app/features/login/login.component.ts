@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { NgIf } from '@angular/common'; 
 import { FormBuilder,FormControl,FormGroup,Validators,ReactiveFormsModule } from '@angular/forms';
 import { CodeInputComponent, CodeInputModule } from 'angular-code-input';
+import { AuthRequest } from '../../core/models/auth-request';
+import { AuthService } from '../../core/services/http/auth.service';
 
 
 function emailOrPhoneValidator(control: FormControl) {
@@ -23,8 +25,10 @@ function emailOrPhoneValidator(control: FormControl) {
 export class LoginComponent {
   temp=true;
 
+  authRequest: AuthRequest = {};
+
   loginForm: FormGroup;
-  constructor(private f: FormBuilder){
+  constructor(private f: FormBuilder, private authService: AuthService){
     this.loginForm = this.f.group({
       usermail: ['', [Validators.required, emailOrPhoneValidator]],
       pass:['', [Validators.required]]
@@ -54,6 +58,9 @@ export class LoginComponent {
   }
   onCodeCompleted(code: string) {
     
+  }
+  login(): void {
+    this.authService.login(this.authRequest);
   }
 
 }
