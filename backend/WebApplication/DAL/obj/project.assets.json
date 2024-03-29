@@ -2664,19 +2664,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\EdisJasarevic\\.nuget\\packages\\": {}
+    "C:\\Users\\emirs\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj",
+      "projectUniqueName": "C:\\Users\\emirs\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj",
       "projectName": "DAL",
-      "projectPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj",
-      "packagesPath": "C:\\Users\\EdisJasarevic\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\EdisJasarevic\\Desktop\\projects\\SI-grupa8\\backend\\WebApplication\\DAL\\obj\\",
+      "projectPath": "C:\\Users\\emirs\\SI-grupa8\\backend\\WebApplication\\DAL\\DAL.csproj",
+      "packagesPath": "C:\\Users\\emirs\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\emirs\\SI-grupa8\\backend\\WebApplication\\DAL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\EdisJasarevic\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\emirs\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2696,11 +2696,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -2760,7 +2755,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
