@@ -58,15 +58,23 @@
             }
           
             .change-button{
-                background-color: #1e5631;
-                border-radius: 20px;
-                padding: 5px 20px;
                 width: fit-content;
-                color: white;
                 align-self: flex-end;
-                font-size:14px;
-            }
-
+                font-size:12px;
+                font-weight: bold;
+                background-color: #1e5631;
+                color: #fdf1d3;
+                padding: 10px 20px;
+                margin-left: 57px;
+                cursor: pointer;
+                border: none;
+                border-radius: 20px;
+                outline: none;
+                transition: background-color 0.3s;
+                &:hover {
+                    background-color: #145123;
+                }
+              }
             .switch {
                 position: relative;
                 display: inline-block;

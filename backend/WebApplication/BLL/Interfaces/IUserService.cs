@@ -14,6 +14,7 @@ namespace BLL.Interfaces
         Task<User> GetUserByEmail(string email);
         Task RefreshUserToken(int userID, RefreshTokenDto refreshTokenDto);
         Task<User> GetByToken(string token);
+        Task<User> UpdateUser(User user);
     }
 }
 

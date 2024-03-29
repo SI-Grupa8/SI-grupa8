@@ -6,6 +6,8 @@ import { AuthRequest } from '../../core/models/auth-request';
 import { AuthService } from '../../core/services/http/auth.service';
 import { AuthResponse } from '../../core/models/auth-response';
 import { Route, Router } from '@angular/router';
+import { AuthTfaRequest } from '../../core/models/auth-tfa-request';
+import { AuthTfaResponse } from '../../core/models/auth-tfa-response';
 
 
 function emailOrPhoneValidator(control: FormControl) {
@@ -28,7 +30,8 @@ export class LoginComponent {
   temp=true;
 
   authRequest: AuthRequest = {};
-
+  authRequestTfa: AuthTfaRequest = {};
+  authResponseTfa: AuthTfaResponse = {};
   loginForm: FormGroup;
   authResponse: AuthResponse = {};
   constructor(private f: FormBuilder, private authService: AuthService, private router: Router){
@@ -67,13 +70,39 @@ export class LoginComponent {
       .subscribe({
         next: (response) => {
           this.authResponse = response;
+          console.log(response);
           if (!this.authResponse.twoFaEnabled) {
             localStorage.setItem('email', this.authResponse.email as string);
             localStorage.setItem('token', this.authResponse.token as string);
+            localStorage.setItem("checked", "true");
+
+            console.log(this.authResponse.email)
+            console.log(this.authResponse.token);
             this.router.navigate(['profile']);
+          }
+          else {
+            this.temp = false;
+            this.authRequestTfa.email = this.authRequest.email;
+
           }
         }
       });
+  }
+  verify(){
+    //this.authRequestTfa.twoFactorCodeSix
+    this.authService.loginTfa(this.authRequestTfa).subscribe({
+      next: (response) => {
+        this.authResponseTfa.token = response;
+        localStorage.setItem('email', this.authResponse.email as string);
+            localStorage.setItem('token', this.authResponse.token as string);
+            localStorage.setItem("checked", "true");
+
+            console.log(this.authResponse.email)
+            console.log(this.authResponse.token);
+            this.router.navigate(['profile']);
+            
+      }
+    })
   }
 
 
