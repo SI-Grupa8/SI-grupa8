@@ -1,0 +1,57 @@
+<p id="title">Profile settings</p>
+<p class="section-title">ACCOUNT PREFERENCES</p>
+<div class="section-line"></div>
+<div class="section">
+    <div class="section-item">
+        <p class="section-item-title">Name</p>
+        <p class="section-item-subtitle">Display users name</p>
+    </div>
+    <div class="section-item">
+        <p class="section-item-title">Surname</p>
+        <p class="section-item-subtitle">Display users surname</p>
+    </div>
+    <div class="section-item">
+        <div class="grid-container">
+            <div class="grid-item">
+                <p class="section-item-title">Email address</p>
+                <p class="section-item-subtitle">{{twoFaRequest.email}}</p>
+            </div>
+            <div class="grid-item">
+                <button class="change-button">CHANGE</button>
+            </div>
+        </div>
+    </div>
+    <div class="section-item">
+        <div class="grid-container">
+            <div class="grid-item">
+                <p class="section-item-title">Password</p>
+                <p class="section-item-subtitle">Password must be at least 8 characters long</p>
+            </div>
+            <div class="grid-item">
+                <button class="change-button">CHANGE</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p class="section-title">SAFETY & PRIVACY</p>
+<div class="section-line"></div>
+<div class="section">
+    <div class="section-item">
+        <div class="grid-container">
+            <div class="grid-item">
+                <p class="section-item-title">Use two-factor authentication</p>
+                <p class="section-item-subtitle">Help protect your account (even if someone gets your password) by requiring a verification code and a password to log in.</p>
+            </div>
+            <div class="grid-item">
+                <!--
+                <label class="switch">
+                    <input  (click)="openEnable2fa()" type="checkbox" (change)="toggleChanged($event)">
+                    <span class="slider round"></span>
+                  </label>-->
+                  <mat-slide-toggle color="primary" (change)="change($event)" [checked]="checked"></mat-slide-toggle>
+            </div>
+        </div>
+    </div>
+</div>
+
