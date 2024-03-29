@@ -3,9 +3,9 @@ namespace BLL.DTOs
 {
 	public class RefreshTokenDto
 	{
-        public string RefreshToken { get; set; }
-        public DateTime TokenCreated { get; set; }
-        public DateTime TokenExpires { get; set; }
+        public string Token { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime Expires { get; set; }
     }
 }
 

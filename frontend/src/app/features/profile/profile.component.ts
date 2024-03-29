@@ -88,7 +88,7 @@ qrCode: string = '';
           console.log("toggle should not change if I click the cancel button")
         }
       })
-    } else {
+    } else if (!this.checked) {
       this.checked = !this.checked;
       //this.openEnable2faService.openEnable2fa();
       console.log("aha?")

@@ -33,4 +33,9 @@ export class RemoveTwofaComponent {
     localStorage.setItem('checked', 'false');
     this.closeDialog();
   }
+  nothing() {
+//this.authService.enable2fa(this.twoFaRequest);
+    localStorage.setItem('checked', 'true');
+    this.closeDialog();
+  }
 }

@@ -78,6 +78,7 @@ export class LoginComponent {
 
             console.log(this.authResponse.email)
             console.log(this.authResponse.token);
+            //this.authService.setRefreshToken();
             this.router.navigate(['profile']);
           }
           else {
@@ -96,6 +97,7 @@ export class LoginComponent {
         localStorage.setItem('email', this.authResponse.email as string);
             localStorage.setItem('token', this.authResponse.token as string);
             localStorage.setItem("checked", "true");
+            //this.authService.setRefreshToken();
 
             console.log(this.authResponse.email)
             console.log(this.authResponse.token);

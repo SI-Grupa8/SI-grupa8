@@ -80,9 +80,9 @@ namespace API.Controllers
             SetRefreshToken(refreshToken, user);
             RefreshTokenDto refresh = new RefreshTokenDto()
             {
-                RefreshToken = refreshToken.RefreshToken,
-                TokenCreated = refreshToken.TokenCreated,
-                TokenExpires = refreshToken.TokenExpires
+                Token = refreshToken.Token,
+                Created = refreshToken.Created,
+                Expires = refreshToken.Expires
             };
             await _userService.RefreshUserToken(user.UserID, refresh);
 
@@ -112,15 +112,17 @@ namespace API.Controllers
 
             string token = CreateToken(user);
             var newToken = GenerateRefreshToken();
-            SetRefreshToken(newToken, user);
+            newToken.Token = refreshToken;
+            SetRefreshToken(newToken,user);
             RefreshTokenDto refresh = new RefreshTokenDto()
             {
-                RefreshToken = newToken.RefreshToken,
-                TokenCreated = newToken.TokenCreated,
-                TokenExpires = newToken.TokenExpires
+                Token = newToken.Token,
+                Created = newToken.Created,
+                Expires = newToken.Expires
             };
             await _userService.RefreshUserToken(user.UserID, refresh);
 
+            
             return Ok(token);
 
         }
@@ -130,9 +132,10 @@ namespace API.Controllers
         {
             var refreshToken = new RefreshTokenDto
             {
-                RefreshToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                TokenExpires = DateTime.Now.AddMinutes(30),
-                TokenCreated = DateTime.Now
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                //Expires = DateTime.Now.AddMinutes(30),
+                Expires = DateTime.Now.AddSeconds(10),
+                Created = DateTime.Now
             };
 
             return refreshToken;
@@ -143,13 +146,13 @@ namespace API.Controllers
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = newRefreshToken.TokenExpires
+                Expires = newRefreshToken.Expires
             };
 
-            Response.Cookies.Append("refreshToken", newRefreshToken.RefreshToken, cookieOptions);
-            user.RefreshToken = newRefreshToken.RefreshToken;
-            user.TokenCreated = newRefreshToken.TokenCreated;
-            user.TokenExpires = newRefreshToken.TokenExpires;
+            Response.Cookies.Append("refreshToken", newRefreshToken.Token, cookieOptions);
+            user.RefreshToken = newRefreshToken.Token;
+            user.TokenCreated = newRefreshToken.Created;
+            user.TokenExpires = newRefreshToken.Expires;
         }
 
         private string CreateToken(User user)
@@ -162,7 +165,8 @@ namespace API.Controllers
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                //expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddSeconds(10),
                 signingCredentials: credentials
                 );
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);

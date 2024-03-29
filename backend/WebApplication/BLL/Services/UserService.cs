@@ -128,9 +128,9 @@ namespace BLL.Services
             if (existingUser != null)
             {
                 // Update the properties of the existing user with the new token information
-                existingUser.RefreshToken = refreshTokenDto.RefreshToken;
-                existingUser.TokenCreated = refreshTokenDto.TokenCreated.ToUniversalTime();
-                existingUser.TokenExpires = refreshTokenDto.TokenExpires.ToUniversalTime(); // Adjust expiration as needed
+                existingUser.RefreshToken = refreshTokenDto.Token;
+                existingUser.TokenCreated = refreshTokenDto.Created.ToUniversalTime();
+                existingUser.TokenExpires = refreshTokenDto.Expires.ToUniversalTime(); // Adjust expiration as needed
 
                 // Save changes to the database
                 await _userRepository.SaveChangesAsync();
