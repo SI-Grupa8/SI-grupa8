@@ -108,10 +108,12 @@ html {
                 border-radius: 20px;
                 outline: none;
                 transition: background-color 0.3s;
-                &:hover {
-                    background-color: #145123;
-                }
+                
             }
+            button:hover {
+                background-color: #2a944d;
+            }
+            
         }
     }
 
@@ -180,7 +182,7 @@ html {
             border-radius: 20px;
             outline: none;
             transition: background-color 0.3s;
-            &:hover {
+            :hover {
                 background-color: #145123;
             }
         }

@@ -74,7 +74,7 @@ export class LoginComponent {
           if (!this.authResponse.twoFaEnabled) {
             localStorage.setItem('email', this.authResponse.email as string);
             localStorage.setItem('token', this.authResponse.token as string);
-            localStorage.setItem("checked", "true");
+            localStorage.setItem("checked", "false");
 
             console.log(this.authResponse.email)
             console.log(this.authResponse.token);
