@@ -25,9 +25,9 @@
               <div class="forma"  *ngIf="temp">
                 <form  (ngSubmit)="login()">
                     
-                    <input [(ngModel)]="authRequest.email" type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}" >
+                    <input name="usermail" [(ngModel)]="authRequest.email" type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}" >
                     
-                    <input [(ngModel)]="authRequest.password" type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}">
+                    <input name="pass" [(ngModel)]="authRequest.password" type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}">
                     
                     
                     <!--<a href="#" (click)="forgotPass()">Forgot password?</a>-->
