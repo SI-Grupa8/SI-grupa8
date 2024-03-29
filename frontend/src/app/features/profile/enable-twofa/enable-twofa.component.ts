@@ -36,8 +36,17 @@ export class EnableTwofaComponent {
   }
 
   loginTfa() {
-    this.authService.loginTfa(this.loginTfaRequest);
-    //localStorage.setItem("checked", "true");
+    this.authService.loginTfa(this.loginTfaRequest).subscribe(response => {
+      console.log( 'response: ', response );
+      if (response) {
+         localStorage.setItem('checked', 'true');
+         //console.log("toggle")
+         this.closeDialog();
+      } else {
+        //this.checked=false;
+        console.log("Wrong pin");
+      }
+    })
   }
   
 }

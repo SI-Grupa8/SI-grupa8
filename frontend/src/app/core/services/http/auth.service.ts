@@ -30,7 +30,7 @@ export class AuthService {
     (`${this.apiUrl}/login`, authRequest);
   }
   loginTfa(authTfaRequest: AuthTfaRequest) {
-    return this.http.post<string>(`${this.apiUrl}/login/tfa`, authTfaRequest);
+    return this.http.post<AuthTfaResponse>(`${this.apiUrl}/login/tfa`, authTfaRequest);
   }
 
   verifyCode(verificationRequest: VerifyRequest) {

@@ -23,7 +23,6 @@
                 
                 <input name="pass" [(ngModel)]="authRequest.password" type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}">
                 
-
                 
                 <!--<a href="#" (click)="forgotPass()">Forgot password?</a>-->
             
@@ -32,15 +31,15 @@
         </div>
         <div class="twoauth" *ngIf="!temp">
             <h2 style="margin-top: -20px; margin-bottom: 40px;">Two-Factor Authentication</h2>
-            <form id="authForm" >
-                <label for="pin" style="margin-top: 5px; margin-bottom: 5px;">Enter the six digit code:</label>
-    
-                <code-input class="code-input" [isCodeHidden]="false"
+            <form id="authForm" (ngSubmit)="verify()">
+                <label for="pincode" style="margin-top: 5px; margin-bottom: 5px;">Enter the six digit code:</label>
+                    <input [(ngModel)]="authRequestTfa.twoFactorCodeSix" type="text" name="pincode" id="pincode">
+                <!--<code-input [(ngModel)]="" class="code-input" [isCodeHidden]="false"
                     [codeLength]="6"
                     isCharsCode:false
                     (codeChanged)="onCodeChanged($event)"
                     (codeCompleted)="onCodeCompleted($event)">
-                </code-input>
+                </code-input>-->
     
                 <!--<div class="digit-group">
                     <input class="digit-input" type="text" id="digit-1" name="digit-1" maxlength="1" pattern="[0-9]{1}">
@@ -51,39 +50,9 @@
                     <input class="digit-input" type="text" id="digit-6" name="digit-6" maxlength="1" pattern="[0-9]{1}">
                 </div>-->
                 
-                <button class="verify" type="submit" style="margin-top: 15px; margin-bottom: 5px;">Verify</button>
+                <button class="verify" type="submit" style="margin-top: 15px; margin-bottom: 5px;">VERIFY</button>
             </form>
         </div>
-<!--
-            </div>
-
-            <div class="twoauth" *ngIf="!temp">
-                <h2 style="margin-top: -20px; margin-bottom: 40px;">Two-Factor Authentication</h2>
-                <form (ngSubmit)="verify()" id="authForm" >
-                    <label for="pincode" style="margin-top: 5px; margin-bottom: 5px;">Enter the six digit code:</label>
-                    <input [(ngModel)]="authRequestTfa.twoFactorCodeSix" type="text" name="pincode" id="pincode">
-                    <!--<code-input name="aaa"  [(ngModel)]="authRequestTfa.twoFactorCodeSix" class="code-input" [isCodeHidden]="false"
-                        [codeLength]="6"
-                        isCharsCode:false
-                        (codeChanged)="onCodeChanged($event)"
-                        (codeCompleted)="onCodeCompleted($event)" [ngModelOptions]="{standalone: true}">
-                    </code-input>-->
-
-                    
-
-                    <!--<div class="digit-group">
-                        <input class="digit-input" type="text" id="digit-1" name="digit-1" maxlength="1" pattern="[0-9]{1}">
-                        <input class="digit-input" type="text" id="digit-2" name="digit-2" maxlength="1" pattern="[0-9]{1}">
-                        <input class="digit-input" type="text" id="digit-3" name="digit-3" maxlength="1" pattern="[0-9]{1}">
-                        <input class="digit-input" type="text" id="digit-4" name="digit-4" maxlength="1" pattern="[0-9]{1}">
-                        <input class="digit-input" type="text" id="digit-5" name="digit-5" maxlength="1" pattern="[0-9]{1}">
-                        <input class="digit-input" type="text" id="digit-6" name="digit-6" maxlength="1" pattern="[0-9]{1}">
-                    </div>-->
-                    
-                    <!--<button class="verify" type="submit" style="margin-top: 5px; margin-bottom: 5px;">Verify</button>
-                </form>
-            </div>
--->
     </div>
 
         

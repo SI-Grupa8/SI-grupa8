@@ -92,7 +92,7 @@ export class LoginComponent {
     //this.authRequestTfa.twoFactorCodeSix
     this.authService.loginTfa(this.authRequestTfa).subscribe({
       next: (response) => {
-        this.authResponseTfa.token = response;
+        this.authResponseTfa = response;
         localStorage.setItem('email', this.authResponse.email as string);
             localStorage.setItem('token', this.authResponse.token as string);
             localStorage.setItem("checked", "true");
