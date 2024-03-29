@@ -6,9 +6,10 @@
     padding: 10px 10px 10px 10px;
     .qr {
         width: 200px;
-        height: 200px;
+        height: 230px;
         display: flex;
         align-self: center;
+        flex-direction: column;
         img {
             width: 200px;
             height: 200px;
