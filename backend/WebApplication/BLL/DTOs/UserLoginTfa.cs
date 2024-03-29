@@ -10,6 +10,6 @@ namespace BLL.DTOs
     {
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
-        public required string TwoFactorCodeSix { get; set; }
+        public string TwoFactorCodeSix { get; set; }
     }
 }

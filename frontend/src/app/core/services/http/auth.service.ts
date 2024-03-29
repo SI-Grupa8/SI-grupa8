@@ -6,6 +6,8 @@ import { AuthRequest } from '../../models/auth-request';
 import { VerifyRequest } from '../../models/verify-request';
 import { TwoFaRequest } from '../../models/two-fa-request';
 import { TwoFaResponse } from '../../models/two-fa-response';
+import { AuthTfaRequest } from '../../models/auth-tfa-request';
+import { AuthTfaResponse } from '../../models/auth-tfa-response';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +29,9 @@ export class AuthService {
     return this.http.post<AuthResponse>
     (`${this.apiUrl}/login`, authRequest);
   }
+  loginTfa(authTfaRequest: AuthTfaRequest) {
+    return this.http.post<string>(`${this.apiUrl}/login/tfa`, authTfaRequest);
+  }
 
   verifyCode(verificationRequest: VerifyRequest) {
     return this.http.post<AuthResponse>
@@ -37,4 +42,9 @@ export class AuthService {
     return this.http.post<TwoFaResponse>
     (`${this.apiUrl}/enable-tfa`, twoFaRequest);
   }
+  disable2fa(twoFaRequest: TwoFaRequest) {
+    return this.http.post<string>
+    (`${this.apiUrl}/disable-tfa`, twoFaRequest);
+  }
+  
 }

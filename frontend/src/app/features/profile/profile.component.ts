@@ -32,6 +32,9 @@ qrCode: string = '';
     private authService: AuthService
   ) {
     this.twoFaRequest.email = localStorage.getItem("email");
+    if(localStorage.getItem('checked') == "true"){
+      this.checked = true;
+    }
    }
 
   twoFaRequest: TwoFaRequest = {}
@@ -81,6 +84,7 @@ qrCode: string = '';
            this.checked = !this.checked;
            console.log("toggle")
         } else {
+          this.checked=false;
           console.log("toggle should not change if I click the cancel button")
         }
       })

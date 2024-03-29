@@ -15,5 +15,5 @@
   border: 1px solid lightgrey;" mat-button mat-dialog-close>No</button>
   <button style="background-color: rgb(245, 67, 67);
   border: none;
-  color: white; margin-bottom: 20px;" mat-button [mat-dialog-close]="true" cdkFocusInitial>Yes</button>
+  color: white; margin-bottom: 20px;" mat-button (click)="disable2fa()" [mat-dialog-close]="true" cdkFocusInitial>Yes</button>
 </mat-dialog-actions>

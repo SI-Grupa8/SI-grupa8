@@ -3,6 +3,18 @@
     height: 600px;
     display: flex;
     flex-direction: column;
+    padding: 10px 10px 10px 10px;
+    .qr {
+        width: 200px;
+        height: 200px;
+        display: flex;
+        align-self: center;
+        img {
+            width: 200px;
+            height: 200px;
+            display: flex;
+        }
+    }
     .title {
         font-size: 24px; /* Adjust font size as needed */
         font-weight: bold; /* Make the title stand out */
@@ -14,7 +26,7 @@
       .text {
         font-size: 16px; /* Adjust font size as needed */
         color: grey; /* Set the color of the text to grey */
-        margin-bottom: 10px; /* Add some space below each paragraph */
+        margin-bottom: 30px; /* Add some space below each paragraph */
         padding: 0px 10px;
       }
     .close {
@@ -43,13 +55,21 @@
     }
     .send-code{
         background-color: #1e5631;
-        border-radius: 20px;
-        padding: 5px 20px;
-        width: fit-content;
-        color: white;
-        align-self: center;
-        font-size:14px;
+        font-weight: bold;
+        color: #fdf1d3;
+        padding: 12px 20px;
+        margin-left: 57px;
         margin-top: 20px;
-        padding-bottom: 10px;
+        cursor: pointer;
+        border: none;
+        border-radius: 20px;
+        outline: none;
+        transition: background-color 0.3s;
+        &:hover {
+            background-color: #145123;
+        }
+    }
+    form {
+        margin: 0 auto;
     }
 }
