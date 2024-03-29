@@ -118,12 +118,12 @@ html {
     .twoauth{
         width: 310px;
         height: 250px;
-        background-color: rgba(255, 255, 255, 0.7);
-        padding: 50px;
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 90px 80px 50px 80px;
         border-radius: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        margin-left: 30px;
-        margin-right: 200px;
+        z-index: 1000;
+        font-size: 14px;
         form{
             display: flex;
             flex-direction: column;
