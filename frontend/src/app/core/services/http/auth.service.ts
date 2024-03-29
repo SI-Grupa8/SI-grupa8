@@ -52,11 +52,9 @@ export class AuthService {
     this.router.navigateByUrl('login');
   }
 
-  setRefreshToken() {
-    return this.http.post(`${this.apiUrl}/refresh-token`, {});
-  }
+  
   isCookiePresent(cookieName: string): boolean {
-    return document.cookie.includes(`refreshToken`);
+    return document.cookie.includes(`refresh`);
   }
   
 }

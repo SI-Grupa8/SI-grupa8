@@ -82,16 +82,19 @@ namespace API.Controllers
             {
                 Token = refreshToken.Token,
                 Created = refreshToken.Created,
-                Expires = refreshToken.Expires
+                Expires = refreshToken.Expires,
             };
             await _userService.RefreshUserToken(user.UserID, refresh);
+            Console.WriteLine(refresh.Expires.ToString());
 
             return Ok(new
             {
                 token = token,
                 twoFaEnabled = user.TwoFactorEnabled,
-                email = user.Email
-            });
+                email = user.Email,
+                refresh = refresh.Token,
+                expires = refresh.Expires.ToString(),
+            }) ;
 
         }
 
@@ -202,6 +205,7 @@ namespace API.Controllers
                 }
             }
             string token = CreateToken(user);
+            
             return Ok(new
             {
                 token = token

@@ -28,7 +28,7 @@ function emailOrPhoneValidator(control: FormControl) {
 })
 export class LoginComponent {
   temp=true;
-
+   refreshToken = '';
   authRequest: AuthRequest = {};
   authRequestTfa: AuthTfaRequest = {};
   authResponseTfa: AuthTfaResponse = {};
@@ -74,11 +74,12 @@ export class LoginComponent {
           if (!this.authResponse.twoFaEnabled) {
             localStorage.setItem('email', this.authResponse.email as string);
             localStorage.setItem('token', this.authResponse.token as string);
-            localStorage.setItem("checked", "false");
-
+            document.cookie = "refresh="+this.authResponse.refresh+"; expires="+this.authResponse.expires;
+            
+            localStorage.setItem("refresh", this.authResponse.refresh as string);
             console.log(this.authResponse.email)
             console.log(this.authResponse.token);
-            //this.authService.setRefreshToken();
+            
             this.router.navigate(['profile']);
           }
           else {

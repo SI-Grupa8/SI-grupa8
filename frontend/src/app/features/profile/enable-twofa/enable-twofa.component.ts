@@ -19,6 +19,7 @@ export class EnableTwofaComponent {
   loginTfaRequest: AuthTfaRequest = {};
 
   @Input() public imageUrl: string = localStorage.getItem("qrcode") as string;
+  @Input() public  key: string = '';
   constructor(
     private twofaService: OpenEnable2faService,
     private authService: AuthService

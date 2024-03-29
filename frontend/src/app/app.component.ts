@@ -16,29 +16,30 @@ import { AuthService } from './core/services/http/auth.service';
     styleUrl: './app.component.scss',
     imports: [SidebarComponent, RouterOutlet, DashboardComponent, HeaderComponent, LoginComponent,ReactiveFormsModule,CommonModule]
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   title = 'frontend';
 
   showHeaderAndSidebar: boolean = true;
- // private subscription: Subscription;
+   private subscription: Subscription;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private authService: AuthService) {
-/*
-    this.subscription = interval(100000).subscribe(() => {
-      if (!this.authService.isCookiePresent('refreshToken')) {
+    this.subscription = interval(500000).subscribe(() => {
+      if (!this.authService.isCookiePresent('refresh')) {
         // If the cookie is missing, log out the user
         this.authService.logout();
       }
-    });*/
+    });
+
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.showHeaderAndSidebar = this.activatedRoute?.firstChild?.snapshot.data['showHeaderAndSidebar'] !== false;
     });
   }
-  /*
+  
+  
   ngOnDestroy(): void {
     // Unsubscribe from the interval observable to avoid memory leaks
     this.subscription.unsubscribe();
-  }*/
+  }
 }
 

@@ -47,7 +47,8 @@ qrCode: string = '';
       console.log("code:" + this.twoFaResponse.qrCodeImageUrl);
       const dialogRef = this.dialog.open(EnableTwofaComponent, {
         data: {
-          imageUrl: this.twoFaResponse.qrCodeImageUrl
+          imageUrl: this.twoFaResponse.qrCodeImageUrl,
+          key: this.twoFaResponse.manualEntryKey
   
         }
         
