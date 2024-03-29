@@ -63,7 +63,15 @@ namespace BLL.Services
 
         }
 
-        public async Task<List<User>> GetAll()
+        public async Task<User> UpdateUser(User user)
+        {
+            
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
+            return user;
+        }
+
+            public async Task<List<User>> GetAll()
         {
             return await _userRepository.GetAll();
         }

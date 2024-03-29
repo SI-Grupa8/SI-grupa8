@@ -12,14 +12,16 @@ html {
     height: 100%;
 }
 
-.background {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(30, 86, 49, 0.6); 
+
+
+
+body {
+    margin: 0;
+    // background-image: url("../../../assets/images/map.jpeg");
+    background-size: cover;
+}
+
+.container {
     display: flex;
     justify-content: center; 
     align-items: center; 

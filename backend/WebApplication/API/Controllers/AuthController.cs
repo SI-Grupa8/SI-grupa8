@@ -198,7 +198,10 @@ namespace API.Controllers
                 }
             }
             string token = CreateToken(user);
-            return Ok(token);
+            return Ok(new
+            {
+                token = token
+            }) ;
         }
 
         [HttpPost("enable-tfa")]
@@ -225,6 +228,30 @@ namespace API.Controllers
                 setup.ManualEntryKey,
                 QRCodeImageUrl = await _userService.GenerateQRCodeImageUrl(user, setup)
         });
+        }
+
+        [HttpPost("disable-tfa")]
+        public async Task<ActionResult> DisableTwoFactorAuthentication(UserPhoneOrMail request)
+        {
+            List<User> users = await _userService.GetAll();
+            User user = new User();
+            if (!request.Email.IsNullOrEmpty())
+            {
+                user = users.FirstOrDefault(u => u.Email == request.Email);
+                if (user == null) { return BadRequest("User not found"); }
+            }
+            //Look for a user by phone number
+            else if (!request.PhoneNumber.IsNullOrEmpty())
+            {
+                user = users.FirstOrDefault(u => u.PhoneNumber == request.PhoneNumber);
+                if (user == null) { return BadRequest("User not found"); }
+            }
+
+            if (user == null) return BadRequest("User not found");
+            user.TwoFactorEnabled = false;
+            user.TwoFactorKey = string.Empty;
+            user = await _userService.UpdateUser(user);
+            return Ok("Two factor authentication successfully removed.");
         }
     }
 }
