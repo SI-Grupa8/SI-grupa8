@@ -8,6 +8,7 @@ import { TwoFaRequest } from '../../models/two-fa-request';
 import { TwoFaResponse } from '../../models/two-fa-response';
 import { AuthTfaRequest } from '../../models/auth-tfa-request';
 import { AuthTfaResponse } from '../../models/auth-tfa-response';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class AuthService {
 
   private apiUrl = 'https://localhost:7126/Api/Auth';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   register(registerRequest: RegisterRequest) {
     console.log(registerRequest);
@@ -45,6 +46,10 @@ export class AuthService {
   disable2fa(twoFaRequest: TwoFaRequest) {
     return this.http.post<string>
     (`${this.apiUrl}/disable-tfa`, twoFaRequest);
+  }
+  logout() {
+    localStorage.clear();
+    this.router.navigateByUrl('login');
   }
   
 }
