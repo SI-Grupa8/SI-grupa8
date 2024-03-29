@@ -1,51 +1,56 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 html {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     font-family: Montserrat, sans-serif !important;
+    background-image: url("../../../assets/images/mapa.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
 }
 
-html::before {
+.background {
     content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    // background-color: rgba(30, 86, 49, 0.5);
-}
-
-body {
-    margin: 0;
-    // background-image: url("../../../assets/images/map.jpeg");
-    background-size: cover;
-}
-
-.container {
+    background-color: rgba(30, 86, 49, 0.6); 
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100vh;
-    background-color: rgba(30, 86, 49, 1);
-}
-.side-text {
-        margin-right: 80px;
-        margin-left: 100px;
-        color: white;
-        font-size: 18px;
-        flex: 1;
+    justify-content: center; 
+    align-items: center; 
+    .logo-container {
+        width: 180px;
+        height: 40px;
+        display: flex;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: -25px;
+        svg {
+            margin-left: 10px;
+            width: 30px;
+            height: 30px;
+            fill: rgb(30, 86, 49);
+        }
+        p {
+            margin-left: 10px;
+            fill: rgb(30, 86, 49);
+            font-size: 20px;
+        }
+    }
 }
     .forma {
         width: 310px;
         height: 250px;
-        background-color: rgba(255, 255, 255, 0.7);
-        padding: 50px;
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 90px 80px 50px 80px;
         border-radius: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        margin-left: 30px;
-        margin-right: 200px;
-        z-index: 100;
+        z-index: 1000;
         form {
             a{
                 color: #5c7fda;
@@ -59,7 +64,6 @@ body {
             display: flex;
             flex-direction: column;
             input[name="usermail"] {
-                //border-radius: 8px 8px 0 0;
                 padding: 8px 10px;
                 padding-left: 40px;
                 background: url("../../../assets/images/user.png") no-repeat; 
@@ -124,7 +128,6 @@ body {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            //background-color: red;
             height: 180px;
             
             .digit-group {
@@ -152,7 +155,6 @@ body {
             }
         }
         .verify {
-            //top: 20px;
             background-color: #1e5631;
             color: #fdf1d3;
             padding: 12px 20px;
