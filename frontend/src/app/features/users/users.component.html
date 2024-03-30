@@ -3,6 +3,19 @@
 </div>
 
 <div class="container">
+    <h3>Add new user</h3>
+    <div class="forma">
+        <form  (ngSubmit)="addNewUser()">
+            <div class="container-flex">
+                <input name="firstname" [(ngModel)]="registerRequest.name" ngModel type="text" placeholder="First name" [ngModelOptions]="{standalone: true}" >
+                <input name="lastname" [(ngModel)]="registerRequest.surname" type="text" placeholder="Last name" [ngModelOptions]="{standalone: true}">
+                <input name="usermail" [(ngModel)]="registerRequest.email" type="text" placeholder="E-mail or phone number" [ngModelOptions]="{standalone: true}" >
+                <input name="pass" [(ngModel)]="registerRequest.password" type="password" placeholder="Password" [ngModelOptions]="{standalone: true}">
+                <button type="submit" style="margin-bottom: 25px;">ADD USER</button>
+            </div>
+        </form>
+    </div>
+    <h3 style="margin-top: 25px;">Existing users</h3>
     <form class="search-container">
         <input type="text" id="search-bar" placeholder="Search users..">
         <button type="submit" class="search-icon">
