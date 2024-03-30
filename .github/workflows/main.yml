@@ -7,7 +7,7 @@ on:
     - main
 env:
   AZURE_WEBAPP_NAME: vehicle-tracking-system-dev-api
-  AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+  AZURE_WEBAPP_PACKAGE_PATH: "./publish/API"
   
 jobs:
   publish:
