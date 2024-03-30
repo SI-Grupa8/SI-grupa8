@@ -12,11 +12,6 @@
     <None Remove="Entities\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Repositories\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Entities\" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="GoogleAuthenticator" Version="3.2.0" />

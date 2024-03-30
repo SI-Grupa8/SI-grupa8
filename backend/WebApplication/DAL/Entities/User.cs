@@ -17,9 +17,10 @@ namespace DAL.Entities
         public string RefreshToken { get; set; } = string.Empty;
         public DateTime TokenCreated { get; set; }
         public DateTime TokenExpires { get; set; }
-
-
         public Role Role { get; set; }
+		public int CompanyID { get; set; }
+		public Company Company { get; set; }
+
     }
 }
 
