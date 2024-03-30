@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,6 +9,10 @@ using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
 using Google.Authenticator;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BLL.Services
 {
@@ -15,12 +20,69 @@ namespace BLL.Services
 	{
 		private readonly IMapper _mapper;
 		private readonly IUserRepository _userRepository;
+        private readonly IConfiguration _configuration;
 
-		public UserService(IUserRepository userRepository, IMapper mapper)
+		public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
 		{
 			_userRepository = userRepository;
 			_mapper = mapper;
+            _configuration = configuration;
 		}
+
+        public async Task<object> EnableTwoFactorAuthentication(int userID)
+        {
+            var user = await _userRepository.GetById(userID);
+
+            if (user == null) throw new Exception("User not found");
+
+            var setup = await SetupCode(user);
+            var QRCodeImageUrl = GenerateQRCodeImageUrl(user, setup);
+            return new
+            {
+                setup.ManualEntryKey,
+                QRCodeImageUrl
+            };
+        }
+
+        public async Task<(CookieOptions cookiesOption, string refreshToken, object data)> UserLogIn(UserLogIn userRequest)
+        {
+            var user = new User();
+            if (!string.IsNullOrEmpty(userRequest.Email))
+            {
+                user = await _userRepository.FindByEmail(userRequest.Email);
+            }
+            else if (!string.IsNullOrEmpty(userRequest.PhoneNumber))
+            {
+                user = await _userRepository.FindByPhoneNumber(userRequest.PhoneNumber);
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(userRequest.Password, Encoding.UTF8.GetString(user.PasswordHash)))
+            {
+                throw new Exception("Wrong password.");
+            }
+
+            string token = CreateToken(user);
+            var refreshToken = GenerateRefreshToken();
+            var cookieOptions = SetRefreshToken(refreshToken, user);
+            RefreshTokenDto refresh = new RefreshTokenDto()
+            {
+                Token = refreshToken.Token,
+                Created = refreshToken.Created,
+                Expires = refreshToken.Expires,
+            };
+            await RefreshUserToken(user.UserID, refresh);
+
+            return (cookieOptions, refreshToken.Token,
+                new 
+            {
+                token = token,
+                twoFaEnabled = user.TwoFactorEnabled,
+                email = user.Email,
+                refresh = refresh.Token,
+                expires = refresh.Expires.ToString()
+            });
+
+        }
 
         public async Task<User> GetUserByEmail(string email)
         {
@@ -71,7 +133,7 @@ namespace BLL.Services
             return user;
         }
 
-            public async Task<List<User>> GetAll()
+        public async Task<List<User>> GetAll()
         {
             return await _userRepository.GetAll();
         }
@@ -93,7 +155,7 @@ namespace BLL.Services
             return code;
         }
 
-        public async Task<string> GenerateQRCodeImageUrl(User user, SetupCode setupCode)
+        public string GenerateQRCodeImageUrl(User user, SetupCode setupCode)
         {
             string manualEntryKey = setupCode.ManualEntryKey;
             string fullName = Uri.EscapeDataString(user.Name + user.Surname);
@@ -161,8 +223,54 @@ namespace BLL.Services
             var userDto = _mapper.Map<UserDto>(user);*/
         }
 
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, user.Email.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.RoleName.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString())
+            };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                //expires: DateTime.Now.AddSeconds(10),
+                signingCredentials: credentials
+                );
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            return jwt;
+        }
 
+        private RefreshTokenDto GenerateRefreshToken()
+        {
+            var refreshToken = new RefreshTokenDto
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                //Expires = DateTime.Now.AddMinutes(30),
+                Expires = DateTime.Now.AddMinutes(30),
+                Created = DateTime.Now
+            };
 
+            return refreshToken;
+        }
+
+        private CookieOptions SetRefreshToken(RefreshTokenDto newRefreshToken, User user)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = newRefreshToken.Expires
+            };
+
+            //Response.Cookies.Append("refreshToken", newRefreshToken.Token, cookieOptions);
+            user.RefreshToken = newRefreshToken.Token;
+            user.TokenCreated = newRefreshToken.Created;
+            user.TokenExpires = newRefreshToken.Expires;
+
+            return cookieOptions;
+        }
 
     }
 }
