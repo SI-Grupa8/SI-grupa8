@@ -8,9 +8,11 @@ import { DevicesComponent } from './features/devices/devices.component';
 
 export const routes: Routes = [
     //need to add auth guard later on
-    {path: '', component: HomeComponent, canActivate: [authGuard]},
+    {path: '', component: HomeComponent},
+    //, canActivate: [authGuard]},
     {path:'login',component:LoginComponent, data: {showHeaderAndSidebar: false}},
     {path: 'register', component: RegisterComponent, data: {showHeaderAndSidebar: false}},
     {path:'profile',  component:ProfileComponent, canActivate: [authGuard]},
-    {path:'devices', component:DevicesComponent, canActivate: [authGuard]}
+    {path:'devices', component:DevicesComponent}
+    //, canActivate: [authGuard]}
 ];
