@@ -5,7 +5,10 @@ on:
   push:
     branches:
     - main
-
+env:
+  AZURE_WEBAPP_NAME: vehicle-tracking-system-dev-api
+  AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+  
 jobs:
   publish:
     runs-on: ubuntu-latest
