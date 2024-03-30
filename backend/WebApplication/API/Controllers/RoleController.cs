@@ -12,9 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    
+
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("api/[controller]"),Authorize]
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
@@ -25,6 +25,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<RoleDto>> GetRoleByID(int id)
         {
             return await _roleService.GetRoleByID(id);
