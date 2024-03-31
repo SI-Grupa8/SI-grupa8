@@ -1,12 +1,16 @@
 ﻿using System;
+using BLL.DTOs;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using API.JWTHelpers;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController
+    public class UserController : ControllerBase
 	{
 		private readonly IUserService _userService;
 
@@ -15,6 +19,16 @@ namespace API.Controllers
 			_userService = userService;
 		}
 
+		[HttpGet]
+		[Authorize(Roles = "User")]
+		public async Task<ActionResult<UserDto>> GetLoggedUser()
+		{
+            string token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
+			var id = JWTHelper.GetUserIDFromClaims(token);
+            var user = await _userService.GetUser(id);
+
+			return Ok(user);
+		}
         
     }
 }
