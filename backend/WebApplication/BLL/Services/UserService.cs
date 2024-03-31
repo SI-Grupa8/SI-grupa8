@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -172,6 +173,12 @@ namespace BLL.Services
         {
             _userRepository.Remove(user);
             await _userRepository.SaveChangesAsync();
+        }
+
+        public async Task<List<UserDto>> GetAllByRole(string role)
+        {
+            var users = await _userRepository.GetAllByRole(role);
+            return _mapper.Map<List<UserDto>>(users);
         }
     }
 }

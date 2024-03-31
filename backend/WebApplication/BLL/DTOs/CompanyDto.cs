@@ -10,6 +10,6 @@ namespace BLL.DTOs
     {
         public int CompanyID { get; set; }
         public string CompanyName { get; set; }
-        public required int AdminID { get; set; }
+        public int AdminID { get; set; }
     }
 }

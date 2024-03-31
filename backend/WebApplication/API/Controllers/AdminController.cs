@@ -39,7 +39,7 @@ namespace API.Controllers
             var company = _companyService.GetCompanyByID(admin.UserID).Result;
             if(company == null) { return BadRequest("Company not found"); }
             var users = await _userService.GetAllByCompanyId(company.CompanyID);
-            return users;
+            return Ok(users);
         }
 
         [HttpPost("remove-user")]
@@ -141,7 +141,7 @@ namespace API.Controllers
         }
 
         [HttpPost("add-device")]
-        public async Task<ActionResult> AddDevice(AdminCRUDDeviceDto request)
+        public async Task<ActionResult<DeviceDto>> AddDevice(AdminCRUDDeviceDto request)
         {
 
             var admin = new User();
@@ -154,8 +154,8 @@ namespace API.Controllers
             if (company == null) { return BadRequest("Company not found"); }
             var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
             var deviceDto = devices.FirstOrDefault(u => u.Reference == request.Reference);
-            _deviceService.AddDevice(deviceDto);
-            return Ok("Device successfully removed.");
+            var device = _deviceService.AddDevice(deviceDto);
+            return Ok(device);
         }
 
         [HttpPost("update-device")]
@@ -176,6 +176,81 @@ namespace API.Controllers
             if (request.Reference != null) deviceDto.Reference = request.Reference;
             _deviceService.UpdateDevice(deviceDto);
             return Ok("Device successfully updated.");
+        }
+
+        [HttpPost("get-all-companies")]
+        public async Task<ActionResult<List<DeviceDto>>> GetAllCompanies(SuperAdminDto request)
+        {
+            var admin = new User();
+            if (!request.superAdminEmail.IsNullOrEmpty())
+            {
+                admin = await _userService.GetUserByEmail(request.superAdminEmail);
+                if (admin == null || admin.Role.RoleName != "Super Admin") { return BadRequest("Only super admin allowed."); }
+            }
+            var companies = _companyService.GetAll().Result;
+            return Ok(companies);
+        }
+
+        [HttpPost("remove-company")]
+        public async Task<ActionResult> RemoveCompany(SuperAdminDto request)
+        {
+
+            var admin = new User();
+            if (!request.superAdminEmail.IsNullOrEmpty())
+            {
+                admin = await _userService.GetUserByEmail(request.superAdminEmail);
+                if (admin == null || admin.Role.RoleName != "Super Admin") { return BadRequest("Only super admin allowed."); }
+            }
+            var company = _companyService.GetCompanyByName(request.CompanyName).Result;
+            if (company == null) { return BadRequest("Company not found"); }
+            _companyService.RemoveCompany(company);
+            return Ok("Company successfully removed.");
+        }
+
+        [HttpPost("add-company")]
+        public async Task<ActionResult<CompanyDto>> AddCompany(SuperAdminDto request)
+        {
+
+            var admin = new User();
+            if (!request.superAdminEmail.IsNullOrEmpty())
+            {
+                admin = await _userService.GetUserByEmail(request.superAdminEmail);
+                if (admin == null || admin.Role.RoleName != "Super Admin") { return BadRequest("Only super admin allowed."); }
+            }
+            var companyDto=new CompanyDto{ CompanyName= request.CompanyName };
+            var company = _companyService.AddCompany(companyDto).Result;
+            return Ok(company);
+        }
+
+        [HttpPost("update-company")]
+        public async Task<ActionResult> UpdateCompany(SuperAdminDto request)
+        {
+            var admin = new User();
+            if (!request.superAdminEmail.IsNullOrEmpty())
+            {
+                admin = await _userService.GetUserByEmail(request.superAdminEmail);
+                if (admin == null || admin.Role.RoleName != "Super Admin") { return BadRequest("Only super admin allowed."); }
+            }
+            var company = _companyService.GetCompanyByName(request.CompanyName).Result;
+            if (company!= null) { 
+                company.CompanyName = request.CompanyName;
+                company = _companyService.GetCompanyByName(request.CompanyName).Result;
+                _companyService.UpdateCompany(company);
+            }
+            return Ok("Company updated");
+        }
+
+        [HttpPost("get-admins")]
+        public async Task<ActionResult<List<UserDto>>> GetAllAdmins(UserPhoneOrMail request)
+        {
+            var admin = new User();
+            if (!request.Email.IsNullOrEmpty())
+            {
+                admin = await _userService.GetUserByEmail(request.Email);
+                if (admin == null || admin.Role.RoleName != "Super Admin") { return BadRequest("Super admin not found"); }
+            }
+            var admins = _userService.GetAllByRole("Admin");
+            return Ok(admins);
         }
     }
 }

@@ -17,6 +17,7 @@ namespace BLL.Interfaces
         Task<User> UpdateUser(User user);
         void RemoveUser(User user);
         Task<List<UserDto>> GetAllByCompanyId(int companyID);
+        Task<List<UserDto>> GetAllByRole(string role);
     }
 }
 

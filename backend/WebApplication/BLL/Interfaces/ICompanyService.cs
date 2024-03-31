@@ -10,5 +10,10 @@ namespace BLL.Interfaces
     public interface ICompanyService
     {
         Task<CompanyDto> GetCompanyByID(int id);
+        Task<List<CompanyDto>> GetAll();
+        Task<CompanyDto> GetCompanyByName(string name);
+        void RemoveCompany(CompanyDto request);
+        Task<CompanyDto> AddCompany(CompanyDto request);
+        void UpdateCompany(CompanyDto request);
     }
 }
