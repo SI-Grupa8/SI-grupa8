@@ -26,7 +26,7 @@ jobs:
         cd ./frontend
         npm install 
         npm install -g @angular/cli 
-        ng build 
+        ng build --configuration production
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
