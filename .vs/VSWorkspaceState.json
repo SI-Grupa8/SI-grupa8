@@ -1,10 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\backend",
-    "\\backend\\WebApplication",
-    "\\backend\\WebApplication\\API"
+    ""
   ],
-  "SelectedNode": "\\backend\\WebApplication\\API\\Program.cs",
+  "SelectedNode": "\\WebApplication.sln",
   "PreviewInSolutionExplorer": false
 }

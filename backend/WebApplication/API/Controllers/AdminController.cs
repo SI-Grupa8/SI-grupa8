@@ -1,5 +1,6 @@
 ﻿using BLL.DTOs;
 using BLL.Interfaces;
+using BLL.Services;
 using DAL.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -35,7 +36,7 @@ namespace API.Controllers
                 if (admin == null || admin.Role.RoleName!="Admin") { return BadRequest("Admin not found"); }
             }
 
-            var company = new Company{ AdminID=admin.UserID };
+            var company = _companyService.GetCompanyByID(admin.UserID).Result;
             if(company == null) { return BadRequest("Company not found"); }
             var users = await _userService.GetAllByCompanyId(company.CompanyID);
             return users;
@@ -51,7 +52,7 @@ namespace API.Controllers
                 admin = await _userService.GetUserByEmail(request.adminEmail);
                 if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
             }
-            var company = new Company { AdminID = admin.UserID };
+            var company = _companyService.GetCompanyByID(admin.UserID).Result;
             if (company == null) { return BadRequest("Company not found"); }
             var users = await _userService.GetAllByCompanyId(company.CompanyID);
             var userDto = users.FirstOrDefault(u => u.Email == request.Email && u.PhoneNumber == request.PhoneNumber);
@@ -70,11 +71,11 @@ namespace API.Controllers
                 admin = await _userService.GetUserByEmail(request.adminEmail);
                 if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
             }
-            var company = new Company { AdminID = admin.UserID };
+            var company = _companyService.GetCompanyByID(admin.UserID).Result;
             if (company == null) { return BadRequest("Company not found"); }
             if (request.Email.IsNullOrEmpty() && request.PhoneNumber.IsNullOrEmpty())
                 return BadRequest("Cannot add auser without an email or a phone number!");
-            var user = new UserRegisterDto { Email = request.Email, Name=request.Name, Surname = request.Surname, Password = request.Password, CompanyID=company.CompanyID};
+            var user = new UserRegisterDto { Email = request.Email, Name = request.Name, Surname = request.Surname, Password = request.Password, CompanyID = company.CompanyID };
             var userDto = await _userService.AddUser(user);
             return Ok(userDto);
         }
@@ -88,7 +89,7 @@ namespace API.Controllers
                 admin = await _userService.GetUserByEmail(request.adminEmail);
                 if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
             }
-            var company = new Company { AdminID = admin.UserID };
+            var company = _companyService.GetCompanyByID(admin.UserID).Result;
             if (company == null) { return BadRequest("Company not found"); }
             var users = await _userService.GetAllByCompanyId(company.CompanyID);
             var userDto = users.FirstOrDefault(u => u.Email == request.Email && u.PhoneNumber == request.PhoneNumber);
@@ -115,7 +116,7 @@ namespace API.Controllers
                 if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
             }
 
-            var company = new Company { AdminID = admin.UserID };
+            var company = _companyService.GetCompanyByID(admin.UserID).Result;
             if (company == null) { return BadRequest("Company not found"); }
             var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
             return devices;
@@ -131,7 +132,7 @@ namespace API.Controllers
                 admin = await _userService.GetUserByEmail(request.adminEmail);
                 if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
             }
-            var company = new Company { AdminID = admin.UserID };
+            var company = _companyService.GetCompanyByID(admin.UserID).Result;
             if (company == null) { return BadRequest("Company not found"); }
             var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
             var deviceDto = devices.FirstOrDefault(u => u.Reference==request.Reference);
@@ -149,7 +150,7 @@ namespace API.Controllers
                 admin = await _userService.GetUserByEmail(request.adminEmail);
                 if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
             }
-            var company = new Company { AdminID = admin.UserID };
+            var company = _companyService.GetCompanyByID(admin.UserID).Result;
             if (company == null) { return BadRequest("Company not found"); }
             var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
             var deviceDto = devices.FirstOrDefault(u => u.Reference == request.Reference);
@@ -167,7 +168,7 @@ namespace API.Controllers
                 admin = await _userService.GetUserByEmail(request.adminEmail);
                 if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
             }
-            var company = new Company { AdminID = admin.UserID };
+            var company = _companyService.GetCompanyByID(admin.UserID).Result;
             if (company == null) { return BadRequest("Company not found"); }
             var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
             var deviceDto = devices.FirstOrDefault(u => u.Reference == request.Reference);
