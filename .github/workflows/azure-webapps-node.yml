@@ -23,6 +23,7 @@ jobs:
     - name: npm install, build, and test
       run: |
         npm install ./frontend
+        npm install -g @angular/cli 
         npm run build ./frontend --if-present
         npm run test ./frontend --if-present
 
