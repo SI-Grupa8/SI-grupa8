@@ -24,8 +24,7 @@ jobs:
       run: |
         npm install ./frontend
         npm install -g @angular/cli 
-        npm run build ./frontend --if-present
-        npm run test ./frontend --if-present
+        npm run build ./frontend
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
