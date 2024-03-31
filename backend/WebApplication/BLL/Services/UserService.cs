@@ -236,7 +236,6 @@ namespace BLL.Services
             var token = new JwtSecurityToken(
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(30),
-                //expires: DateTime.Now.AddSeconds(10),
                 signingCredentials: credentials
                 );
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
@@ -272,6 +271,12 @@ namespace BLL.Services
             return cookieOptions;
         }
 
+        public async Task<UserDto> GetUser(int userID)
+        {
+            var user = await _userRepository.GetById(userID);
+
+            return _mapper.Map<UserDto>(user);
+        }
     }
 }
 

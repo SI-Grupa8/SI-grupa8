@@ -20,7 +20,7 @@ using QRCoder;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Configuration;
+using API.JWTHelpers;
 
 namespace API.Controllers
 {
@@ -135,11 +135,12 @@ namespace API.Controllers
         }
 
         [HttpPost("enable-tfa")]
-        //[Authorize(Roles="User")]
+        [Authorize(Roles="User")]
         public async Task<ActionResult<object>> EnableTwoFactorAuthentication()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            return Ok(await _userService.EnableTwoFactorAuthentication(int.Parse(userId)));
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
+            var userId = JWTHelper.GetUserIDFromClaims(token);
+            return Ok(await _userService.EnableTwoFactorAuthentication(userId));
 
         }
 
