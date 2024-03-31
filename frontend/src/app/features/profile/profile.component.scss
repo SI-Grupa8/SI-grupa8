@@ -55,6 +55,21 @@
                 display: flex;
                 flex-direction: column;
                 max-width: 500px;
+                .twofa-button {
+                  display: flex;
+                  height: 30px;
+                  margin-top: 10px;
+                  border-radius: 6px;
+                  border: 1px solid lightblue;
+                  cursor: pointer;
+                }
+                #setup-twofa {}
+                #remove-twofa {
+                  //display: none;
+                }
+                .disappear {
+                  display: none;
+                }
             }
           
             .change-button{

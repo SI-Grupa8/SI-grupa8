@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RegisterRequest } from '../../models/register-request';
 import { AuthResponse } from '../../models/auth-response';
@@ -39,9 +39,13 @@ export class AuthService {
     (`${this.apiUrl}/verify`, verificationRequest);
   }
 
-  enable2fa(twoFaRequest: TwoFaRequest) {
-    return this.http.post<TwoFaResponse>
-    (`${this.apiUrl}/enable-tfa`, twoFaRequest);
+  enable2fa() {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<{}>
+    (`${this.apiUrl}/enable-tfa`,{}, { headers });
   }
   disable2fa(twoFaRequest: TwoFaRequest) {
     return this.http.post<string>
