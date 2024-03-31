@@ -7,10 +7,10 @@
     <div class="forma">
         <form  (ngSubmit)="addNewUser()">
             <div class="container-flex">
-                <input name="firstname" [(ngModel)]="registerRequest.name" ngModel type="text" placeholder="First name" [ngModelOptions]="{standalone: true}" >
-                <input name="lastname" [(ngModel)]="registerRequest.surname" type="text" placeholder="Last name" [ngModelOptions]="{standalone: true}">
-                <input name="usermail" [(ngModel)]="registerRequest.email" type="text" placeholder="E-mail or phone number" [ngModelOptions]="{standalone: true}" >
-                <input name="pass" [(ngModel)]="registerRequest.password" type="password" placeholder="Password" [ngModelOptions]="{standalone: true}">
+                <input name="firstname" [(ngModel)]="addingUser.name" ngModel type="text" placeholder="First name" [ngModelOptions]="{standalone: true}" >
+                <input name="lastname" [(ngModel)]="addingUser.surname" type="text" placeholder="Last name" [ngModelOptions]="{standalone: true}">
+                <input name="usermail" [(ngModel)]="addingUser.email" type="text" placeholder="E-mail or phone number" [ngModelOptions]="{standalone: true}" >
+                <input name="pass" [(ngModel)]="addingUser.password" type="password" placeholder="Password" [ngModelOptions]="{standalone: true}">
                 <button type="submit" style="margin-bottom: 25px;">ADD USER</button>
             </div>
         </form>
