@@ -25,6 +25,7 @@ namespace API.Controllers
 		{
             string token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
 			var id = JWTHelper.GetUserIDFromClaims(token);
+
             var user = await _userService.GetUser(id);
 
 			return Ok(user);
