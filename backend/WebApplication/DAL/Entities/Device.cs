@@ -12,7 +12,7 @@ namespace DAL.Entities
         public required string Reference { get; set; }
         public required string DeviceName { get; set; }
         public int CompanyID { get; set; }
-        public Company CompanyName { get; set; }
+        public Company? Company { get; set; }
         public string XCoordinate { get; set; } = string.Empty;
         public string YCoordinate { get; set; } = string.Empty;
     }

@@ -1,4 +1,5 @@
 ﻿using BLL.DTOs;
+using DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,11 @@ namespace BLL.Interfaces
 {
     public interface ICompanyService
     {
-        Task<CompanyDto> GetCompanyByID(int id);
+        Task<Company> GetCompanyByID(int id);
         Task<List<CompanyDto>> GetAll();
         Task<CompanyDto> GetCompanyByName(string name);
-        void RemoveCompany(CompanyDto request);
+        Task RemoveCompany(Company company);
         Task<CompanyDto> AddCompany(CompanyDto request);
-        void UpdateCompany(CompanyDto request);
+        Task UpdateCompany(Company company);
     }
 }

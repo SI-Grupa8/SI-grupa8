@@ -23,11 +23,11 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<DeviceDto> GetDeviceByID(int id)
+        public async Task<Device> GetDeviceByID(int id)
         {
             var device = await _deviceRepository.GetById(id);
 
-            return _mapper.Map<DeviceDto>(device);
+            return device;
         }
 
         public async Task<List<DeviceDto>> GetAllByCompanyId(int companyID)
@@ -44,16 +44,14 @@ namespace BLL.Services
             return request;
         }
 
-        public async void RemoveDevice(DeviceDto request)
+        public async Task RemoveDevice(Device device)
         {
-            var device = _mapper.Map<Device>(request);
             _deviceRepository.Remove(device);
             await _deviceRepository.SaveChangesAsync();
         }
 
-        public async void UpdateDevice(DeviceDto request)
+        public async Task UpdateDevice(Device device)
         {
-            var device = _mapper.Map<Device>(request);
             _deviceRepository.Update(device);
             await _deviceRepository.SaveChangesAsync();
         }

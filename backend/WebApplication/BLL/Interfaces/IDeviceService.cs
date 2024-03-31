@@ -10,10 +10,10 @@ namespace BLL.Interfaces
 {
     public interface IDeviceService
     {
-        Task<DeviceDto> GetDeviceByID(int id);
+        Task<Device> GetDeviceByID(int id);
         Task<List<DeviceDto>> GetAllByCompanyId(int companyID);
         Task<DeviceDto> AddDevice(DeviceDto deviceDto);
-        void UpdateDevice(DeviceDto request);
-        void RemoveDevice(DeviceDto request);
+        Task UpdateDevice(Device device);
+        Task RemoveDevice(Device device);
     }
 }

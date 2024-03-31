@@ -23,11 +23,11 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<CompanyDto> GetCompanyByID(int id)
+        public async Task<Company> GetCompanyByID(int id)
         {
             var company = await _companyRepository.GetById(id);
 
-            return _mapper.Map<CompanyDto>(company);
+            return company;
         }
 
         public async Task<List<CompanyDto>> GetAll()
@@ -42,9 +42,8 @@ namespace BLL.Services
 
             return _mapper.Map<CompanyDto>(company);
         }
-        public async void RemoveCompany(CompanyDto request)
+        public async Task RemoveCompany(Company company)
         {
-            var company = _mapper.Map<Company>(request);
             _companyRepository.Remove(company);
             await _companyRepository.SaveChangesAsync();
         }
@@ -56,9 +55,8 @@ namespace BLL.Services
             return request;
         }
 
-        public async void UpdateCompany(CompanyDto request)
+        public async Task UpdateCompany(Company company)
         {
-            var company = _mapper.Map<Company>(request);
             _companyRepository.Update(company);
             await _companyRepository.SaveChangesAsync();
         }

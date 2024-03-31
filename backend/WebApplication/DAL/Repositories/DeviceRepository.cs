@@ -20,7 +20,10 @@ namespace DAL.Repositories
 
         public async Task<List<Device>> GetAllByCompanyId(int companyID)
         {
-            return await _context.Devices.Where(x => x.CompanyID == companyID).ToListAsync();
+            return await _context.Devices
+                .Where(x => x.CompanyID == companyID)
+                .Include(d => d.Company) 
+                .ToListAsync();
         }
     }
 }

@@ -8,7 +8,8 @@ namespace BLL.DTOs
 {
     public class SuperAdminDto
     {
-        public required string superAdminEmail { get; set; }
+        public required int SuperAdminId { get; set; }
         public string CompanyName { get; set; } = string.Empty;
+        public int AdminId { get; set;}
     }
 }

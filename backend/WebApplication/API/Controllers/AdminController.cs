@@ -26,7 +26,7 @@ namespace API.Controllers
             _companyService = companyService;
         }
 
-        [HttpGet("get-company-users")]
+        [HttpGet("get-company-users/{adminId}")]
         public async Task<ActionResult<List<UserDto>>> GetAllUsers(int adminId)
         {
             var admin = await _userService.GetUserById(adminId);
@@ -47,7 +47,7 @@ namespace API.Controllers
         }
 
 
-        [HttpDelete("remove-user")]
+        [HttpDelete("remove-user/{userId}")]
         public async Task<ActionResult> RemoveUser(int adminId, int userId)
         {
             var admin = await _userService.GetUserById(adminId);
@@ -160,150 +160,215 @@ namespace API.Controllers
 
 
 
-        [HttpPost("get-company-devices")]
-        public async Task<ActionResult<List<DeviceDto>>> GetAllDevices(AdminCRUDDeviceDto request)
+        [HttpGet("get-company-devices/{adminId}")]
+        public async Task<ActionResult<List<DeviceDto>>> GetAllDevices(int adminId)
         {
-            var admin = new User();
-            if (!request.adminEmail.IsNullOrEmpty())
+            var admin = await _userService.GetUserById(adminId);
+            if (admin == null || admin.Role?.RoleName != "Admin")
             {
-                admin = await _userService.GetUserByEmail(request.adminEmail);
-                if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
+                return BadRequest("Admin not found or not authorized");
             }
 
-            var company = _companyService.GetCompanyByID(admin.UserID).Result;
-            if (company == null) { return BadRequest("Company not found"); }
+            var company = await _companyService.GetCompanyByID((int)admin.CompanyID);
+            if (company == null)
+            {
+                return BadRequest("Company not found");
+            }
+
             var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
             return devices;
         }
 
-        [HttpPost("remove-device")]
-        public async Task<ActionResult> RemoveDevice(AdminCRUDDeviceDto request)
+        [HttpDelete("remove-device/{deviceId}")]
+        public async Task<ActionResult> RemoveDevice(int adminId, int deviceId)
         {
 
-            var admin = new User();
-            if (!request.adminEmail.IsNullOrEmpty())
+            var admin = await _userService.GetUserById(adminId);
+            if (admin == null || admin.Role?.RoleName != "Admin")
             {
-                admin = await _userService.GetUserByEmail(request.adminEmail);
-                if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
+                return BadRequest("Admin not found or not authorized");
             }
-            var company = _companyService.GetCompanyByID(admin.UserID).Result;
-            if (company == null) { return BadRequest("Company not found"); }
-            var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
-            var deviceDto = devices.FirstOrDefault(u => u.Reference==request.Reference);
-            _deviceService.RemoveDevice(deviceDto);
+
+            var company = await _companyService.GetCompanyByID((int)admin.CompanyID);
+            if (company == null)
+            {
+                return BadRequest("Company not found");
+            }
+
+            var device = await _deviceService.GetDeviceByID(deviceId);
+            if (device == null || device.CompanyID != company.CompanyID)
+            {
+                return NotFound("Device not found or does not belong to the company");
+            }
+
+            await _deviceService.RemoveDevice(device);
             return Ok("Device successfully removed.");
         }
 
+
         [HttpPost("add-device")]
-        public async Task<ActionResult<DeviceDto>> AddDevice(AdminCRUDDeviceDto request)
+        public async Task<ActionResult<DeviceDto>> AddDevice( AdminCRUDDeviceDto request)
         {
 
-            var admin = new User();
-            if (!request.adminEmail.IsNullOrEmpty())
+            var admin = await _userService.GetUserById(request.AdminId);
+            if (admin == null || admin.Role?.RoleName != "Admin")
             {
-                admin = await _userService.GetUserByEmail(request.adminEmail);
-                if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
+                return BadRequest("Admin not found or not authorized");
             }
-            var company = _companyService.GetCompanyByID(admin.UserID).Result;
-            if (company == null) { return BadRequest("Company not found"); }
-            var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
-            var deviceDto = devices.FirstOrDefault(u => u.Reference == request.Reference);
-            var device = _deviceService.AddDevice(deviceDto);
+
+            var company = await _companyService.GetCompanyByID((int)admin.CompanyID);
+            if (company == null)
+            {
+                return BadRequest("Company not found");
+            }
+
+            var deviceDto = new DeviceDto
+            {
+                Reference = request.Reference,
+                DeviceName = request.DeviceName,
+                CompanyID = company.CompanyID
+            };
+
+            var device = await _deviceService.AddDevice(deviceDto);
             return Ok(device);
         }
 
-        [HttpPost("update-device")]
-        public async Task<ActionResult> UpdateDevice(AdminCRUDDeviceDto request)
+        [HttpPut("update-device/{deviceId}")]
+        public async Task<ActionResult> UpdateDevice(int deviceId, AdminCRUDDeviceDto request)
         {
-
-            var admin = new User();
-            if (!request.adminEmail.IsNullOrEmpty())
+            var admin = await _userService.GetUserById(request.AdminId);
+            if (admin == null || admin.Role?.RoleName != "Admin")
             {
-                admin = await _userService.GetUserByEmail(request.adminEmail);
-                if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
+                return BadRequest("Admin not found or not authorized");
             }
-            var company = _companyService.GetCompanyByID(admin.UserID).Result;
-            if (company == null) { return BadRequest("Company not found"); }
-            var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
-            var deviceDto = devices.FirstOrDefault(u => u.Reference == request.Reference);
-            if (request.DeviceName != null) deviceDto.DeviceName = request.DeviceName;
-            if (request.Reference != null) deviceDto.Reference = request.Reference;
-            _deviceService.UpdateDevice(deviceDto);
+
+            var company = await _companyService.GetCompanyByID((int)admin.CompanyID);
+            if (company == null)
+            {
+                return BadRequest("Company not found");
+            }
+
+            var device = await _deviceService.GetDeviceByID(deviceId);
+            if (device == null || device.CompanyID != company.CompanyID)
+            {
+                return NotFound("Device not found or does not belong to the company");
+            }
+
+            if (request.DeviceName != null)
+            {
+                device.DeviceName = request.DeviceName;
+            }
+            if (request.Reference != null)
+            {
+                device.Reference = request.Reference;
+            }
+
+            await _deviceService.UpdateDevice(device);
             return Ok("Device successfully updated.");
         }
 
-        [HttpPost("get-all-companies")]
-        public async Task<ActionResult<List<DeviceDto>>> GetAllCompanies(SuperAdminDto request)
+
+
+        [HttpGet("get-all-companies/{superAdminId}")]
+        public async Task<ActionResult<List<DeviceDto>>> GetAllCompanies(int superAdminId)
         {
-            var admin = new User();
-            if (!request.superAdminEmail.IsNullOrEmpty())
+            if (superAdminId <= 0)
             {
-                admin = await _userService.GetUserByEmail(request.superAdminEmail);
-                if (admin == null || admin.Role.RoleName != "Super Admin") { return BadRequest("Only super admin allowed."); }
+                return BadRequest("Invalid super admin ID.");
             }
-            var companies = _companyService.GetAll().Result;
+
+            var superAdmin = await _userService.GetUserById(superAdminId);
+            if (superAdmin == null || superAdmin.Role?.RoleName != "Super Admin")
+            {
+                return BadRequest("Only super admin allowed.");
+            }
+
+            var companies = await _companyService.GetAll();
             return Ok(companies);
         }
 
-        [HttpPost("remove-company")]
-        public async Task<ActionResult> RemoveCompany(SuperAdminDto request)
+        [HttpDelete("remove-company/{companyId}")]
+        public async Task<ActionResult> RemoveCompany(int adminId, int companyId)
         {
-
-            var admin = new User();
-            if (!request.superAdminEmail.IsNullOrEmpty())
+            var superAdmin = await _userService.GetUserById(adminId);
+            if (superAdmin == null || superAdmin.Role?.RoleName != "Super Admin")
             {
-                admin = await _userService.GetUserByEmail(request.superAdminEmail);
-                if (admin == null || admin.Role.RoleName != "Super Admin") { return BadRequest("Only super admin allowed."); }
+                return BadRequest("Only super admin allowed.");
             }
-            var company = _companyService.GetCompanyByName(request.CompanyName).Result;
-            if (company == null) { return BadRequest("Company not found"); }
-            _companyService.RemoveCompany(company);
+
+            var company = await _companyService.GetCompanyByID(companyId);
+            if (company == null)
+            {
+                return BadRequest("Company not found");
+            }
+
+            await _companyService.RemoveCompany(company);
             return Ok("Company successfully removed.");
         }
+
 
         [HttpPost("add-company")]
         public async Task<ActionResult<CompanyDto>> AddCompany(SuperAdminDto request)
         {
-
-            var admin = new User();
-            if (!request.superAdminEmail.IsNullOrEmpty())
+            var superAdmin = await _userService.GetUserById(request.SuperAdminId);
+            if (superAdmin == null || superAdmin.Role?.RoleName != "Super Admin")
             {
-                admin = await _userService.GetUserByEmail(request.superAdminEmail);
-                if (admin == null || admin.Role.RoleName != "Super Admin") { return BadRequest("Only super admin allowed."); }
+                return BadRequest("Only super admin allowed.");
             }
-            var companyDto=new CompanyDto{ CompanyName= request.CompanyName };
-            var company = _companyService.AddCompany(companyDto).Result;
+
+            var adminUser = await _userService.GetUserById(request.AdminId);
+            if (adminUser == null || adminUser.Role?.RoleName != "Admin")
+            {
+                return BadRequest("The specified admin user is not valid or does not have the role of Admin.");
+            }
+
+            var companyDto = new CompanyDto { CompanyName = request.CompanyName, AdminID = request.AdminId };
+            var company = await _companyService.AddCompany(companyDto);
+
             return Ok(company);
         }
 
-        [HttpPost("update-company")]
-        public async Task<ActionResult> UpdateCompany(SuperAdminDto request)
+
+        [HttpPut("update-company/{companyId}")]
+        public async Task<ActionResult> UpdateCompany(int companyId, SuperAdminDto request)
         {
-            var admin = new User();
-            if (!request.superAdminEmail.IsNullOrEmpty())
+            var admin = await _userService.GetUserById(request.SuperAdminId);
+            if (admin == null || admin.Role?.RoleName != "Super Admin")
             {
-                admin = await _userService.GetUserByEmail(request.superAdminEmail);
-                if (admin == null || admin.Role.RoleName != "Super Admin") { return BadRequest("Only super admin allowed."); }
+                return BadRequest("Only super admin allowed.");
             }
-            var company = _companyService.GetCompanyByName(request.CompanyName).Result;
-            if (company!= null) { 
+
+            var company = await _companyService.GetCompanyByID(companyId);
+            if (company == null)
+            {
+                return NotFound("Company not found.");
+            }
+
+            if (!string.IsNullOrEmpty(request.CompanyName))
+            {
                 company.CompanyName = request.CompanyName;
-                company = _companyService.GetCompanyByName(request.CompanyName).Result;
-                _companyService.UpdateCompany(company);
             }
+
+            if (request.AdminId != null)
+            {
+                company.AdminID = (int)request.AdminId;
+            }
+
+            await _companyService.UpdateCompany(company);
             return Ok("Company updated");
         }
 
-        [HttpPost("get-admins")]
-        public async Task<ActionResult<List<UserDto>>> GetAllAdmins(UserPhoneOrMail request)
+
+        [HttpGet("get-admins/{superAdminId}")]
+        public async Task<ActionResult<List<UserDto>>> GetAllAdmins(int superAdminId)
         {
-            var admin = new User();
-            if (!request.Email.IsNullOrEmpty())
+            var admin = await _userService.GetUserById(superAdminId);
+            if (admin == null || admin.Role?.RoleName != "Super Admin")
             {
-                admin = await _userService.GetUserByEmail(request.Email);
-                if (admin == null || admin.Role.RoleName != "Super Admin") { return BadRequest("Super admin not found"); }
+                return BadRequest("Super admin not found or not authorized");
             }
-            var admins = _userService.GetAllByRole("Admin");
+
+            var admins = await _userService.GetAllByRole("Admin");
             return Ok(admins);
         }
     }
