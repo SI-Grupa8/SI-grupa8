@@ -15,6 +15,8 @@ namespace BLL.Interfaces
         Task RefreshUserToken(int userID, RefreshTokenDto refreshTokenDto);
         Task<User> GetByToken(string token);
         Task<User> UpdateUser(User user);
+        void RemoveUser(User user);
+        Task<List<UserDto>> GetAllByCompanyId(int companyID);
     }
 }
 

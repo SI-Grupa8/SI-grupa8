@@ -9,5 +9,6 @@ namespace DAL.Interfaces
 {
     public interface ICompanyRepository : IRepository<Company>
     {
+        Task<Company> GetByAdminId(int id);
     }
 }

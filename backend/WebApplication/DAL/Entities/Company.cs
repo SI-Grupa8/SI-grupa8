@@ -9,7 +9,7 @@ namespace DAL.Entities
     public class Company
     {
         public int CompanyID { get; set; }
-        public required string CompanyName { get; set; } 
+        public string CompanyName { get; set; } 
         public required int AdminID { get; set; } 
     }
 }

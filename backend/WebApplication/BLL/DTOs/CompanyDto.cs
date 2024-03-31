@@ -8,7 +8,8 @@ namespace BLL.DTOs
 {
     public class CompanyDto
     {
-        public required string CompanyName { get; set; }
+        public int CompanyID { get; set; }
+        public string CompanyName { get; set; }
         public required int AdminID { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DAL.Entities;
 using DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,11 @@ namespace DAL.Repositories
         public CompanyRepository(AppDbContext context) : base(context)
         {
             _context = context;
+        }
+
+        public async Task<Company> GetByAdminId(int id)
+        {
+            return await _context.Companies.FirstAsync(x => x.AdminID == id);
         }
     }
 }
