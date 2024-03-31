@@ -6,7 +6,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: vehicle-tracking-system
-  AZURE_WEBAPP_PACKAGE_PATH: .
+  AZURE_WEBAPP_PACKAGE_PATH: ./frontend/dist/frontend
   NODE_VERSION: '20.x'           
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
       run: |
         npm install ./frontend
         npm install -g @angular/cli 
-        npm run build ./frontend
+        npm build ./frontend
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
