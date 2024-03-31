@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: vehicle-tracking-system
+  AZURE_WEBAPP_NAME: vehicle-tracking-system-dev
   AZURE_WEBAPP_PACKAGE_PATH: frontend/dist
   NODE_VERSION: '20.x'           
 
