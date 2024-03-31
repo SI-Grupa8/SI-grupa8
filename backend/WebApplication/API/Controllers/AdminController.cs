@@ -105,5 +105,76 @@ namespace API.Controllers
             return Ok("User successfully updated.");
         }
 
+        [HttpPost("get-company-devices")]
+        public async Task<ActionResult<List<DeviceDto>>> GetAllDevices(AdminCRUDDeviceDto request)
+        {
+            var admin = new User();
+            if (!request.adminEmail.IsNullOrEmpty())
+            {
+                admin = await _userService.GetUserByEmail(request.adminEmail);
+                if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
+            }
+
+            var company = new Company { AdminID = admin.UserID };
+            if (company == null) { return BadRequest("Company not found"); }
+            var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
+            return devices;
+        }
+
+        [HttpPost("remove-device")]
+        public async Task<ActionResult> RemoveDevice(AdminCRUDDeviceDto request)
+        {
+
+            var admin = new User();
+            if (!request.adminEmail.IsNullOrEmpty())
+            {
+                admin = await _userService.GetUserByEmail(request.adminEmail);
+                if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
+            }
+            var company = new Company { AdminID = admin.UserID };
+            if (company == null) { return BadRequest("Company not found"); }
+            var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
+            var deviceDto = devices.FirstOrDefault(u => u.Reference==request.Reference);
+            _deviceService.RemoveDevice(deviceDto);
+            return Ok("Device successfully removed.");
+        }
+
+        [HttpPost("add-device")]
+        public async Task<ActionResult> AddDevice(AdminCRUDDeviceDto request)
+        {
+
+            var admin = new User();
+            if (!request.adminEmail.IsNullOrEmpty())
+            {
+                admin = await _userService.GetUserByEmail(request.adminEmail);
+                if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
+            }
+            var company = new Company { AdminID = admin.UserID };
+            if (company == null) { return BadRequest("Company not found"); }
+            var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
+            var deviceDto = devices.FirstOrDefault(u => u.Reference == request.Reference);
+            _deviceService.AddDevice(deviceDto);
+            return Ok("Device successfully removed.");
+        }
+
+        [HttpPost("update-device")]
+        public async Task<ActionResult> UpdateDevice(AdminCRUDDeviceDto request)
+        {
+
+            var admin = new User();
+            if (!request.adminEmail.IsNullOrEmpty())
+            {
+                admin = await _userService.GetUserByEmail(request.adminEmail);
+                if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
+            }
+            var company = new Company { AdminID = admin.UserID };
+            if (company == null) { return BadRequest("Company not found"); }
+            var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
+            var deviceDto = devices.FirstOrDefault(u => u.Reference == request.Reference);
+            if (request.DeviceName != null) deviceDto.DeviceName = request.DeviceName;
+            if (request.Reference != null) deviceDto.Reference = request.Reference;
+            _deviceService.UpdateDevice(deviceDto);
+            return Ok("Device successfully updated.");
+        }
     }
 }

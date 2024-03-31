@@ -9,5 +9,6 @@ namespace DAL.Interfaces
 {
     public interface IDeviceRepository : IRepository<Device>
     {
+        Task<List<Device>> GetAllByCompanyId(int companyID);
     }
 }
