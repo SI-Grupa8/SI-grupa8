@@ -22,6 +22,60 @@ namespace DAL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DAL.Entities.Company", b =>
+                {
+                    b.Property<int>("CompanyID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CompanyID"));
+
+                    b.Property<int>("AdminID")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("CompanyID");
+
+                    b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Device", b =>
+                {
+                    b.Property<int>("DeviceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DeviceId"));
+
+                    b.Property<int>("CompanyID")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("DeviceName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("XCoordinate")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("YCoordinate")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("DeviceId");
+
+                    b.HasIndex("CompanyID");
+
+                    b.ToTable("Devices");
+                });
+
             modelBuilder.Entity("DAL.Entities.Role", b =>
                 {
                     b.Property<int>("RoleID")
@@ -46,6 +100,9 @@ namespace DAL.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserID"));
+
+                    b.Property<int>("CompanyID")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -94,18 +151,39 @@ namespace DAL.Migrations
 
                     b.HasKey("UserID");
 
+                    b.HasIndex("CompanyID");
+
                     b.HasIndex("RoleID");
 
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("DAL.Entities.Device", b =>
+                {
+                    b.HasOne("DAL.Entities.Company", "CompanyName")
+                        .WithMany()
+                        .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CompanyName");
+                });
+
             modelBuilder.Entity("DAL.Entities.User", b =>
                 {
+                    b.HasOne("DAL.Entities.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DAL.Entities.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Company");
 
                     b.Navigation("Role");
                 });

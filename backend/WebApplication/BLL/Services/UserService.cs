@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.ComponentModel.Design;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,6 +9,7 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
+using DAL.Repositories;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -112,9 +114,9 @@ namespace BLL.Services
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
-                
                 PasswordSalt = [],
-                RoleID = 0
+                RoleID = 0,
+                CompanyID = userRegisterDto.CompanyID
             };
             _userRepository.Add(user);
 
@@ -276,6 +278,23 @@ namespace BLL.Services
             var user = await _userRepository.GetById(userID);
 
             return _mapper.Map<UserDto>(user);
+            
+        public async Task<List<UserDto>> GetAllByCompanyId(int companyID)
+        {
+            var users = await _userRepository.GetAllByCompanyId(companyID);
+            return _mapper.Map<List<UserDto>>(users);
+        }
+
+        public async void RemoveUser(User user)
+        {
+            _userRepository.Remove(user);
+            await _userRepository.SaveChangesAsync();
+        }
+
+        public async Task<List<UserDto>> GetAllByRole(string role)
+        {
+            var users = await _userRepository.GetAllByRole(role);
+            return _mapper.Map<List<UserDto>>(users);
         }
     }
 }

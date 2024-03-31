@@ -18,6 +18,9 @@ namespace BLL.Interfaces
         Task<(CookieOptions cookiesOption, string refreshToken, object data)> UserLogIn(UserLogIn userRequest);
         Task<object> EnableTwoFactorAuthentication(int userID);
         Task<UserDto> GetUser(int userID);
+        void RemoveUser(User user);
+        Task<List<UserDto>> GetAllByCompanyId(int companyID);
+        Task<List<UserDto>> GetAllByRole(string role);
     }
 }
 
