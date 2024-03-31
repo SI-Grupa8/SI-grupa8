@@ -6,7 +6,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: vehicle-tracking-system
-  AZURE_WEBAPP_PACKAGE_PATH: ./frontend/dist/frontend
+  AZURE_WEBAPP_PACKAGE_PATH: ./dist/frontend
   NODE_VERSION: '20.x'           
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: node-app
-        path: ./frontend
+        path: ./frontend/dist
 
   deploy:
     runs-on: ubuntu-latest
