@@ -4,7 +4,9 @@ import { FormBuilder,FormControl,FormGroup,Validators, ReactiveFormsModule, Form
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/http/auth.service';
 import { RegisterRequest } from '../../core/models/register-request';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthResponse } from '../../core/models/auth-response';
+import { AddNewUserComponent } from './add-new-user/add-new-user.component';
 
 function emailOrPhoneValidator(control: FormControl) {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -26,39 +28,23 @@ function emailOrPhoneValidator(control: FormControl) {
 
 
 export class UsersComponent {
+  modalVisible: boolean = false;
 
-  addingUser: RegisterRequest = {};
-  authResponse: AuthResponse = {};
-  message = '';
-  registerForm: FormGroup;
-  constructor(private f: FormBuilder, private router: Router, private authService: AuthService){
-    this.registerForm = this.f.group({
-      usermail: ['', [Validators.required, emailOrPhoneValidator]],
-      pass:['', [Validators.required]]
+  constructor(public dialog: MatDialog) {}
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(AddNewUserComponent, {
+      disableClose: true 
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
     });
   }
-
-  addNewUser(): void {
-    this.authService.register(this.addingUser).subscribe({
-      next: (response) => {
-        if(response) {
-          this.authResponse = response;
-        }
-        else {
-          this.message= 'Successfully added user!';
-        }
-      }
-    })
-  }
-
-  edit() {
+  edit(){
 
   }
-
-  delete() {
-
+  delete(){
+    
   }
-  
-  
-
 }
