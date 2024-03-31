@@ -99,74 +99,35 @@ namespace API.Controllers
         */
 
         [HttpPost("login/tfa")]
-        public async Task<ActionResult<string>> LoginTfa(UserLoginTfa request)
+        [Authorize(Roles = "User")]
+        public async Task<ActionResult> LoginTfa(UserLoginTfa request)
         {
-            List<User> users = await _userService.GetAll();
-            User user = new User();
-            if (!request.Email.IsNullOrEmpty())
-            {
-                user = users.FirstOrDefault(u => u.Email == request.Email);
-                if (user == null) { return BadRequest("User not found"); }
-            }
-            //Look for a user by phone number
-            else if (!request.PhoneNumber.IsNullOrEmpty())
-            {
-                user = users.FirstOrDefault(u => u.PhoneNumber == request.PhoneNumber);
-                if (user == null) { return BadRequest("User not found"); }
-            }
-
-            if (user == null) return BadRequest("User not found");
-
-            if (user.TwoFactorEnabled)
-            {
-                var twoFactorAuthenticator = new TwoFactorAuthenticator();
-                bool isValid = twoFactorAuthenticator.ValidateTwoFactorPIN(user.TwoFactorKey, request.TwoFactorCodeSix);
-                if (!isValid)
-                {
-                    return BadRequest("Invalid 2FA code.");
-                }
-            }
-            string token = CreateToken(user);
-            
-            return Ok(new
-            {
-                token = token
-            }) ;
+            return Ok(await _userService.ConfirmTfa(request));
         }
 
-        [HttpPost("enable-tfa")]
+        [HttpPost("get-tfa")] // vraca tfa samo
         [Authorize(Roles="User")]
         public async Task<ActionResult<object>> EnableTwoFactorAuthentication()
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
             var userId = JWTHelper.GetUserIDFromClaims(token);
             return Ok(await _userService.EnableTwoFactorAuthentication(userId));
+        }
 
+        [HttpPost("store-tfa")] // ako se poklope enabled u bazu
+        [Authorize(Roles = "User")]
+        public async Task<ActionResult<UserDto>> StoreTwoFactorAuthentication(UserLoginTfa request)
+        {
+            return Ok(await _userService.ConfirmTfa(request));
         }
 
         [HttpPost("disable-tfa")]
-        //[Authorize]
-        public async Task<ActionResult> DisableTwoFactorAuthentication(UserPhoneOrMail request)
+        [Authorize(Roles = "User")]
+        public async Task<ActionResult> DisableTwoFactorAuthentication()
         {
-            List<User> users = await _userService.GetAll();
-            User user = new User();
-            if (!request.Email.IsNullOrEmpty())
-            {
-                user = users.FirstOrDefault(u => u.Email == request.Email);
-                if (user == null) { return BadRequest("User not found"); }
-            }
-            //Look for a user by phone number
-            else if (!request.PhoneNumber.IsNullOrEmpty())
-            {
-                user = users.FirstOrDefault(u => u.PhoneNumber == request.PhoneNumber);
-                if (user == null) { return BadRequest("User not found"); }
-            }
-
-            if (user == null) return BadRequest("User not found");
-            user.TwoFactorEnabled = false;
-            user.TwoFactorKey = string.Empty;
-            user = await _userService.UpdateUser(user);
-            return Ok("Two factor authentication successfully removed.");
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
+            var userId = JWTHelper.GetUserIDFromClaims(token);
+            return Ok(await _userService.DisableTfa(userId));
         }
 
         private string CreateToken(User user)

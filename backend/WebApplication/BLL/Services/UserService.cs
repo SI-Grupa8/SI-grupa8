@@ -44,6 +44,32 @@ namespace BLL.Services
             };
         }
 
+        public async Task<UserDto> ConfirmTfa(UserLoginTfa request)
+        {
+            var authenticator = new TwoFactorAuthenticator();
+            var user = await _userRepository.FindByEmail(request.Email);
+            bool isValid = authenticator.ValidateTwoFactorPIN(user.TwoFactorKey, request.TwoFactorCodeSix);
+            if (!isValid)
+            {
+                throw new Exception("Invalid 2FA code.");
+            }
+            user.TwoFactorEnabled = true;
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
+            return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task<UserDto> DisableTfa(int userID)
+        {
+            var user = await _userRepository.GetById(userID);
+            if (user == null) throw new Exception("User not found");
+            user.TwoFactorEnabled = false;
+            user.TwoFactorKey = string.Empty;
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
+            return _mapper.Map<UserDto>(user);
+        }
+
         public async Task<(CookieOptions cookiesOption, string refreshToken, object data)> UserLogIn(UserLogIn userRequest)
         {
             var user = new User();
@@ -144,7 +170,6 @@ namespace BLL.Services
             {
                 string secretKey = GenerateSecretKey();
                 user.TwoFactorKey = secretKey;
-                user.TwoFactorEnabled = true;
                 _userRepository.Update(user);
                 await _userRepository.SaveChangesAsync();
                 _mapper.Map<UserDto>(user);
