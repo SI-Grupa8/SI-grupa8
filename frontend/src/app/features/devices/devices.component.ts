@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { AddNewDeviceComponent } from './add-new-device/add-new-device.component';
 
 @Component({
   selector: 'app-devices',
@@ -8,11 +10,18 @@ import { Component } from '@angular/core';
   styleUrl: './devices.component.scss'
 })
 export class DevicesComponent {
+  modalVisible: boolean = false;
 
-  constructor(){}
+  constructor(public dialog: MatDialog) {}
 
-  add(){
+  openDialog(): void {
+    const dialogRef = this.dialog.open(AddNewDeviceComponent, {
+      disableClose: true 
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
   edit(){
 

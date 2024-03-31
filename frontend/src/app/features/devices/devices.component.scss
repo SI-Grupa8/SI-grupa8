@@ -8,17 +8,23 @@
     flex-direction: column;
 
     .home-header {
+        
         display: flex;
-        width: 100%;
+        width: 80%;
         margin-top: 30px;
-        justify-content: space-between;
-        align-items: center;
+        margin-left: 55px;
+    
+    flex-direction: row;
 
         .greeting {
             margin-left: 55px;
             font-size: 25px;
             color: #1e5631;
             font-weight: 600;
+        }
+        .search-container{
+            margin-left: auto;
+            
         }
     }
 
@@ -29,7 +35,7 @@
         font-weight: bold;
         background-color: whitesmoke;
         padding: 10px 20px;
-        cursor: pointer;
+        cursor: text;
         border: 1px solid #1e5631;
         border-radius: 5px;
         outline: none;
@@ -38,7 +44,7 @@
     .container {
         margin-top: 30px;
         margin-left: 55px;
-        width: calc(100% - 55px);
+        width: 80%;
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -53,7 +59,7 @@
     }
 
     table {
-        width: 80%;
+        width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
         background-color: whitesmoke;
@@ -74,17 +80,7 @@
 
     }
 
-    .tableforform td {
-        border: 0;
-        background-color: #f0f1f3;
-    }
-.tableforform{
-    width: 40%;
-}
    
-    .tablewidthin td{
-        text-align: right;
-    }
 
     button {
         background-color: whitesmoke;
@@ -123,6 +119,20 @@
         display: flex;
         gap: 10px;
     }
-
+input[name="query"]{
+    width: fit-content;
+    height: 20px;
+margin-right: 5px;
+    align-self: flex-end;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: whitesmoke;
+    border: 3px solid #1e5631;
+    border-radius: 20px;
+    padding: 8px 16px;
+    cursor: text;
+ 
+    outline: none;
+}
 
 }
