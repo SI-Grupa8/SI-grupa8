@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using static QRCoder.PayloadGenerator;
 
 namespace DAL.Repositories
 {
@@ -42,6 +44,11 @@ namespace DAL.Repositories
         public async Task<List<User>> GetAllByRole(string role)
         {
             return await _context.Users.Where(x => x.Role.RoleName == role).ToListAsync();
+        }
+
+        public async Task<User> GetUserById(int userID)
+        {
+            return await _context.Users.Include(u => u.Role).FirstAsync(x => x.UserID == userID);
         }
     }
 }

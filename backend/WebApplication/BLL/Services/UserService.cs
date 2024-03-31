@@ -53,7 +53,7 @@ namespace BLL.Services
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
                 PasswordSalt = [],
-                RoleID = 0,
+                RoleID = userRegisterDto.RoleID,
                 CompanyID = userRegisterDto.CompanyID
             };
             _userRepository.Add(user);
@@ -179,6 +179,11 @@ namespace BLL.Services
         {
             var users = await _userRepository.GetAllByRole(role);
             return _mapper.Map<List<UserDto>>(users);
+        }
+
+        public async Task<User> GetUserById(int userId)
+        {
+            return await _userRepository.GetUserById(userId);
         }
     }
 }

@@ -26,103 +26,139 @@ namespace API.Controllers
             _companyService = companyService;
         }
 
-        [HttpPost("get-company-users")]
-        public async Task<ActionResult<List<UserDto>>> GetAllUsers(AdminCRUDUserDto request)
+        [HttpGet("get-company-users")]
+        public async Task<ActionResult<List<UserDto>>> GetAllUsers(int adminId)
         {
-            var admin=new User();
-            if (!request.adminEmail.IsNullOrEmpty())
+            var admin = await _userService.GetUserById(adminId);
+            
+            if (admin == null || admin.Role?.RoleName != "Admin")
             {
-                admin = await _userService.GetUserByEmail(request.adminEmail);
-                if (admin == null || admin.Role.RoleName!="Admin") { return BadRequest("Admin not found"); }
+                return BadRequest("Admin not found or not authorized");
             }
 
             var company = _companyService.GetCompanyByID((int)admin.CompanyID).Result;
-            if(company == null) { return BadRequest("Company not found"); }
+            if (company == null)
+            {
+                return BadRequest("Company not found");
+            }
+
             var users = await _userService.GetAllByCompanyId(company.CompanyID);
             return Ok(users);
         }
 
-        [HttpPost("remove-user")]
-        public async Task<ActionResult> RemoveUser(AdminCRUDUserDto request)
+
+        [HttpDelete("remove-user")]
+        public async Task<ActionResult> RemoveUser(int adminId, int userId)
         {
-
-            var admin = new User();
-            if (!request.adminEmail.IsNullOrEmpty())
+            var admin = await _userService.GetUserById(adminId);
+            if (admin == null || admin.Role?.RoleName != "Admin")
             {
-                admin = await _userService.GetUserByEmail(request.adminEmail);
-                if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
+                return BadRequest("Admin not found or not authorized");
             }
+
             var company = _companyService.GetCompanyByID((int)admin.CompanyID).Result;
-            if (company == null) { return BadRequest("Company not found"); }
-            var users = await _userService.GetAllByCompanyId(company.CompanyID);
-
-            var userDto = await _userService.GetUserByEmail(request.Email);
-            if (userDto == null)
+            if (company == null)
             {
-                userDto = await _userService.GetUserByPhoneNumber(request.PhoneNumber);
-                if(userDto == null)
-                {
-                    return NotFound("No users in the company.");
-                }
+                return BadRequest("Company not found");
             }
-            
-            var user = _userService.GetUserByEmail(userDto.Email).Result;
+
+            var user = await _userService.GetUserById(userId);
             if (user == null)
             {
-                user = _userService.GetUserByPhoneNumber(userDto.PhoneNumber).Result;
-                if (user == null)
-                {
-                    return NotFound("User not found.");
-                }
+                return NotFound("User not found.");
             }
+
+            if (user.CompanyID != admin.CompanyID)
+            {
+                return BadRequest("User does not belong to the same company as the admin.");
+            }
+
             _userService.RemoveUser(user);
             return Ok("User successfully removed.");
         }
 
+
+
         [HttpPost("add-user")]
         public async Task<ActionResult<UserDto>> AddUser(AdminCRUDUserDto request)
-
         {
-            var admin = new User();
-            if (!request.adminEmail.IsNullOrEmpty())
+            var admin = await _userService.GetUserById(request.AdminId);
+            if (admin == null || admin.Role?.RoleName != "Admin")
             {
-                admin = await _userService.GetUserByEmail(request.adminEmail);
-                if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
+                return BadRequest("Admin not found or not authorized");
             }
-            var company = _companyService.GetCompanyByID((int)admin.CompanyID).Result;
-            if (company == null) { return BadRequest("Company not found"); }
+
+            var company = await _companyService.GetCompanyByID((int)admin.CompanyID);
+            if (company == null)
+            {
+                return BadRequest("Company not found");
+            }
+
             if (request.Email.IsNullOrEmpty() && request.PhoneNumber.IsNullOrEmpty())
-                return BadRequest("Cannot add auser without an email or a phone number!");
-            var user = new UserRegisterDto { Email = request.Email, Name = request.Name, Surname = request.Surname, Password = request.Password, CompanyID = company.CompanyID };
+            {
+                return BadRequest("Cannot add a user without an email or a phone number!");
+            }
+
+            var user = new UserRegisterDto
+            {
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                Name = request.Name,
+                Surname = request.Surname,
+                Password = request.Password,
+                RoleID = request.RoleId, 
+                CompanyID = company.CompanyID
+            };
+
             var userDto = await _userService.AddUser(user);
             return Ok(userDto);
         }
 
-        [HttpPost("update-user")]
-        public async Task<ActionResult> UpdateUser(AdminCRUDUserDto request)
+
+        [HttpPut("update-user/{userId}")]
+        public async Task<ActionResult> UpdateUser(int userId, AdminCRUDUserDto request)
         {
-            var admin = new User();
-            if (!request.adminEmail.IsNullOrEmpty())
+           
+            var admin = await _userService.GetUserById(request.AdminId);
+            if (admin == null || admin.Role?.RoleName != "Admin")
             {
-                admin = await _userService.GetUserByEmail(request.adminEmail);
-                if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
+                return BadRequest("Admin not found or not authorized");
             }
-            var company = _companyService.GetCompanyByID(admin.UserID).Result;
-            if (company == null) { return BadRequest("Company not found"); }
-            var users = await _userService.GetAllByCompanyId(company.CompanyID);
-            var userDto = users.FirstOrDefault(u => u.Email == request.Email && u.PhoneNumber == request.PhoneNumber);
-            var user = _userService.GetUserByEmail(userDto.Email).Result;
-            if (request.Name!=null) user.Name=request.Name;
-            if (request.Surname!=null) user.Surname=request.Surname;
-            if (request.Email!=null) user.Email=request.Email;
-            if (request.PhoneNumber != null) user.Email = request.PhoneNumber;
-            if (request.Password != null) {
+
+            var company = await _companyService.GetCompanyByID((int)admin.CompanyID);
+            if (company == null)
+            {
+                return BadRequest("Company not found");
+            }
+
+            var user = await _userService.GetUserById(userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Ensure the user belongs to the same company as the admin
+            if (user.CompanyID != admin.CompanyID)
+            {
+                return BadRequest("User does not belong to the same company as the admin.");
+            }
+
+            if (request.Name != null) user.Name = request.Name;
+            if (request.Surname != null) user.Surname = request.Surname;
+            if (request.Email != null) user.Email = request.Email;
+            if (request.PhoneNumber != null) user.PhoneNumber = request.PhoneNumber;
+            if (request.Password != null)
+            {
                 user.PasswordHash = Encoding.UTF8.GetBytes(BCrypt.Net.BCrypt.HashPassword(request.Password));
-                user.PasswordSalt = [];
+                user.PasswordSalt = []; 
             }
+            if(request.RoleId != null) user.RoleID = request.RoleId;
+
             await _userService.UpdateUser(user);
             return Ok("User successfully updated.");
         }
+
+
 
         [HttpPost("get-company-devices")]
         public async Task<ActionResult<List<DeviceDto>>> GetAllDevices(AdminCRUDDeviceDto request)
