@@ -36,7 +36,7 @@ namespace API.Controllers
                 if (admin == null || admin.Role.RoleName!="Admin") { return BadRequest("Admin not found"); }
             }
 
-            var company = _companyService.GetCompanyByID(admin.UserID).Result;
+            var company = _companyService.GetCompanyByID((int)admin.CompanyID).Result;
             if(company == null) { return BadRequest("Company not found"); }
             var users = await _userService.GetAllByCompanyId(company.CompanyID);
             return Ok(users);
@@ -52,11 +52,29 @@ namespace API.Controllers
                 admin = await _userService.GetUserByEmail(request.adminEmail);
                 if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
             }
-            var company = _companyService.GetCompanyByID(admin.UserID).Result;
+            var company = _companyService.GetCompanyByID((int)admin.CompanyID).Result;
             if (company == null) { return BadRequest("Company not found"); }
             var users = await _userService.GetAllByCompanyId(company.CompanyID);
-            var userDto = users.FirstOrDefault(u => u.Email == request.Email && u.PhoneNumber == request.PhoneNumber);
+
+            var userDto = await _userService.GetUserByEmail(request.Email);
+            if (userDto == null)
+            {
+                userDto = await _userService.GetUserByPhoneNumber(request.PhoneNumber);
+                if(userDto == null)
+                {
+                    return NotFound("No users in the company.");
+                }
+            }
+            
             var user = _userService.GetUserByEmail(userDto.Email).Result;
+            if (user == null)
+            {
+                user = _userService.GetUserByPhoneNumber(userDto.PhoneNumber).Result;
+                if (user == null)
+                {
+                    return NotFound("User not found.");
+                }
+            }
             _userService.RemoveUser(user);
             return Ok("User successfully removed.");
         }
@@ -71,7 +89,7 @@ namespace API.Controllers
                 admin = await _userService.GetUserByEmail(request.adminEmail);
                 if (admin == null || admin.Role.RoleName != "Admin") { return BadRequest("Admin not found"); }
             }
-            var company = _companyService.GetCompanyByID(admin.UserID).Result;
+            var company = _companyService.GetCompanyByID((int)admin.CompanyID).Result;
             if (company == null) { return BadRequest("Company not found"); }
             if (request.Email.IsNullOrEmpty() && request.PhoneNumber.IsNullOrEmpty())
                 return BadRequest("Cannot add auser without an email or a phone number!");

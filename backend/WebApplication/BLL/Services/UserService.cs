@@ -169,7 +169,7 @@ namespace BLL.Services
             return _mapper.Map<List<UserDto>>(users);
         }
 
-        public async void RemoveUser(User user)
+        public async Task RemoveUser(User user)
         {
             _userRepository.Remove(user);
             await _userRepository.SaveChangesAsync();

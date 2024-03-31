@@ -21,7 +21,7 @@ namespace DAL.Repositories
 
 		public async Task<User> FindByEmail(string email)
 		{
-			return await _context.Users.FirstAsync(x => x.Email == email);
+			return await _context.Users.Include(u => u.Role).FirstAsync(x => x.Email == email);
 		}
 
         public async Task<User> FindByPhoneNumber(string phoneNumber)
