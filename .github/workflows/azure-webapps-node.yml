@@ -6,7 +6,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: vehicle-tracking-system
-  AZURE_WEBAPP_PACKAGE_PATH: ./frontend
+  AZURE_WEBAPP_PACKAGE_PATH: .
   NODE_VERSION: '20.x'           
 
 jobs:
