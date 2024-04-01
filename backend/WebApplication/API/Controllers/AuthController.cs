@@ -100,11 +100,13 @@ namespace API.Controllers
 
         [HttpPost("login/tfa")]
         [Authorize(Roles = "User")]
-        public async Task<ActionResult> LoginTfa(UserLoginTfa request)
+        public async Task<ActionResult<object>> LoginTfa(UserLoginTfa request)
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
             var userId = JWTHelper.GetUserIDFromClaims(token);
-            return Ok(await _userService.ConfirmTfa(request, userId));
+            var (cookieOptions, refresh, data) = await _userService.UserLogInTfa(request, userId);
+            Response.Cookies.Append("refreshToken", refresh, cookieOptions);
+            return Ok(data);
         }
 
         [HttpPost("get-tfa")] // vraca tfa samo

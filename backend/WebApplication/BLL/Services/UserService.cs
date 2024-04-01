@@ -72,7 +72,7 @@ namespace BLL.Services
             return _mapper.Map<UserDto>(user);
         }
 
-        public async Task<(CookieOptions cookiesOption, string refreshToken, object data)> UserLogIn(UserLogIn userRequest)
+        public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogIn(UserLogIn userRequest)
         {
             var user = new User();
             if (!string.IsNullOrEmpty(userRequest.Email))
@@ -88,28 +88,69 @@ namespace BLL.Services
             {
                 throw new Exception("Wrong password.");
             }
+            if (user.TwoFactorEnabled == false)
+            {
+                string token = CreateToken(user);
+                var refreshToken = GenerateRefreshToken();
+                var cookieOptions = SetRefreshToken(refreshToken, user);
+                RefreshTokenDto refresh = new RefreshTokenDto()
+                {
+                    Token = refreshToken.Token,
+                    Created = refreshToken.Created,
+                    Expires = refreshToken.Expires,
+                };
+                await RefreshUserToken(user.UserID, refresh);
 
+                return (cookieOptions, refreshToken.Token,
+                    new
+                    {
+                        token = token,
+                        twoFaEnabled = user.TwoFactorEnabled,
+                        email = user.Email,
+                        refresh = refresh.Token,
+                        expires = refresh.Expires.ToString()
+                    });
+            }
+            return (null, null,
+                new
+                {
+                    twoFaEnabled = user.TwoFactorEnabled,
+                    email = user.Email
+                });        
+        }
+
+        public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogInTfa(UserLoginTfa request, int userID)
+        {
+
+            var authenticator = new TwoFactorAuthenticator();
+            var user = await _userRepository.GetById(userID);
+
+            if (user == null) throw new Exception("User not found");
+            bool isValid = authenticator.ValidateTwoFactorPIN(user.TwoFactorKey, request.TwoFactorCodeSix);
+            if (!isValid)
+            {
+                throw new Exception("Invalid 2FA code.");
+            }
             string token = CreateToken(user);
             var refreshToken = GenerateRefreshToken();
-            var cookieOptions = SetRefreshToken(refreshToken, user);
-            RefreshTokenDto refresh = new RefreshTokenDto()
-            {
-                Token = refreshToken.Token,
-                Created = refreshToken.Created,
-                Expires = refreshToken.Expires,
-            };
-            await RefreshUserToken(user.UserID, refresh);
+                var cookieOptions = SetRefreshToken(refreshToken, user);
+                RefreshTokenDto refresh = new RefreshTokenDto()
+                {
+                    Token = refreshToken.Token,
+                    Created = refreshToken.Created,
+                    Expires = refreshToken.Expires,
+                };
+                await RefreshUserToken(user.UserID, refresh);
 
-            return (cookieOptions, refreshToken.Token,
-                new 
-            {
-                token = token,
-                twoFaEnabled = user.TwoFactorEnabled,
-                email = user.Email,
-                refresh = refresh.Token,
-                expires = refresh.Expires.ToString()
-            });
-
+                return (cookieOptions, refreshToken.Token,
+                    new
+                    {
+                        token = token,
+                        twoFaEnabled = user.TwoFactorEnabled,
+                        email = user.Email,
+                        refresh = refresh.Token,
+                        expires = refresh.Expires.ToString()
+                    });
         }
 
         public async Task<User> GetUserByEmail(string email)
