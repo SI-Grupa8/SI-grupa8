@@ -44,10 +44,12 @@ namespace BLL.Services
             };
         }
 
-        public async Task<UserDto> ConfirmTfa(UserLoginTfa request)
+        public async Task<UserDto> ConfirmTfa(UserLoginTfa request, int userID)
         {
             var authenticator = new TwoFactorAuthenticator();
-            var user = await _userRepository.FindByEmail(request.Email);
+            var user = await _userRepository.GetById(userID);
+
+            if (user == null) throw new Exception("User not found");
             bool isValid = authenticator.ValidateTwoFactorPIN(user.TwoFactorKey, request.TwoFactorCodeSix);
             if (!isValid)
             {
