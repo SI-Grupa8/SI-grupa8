@@ -102,7 +102,9 @@ namespace API.Controllers
         [Authorize(Roles = "User")]
         public async Task<ActionResult> LoginTfa(UserLoginTfa request)
         {
-            return Ok(await _userService.ConfirmTfa(request));
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
+            var userId = JWTHelper.GetUserIDFromClaims(token);
+            return Ok(await _userService.ConfirmTfa(request, userId));
         }
 
         [HttpPost("get-tfa")] // vraca tfa samo
@@ -118,7 +120,9 @@ namespace API.Controllers
         [Authorize(Roles = "User")]
         public async Task<ActionResult<UserDto>> StoreTwoFactorAuthentication(UserLoginTfa request)
         {
-            return Ok(await _userService.ConfirmTfa(request));
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
+            var userId = JWTHelper.GetUserIDFromClaims(token);
+            return Ok(await _userService.ConfirmTfa(request, userId));
         }
 
         [HttpPost("disable-tfa")]
