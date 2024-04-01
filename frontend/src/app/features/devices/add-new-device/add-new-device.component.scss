@@ -1,0 +1,102 @@
+:host {
+    width: 450px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+
+
+    
+    input {
+        width: fit-content;
+        align-self: flex-end;
+        font-size: 12px;
+        font-weight: bold;
+        background-color: whitesmoke;
+        padding: 10px 20px;
+        cursor: text;
+        border: 1px solid #1e5631;
+        border-radius: 5px;
+        outline: none;
+    }
+  
+    table {
+  
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        border-radius: 10px;
+        border: 0;
+      
+      
+ 
+}
+.tableforform td {
+    border: 0;
+    
+}
+.tableforform{
+width: 80%;
+
+}
+.tableforform table {
+    border-collapse: separate; 
+    border-spacing: 0 15px; 
+}
+
+
+.tablewidthin td{
+    text-align: right;
+
+}
+.buttonadd {
+    background-color: whitesmoke;
+    border: 3px solid #1e5631;
+    border-radius: 20px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+        width: 24px;
+        height: 24px;
+        fill: #1e5631;
+    }
+
+    width: fit-content;
+    height: 40px;
+   
+
+}
+.close {
+    align-self: flex-end;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+    margin-top: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+.buttonadd:hover {
+    transition: 0.2s;
+    background-color: #1e5631;
+    color: whitesmoke;
+
+    svg {
+        fill: whitesmoke;
+
+    }
+}
+
+   
+}
