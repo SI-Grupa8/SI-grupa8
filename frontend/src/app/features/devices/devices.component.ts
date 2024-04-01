@@ -2,10 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddNewDeviceComponent } from './add-new-device/add-new-device.component';
 import { DeviceService } from '../../core/services/http/device.service';
-import { DeviceResponse } from '../../core/models/device-response';
 import { DeviceRequest } from '../../core/models/device-request';
-import { UpdateDeviceRequest } from '../../core/models/update-device-request';
-import { DeleteDeviceRequest } from '../../core/models/delete-device-request';
 
 @Component({
   selector: 'app-devices',
@@ -16,7 +13,10 @@ import { DeleteDeviceRequest } from '../../core/models/delete-device-request';
 })
 export class DevicesComponent {
   modalVisible: boolean = false;
-  devices: DeviceResponse[] = [];
+  devices: any[] = [];
+  deviceRequest: DeviceRequest = {
+    adminId: 0
+  };
 
   constructor(public dialog: MatDialog,
     private deviceService: DeviceService) { }
@@ -34,34 +34,24 @@ export class DevicesComponent {
     });
   }
   edit(device: any): void {
-    const adminEmail = localStorage.getItem("email")!;
-    const request: UpdateDeviceRequest = {
-      adminEmail: adminEmail,
-      deviceId: device.id
-    };
-    this.deviceService.updateDevice(request).subscribe(() => {
+    const deviceId=device.id;
+    this.deviceService.updateDevice(this.deviceRequest,deviceId).subscribe(() => {
       console.log('Device updated successfully');
+      this.getAll();
     });
   }
 
-  delete(device: DeviceResponse): void {
-    const adminEmail = localStorage.getItem("email")!;
-
-    const request: DeleteDeviceRequest = {
-      adminEmail: adminEmail,
-      deviceId: device.id
-    };
-    this.deviceService.deleteDevice(request).subscribe(() => {
+  delete(device:any): void {
+    const deviceId=device.id;
+    this.deviceService.deleteDevice(this.deviceRequest.adminId,deviceId).subscribe(() => {
       console.log('Device deleted successfully');
+      this.getAll();
     });
 
   }
 
   getAll(): void {
-    const adminEmail = localStorage.getItem("email")!;
-
-    const request: DeviceRequest = { adminEmail:adminEmail};
-    this.deviceService.getCompanyDevices(request).subscribe(devices => {
+    this.deviceService.getCompanyDevices(this.deviceRequest.adminId).subscribe(devices => {
       this.devices = devices;
     });
   }

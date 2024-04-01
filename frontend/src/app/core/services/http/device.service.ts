@@ -2,30 +2,27 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DeviceRequest } from '../../models/device-request';
-import { DeviceResponse } from '../../models/device-response';
-import { UpdateDeviceRequest } from '../../models/update-device-request';
-import { DeleteDeviceRequest } from '../../models/delete-device-request';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DeviceService {
-  private apiUrl = 'https://localhost:7126/Api/Device'
+  private apiUrl = 'https://localhost:7126/Api/Admin'
 
   constructor(private http: HttpClient) { }
 
-  createDevice(request: DeviceRequest): Observable<DeviceResponse> {
-    return this.http.post<DeviceResponse>(`${this.apiUrl}/add-device`, request);
+  createDevice(request: DeviceRequest): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/add-device`, request);
   }
 
-  updateDevice(request:UpdateDeviceRequest):Observable<any>{
-    return this.http.put<any>(`${this.apiUrl}/update-device`,request);
+  updateDevice(request:DeviceRequest, deviceId: number):Observable<any>{
+    return this.http.put<any>(`${this.apiUrl}/update-device/${deviceId}`,request);
   }
-  deleteDevice(request:DeleteDeviceRequest):Observable<any>{
-    return this.http.delete<any>(`${this.apiUrl}/remove-device`,{ body: request });
+  deleteDevice(adminId: number, deviceId: number):Observable<any>{
+    return this.http.delete<any>(`${this.apiUrl}/remove-device/${deviceId}`);
 
   }
-  getCompanyDevices(request:DeviceRequest):Observable<DeviceResponse[]>{
-    return this.http.get<DeviceResponse[]>(`${this.apiUrl}/get-company-devices`,{ params: request as any });
+  getCompanyDevices(adminId:number):Observable<any[]>{
+    return this.http.get<any[]>(`${this.apiUrl}/get-company-devices/${adminId}`);
   }
 }

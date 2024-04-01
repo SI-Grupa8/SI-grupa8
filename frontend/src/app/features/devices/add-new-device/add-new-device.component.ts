@@ -11,7 +11,9 @@ import { DeviceService } from '../../../core/services/http/device.service';
   styleUrl: './add-new-device.component.scss'
 })
 export class AddNewDeviceComponent {
-  deviceName: string = '';
+  deviceRequest: DeviceRequest = {
+    adminId: 0
+  };
 
   constructor(public dialogRef: MatDialogRef<AddNewDeviceComponent>, private deviceService: DeviceService) {}
 
@@ -19,12 +21,7 @@ export class AddNewDeviceComponent {
     this.dialogRef.close();
   }
   add(){
-    const adminEmail = localStorage.getItem("email")!;
-    const request: DeviceRequest = {
-      adminEmail: adminEmail,
-    };
-
-    this.deviceService.createDevice(request).subscribe(()=>{
+    this.deviceService.createDevice(this.deviceRequest).subscribe(()=>{
       console.log('Device added successfully');
     });
   }
