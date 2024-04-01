@@ -1,8 +1,14 @@
 export interface UserRequest {
-    adminId: number;
+    userID?: number;
     name?:string;
     surname?:string;
     email?: string;
-    phone?: string;
-    password?: string;
+    phoneNumber?: string;
+    roleID?: number;
+    twoFactorKey?: string;
+    twoFactorEnabled?: boolean;
+    refreshToken?: string;
+    tokenCreated?: Date;
+    tokenExpires?: Date;
+    companyID?: number
 }

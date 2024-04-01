@@ -19,9 +19,9 @@ import { UserService } from '../../core/services/http/user.service';
 export class UsersComponent {
   modalVisible: boolean = false;
   users: any[] = [];
+  adminId: number = 0;
 
   userRequest: UserRequest = {
-    adminId: 0
   }
 
   constructor(public dialog: MatDialog, private userService: UserService) {}
@@ -49,7 +49,7 @@ export class UsersComponent {
   }
   delete(user:any): void {
     const userId = user.id;
-    this.userService.deleteUser(this.userRequest.adminId, userId).subscribe(() => {
+    this.userService.deleteUser(userId).subscribe(() => {
       console.log('User deleted successfully');
       this.getAll();
     });
@@ -57,7 +57,7 @@ export class UsersComponent {
   }
 
   getAll(): void {
-    this.userService.getUsers(this.userRequest.adminId).subscribe(users => {
+    this.userService.getCompanyUsers(this.adminId).subscribe(users => {
       this.users = users;
     });
   }

@@ -15,14 +15,14 @@ export class UserService {
     return this.http.post<any>(`${this.apiUrl}/add-user`, request);
   }
 
-  updateUser(request:UserRequest, deviceId: number):Observable<any>{
-    return this.http.put<any>(`${this.apiUrl}/update-user/${deviceId}`,request);
+  updateUser(request:UserRequest, userId: number):Observable<any>{
+    return this.http.put<any>(`${this.apiUrl}/update-user/${userId}`,request);
   }
-  deleteUser(adminId: number, deviceId: number):Observable<any>{
-    return this.http.delete<any>(`${this.apiUrl}/remove-user/${deviceId}`);
+  deleteUser(userId: number):Observable<any>{
+    return this.http.delete<any>(`${this.apiUrl}/remove-user/${userId}`);
 
   }
-  getUsers(adminId:number):Observable<any[]>{
-    return this.http.get<any[]>(`${this.apiUrl}/get-users/${adminId}`);
+  getCompanyUsers(adminId:number):Observable<any[]>{
+    return this.http.get<any[]>(`${this.apiUrl}/get-company-users/${adminId}`);
   }
 }

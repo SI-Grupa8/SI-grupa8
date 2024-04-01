@@ -18,22 +18,22 @@
         <thead>
           <tr>
             <th>UserID</th>
-            <th>Email</th>
-            <th>Phone Number</th>
             <th>Name</th>
             <th>Surname</th>
+            <th>Email</th>
+            <th>Phone Number</th>
             <th>RoleID</th>
             <th class="actcolumn"></th>
           </tr>
         </thead>
         <tbody>
             <tr *ngFor = "let user of users">
-                <th>{{user.UserID}}</th>
-                <th>{{user.Email}}</th>
-                <th>{{user.PhoneNumber}}</th>
-                <th>{{user.Name}}</th>
-                <th>{{user.Surname}}</th>
-                <th>{{user.RoleID}}</th>
+                <th>{{user.serID}}</th>
+                <th>{{user.name}}</th>
+                <th>{{user.surname}}</th>
+                <th>{{user.email}}</th>
+                <th>{{user.phoneNumber}}</th>
+                <th>{{user.roleID}}</th>
                 <th class="actcolumn"></th>
                 <td style="width: 20px;">
                     <div class="button-container">

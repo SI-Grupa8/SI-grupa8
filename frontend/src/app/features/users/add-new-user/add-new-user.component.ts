@@ -12,7 +12,6 @@ import { UserService } from '../../../core/services/http/user.service';
 })
 export class AddNewUserComponent {
   userRequest: UserRequest = {
-    adminId: 0
   };
 
   constructor(public dialogRef: MatDialogRef<AddNewUserComponent>, private userService: UserService) {}
