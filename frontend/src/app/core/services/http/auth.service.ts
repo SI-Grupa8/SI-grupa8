@@ -34,11 +34,15 @@ export class AuthService {
     return this.http.post<AuthTfaResponse>(`${this.apiUrl}/login/tfa`, authTfaRequest);
   }
 
-  verifyCode(verificationRequest: VerifyRequest) {
-    return this.http.post<AuthResponse>
-    (`${this.apiUrl}/verify`, verificationRequest);
+  enable2fa() {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<{}>
+    (`${this.apiUrl}/get-tfa`, {}, { headers });
   }
-
+/*
   enable2fa() {
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
@@ -46,6 +50,16 @@ export class AuthService {
     });
     return this.http.post<{}>
     (`${this.apiUrl}/enable-tfa`,{}, { headers });
+  }*/
+
+
+  store2fa(verifyRequest: VerifyRequest){
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>
+    (`${this.apiUrl}/store-tfa`, verifyRequest, { headers });
   }
   disable2fa(twoFaRequest: TwoFaRequest) {
     return this.http.post<string>

@@ -39,17 +39,40 @@ export class ProfileComponent {
   message='';
 
   openEnable2fa(): void {
-    //this.enable2fa();
+    //this.get2fa();
       console.log("code:" + this.twoFaResponse.qrCodeImageUrl);
       const dialogRef = this.dialog.open(EnableTwofaComponent, {
         data: {
           imageUrl: this.twoFaResponse.qrCodeImageUrl,
-          key: this.twoFaResponse.manualEntryKey
+          key: this.twoFaResponse.manualEntryKey,
+          
         }
         
       });
+      dialogRef.componentInstance.dialogClosed.subscribe((twoFaEnabled: boolean) => {
+        this.twoFaEnabled = twoFaEnabled;
+        console.log(twoFaEnabled);
+      });
   }
+  get2fa() {
+    this.authService.enable2fa().subscribe({
+      next: (response) => {
+        if(response) {
+          //this.allow2faDialogOpen = true;
+          this.twoFaResponse = response;
+          localStorage.setItem("qrcode", this.twoFaResponse.qrCodeImageUrl as string);
+          localStorage.setItem("key", this.twoFaResponse.manualEntryKey as string);
 
+          console.log("key: " +this.twoFaResponse.manualEntryKey);
+          console.log("image:" + this.twoFaResponse.qrCodeImageUrl);
+          this.openEnable2fa();
+        }
+        else {
+          console.log("nothing");
+        }
+      }
+    })
+  }
   openRemove2fa(): void {
     this.openEnable2faService.openRemove2fa();
   }
@@ -64,7 +87,7 @@ export class ProfileComponent {
     }
   }*/
 
-
+/*
   enable2fa(): void {
     console.log(this.twoFaRequest.email)
     //this.allow2faDialogOpen = true;
@@ -85,4 +108,5 @@ export class ProfileComponent {
       }
     })
   }
+  */
 }

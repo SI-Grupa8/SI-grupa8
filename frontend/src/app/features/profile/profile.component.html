@@ -44,7 +44,7 @@
                 <p class="section-item-subtitle">Help protect your account (even if someone gets your password) by requiring a verification code and a password to log in.</p>
             </div>
             <div class="grid-item">
-                <button (click)="enable2fa()" [class.disappear]="twoFaEnabled" class="twofa-button" id="setup-twofa">Setup 2fa</button>
+                <button (click)="get2fa()" [class.disappear]="twoFaEnabled" class="twofa-button" id="setup-twofa">Setup 2fa</button>
                 <button (click)="openRemove2fa()" [class.disappear]="!twoFaEnabled" class="twofa-button" id="remove-twofa">Remove 2fa</button>
             </div>
         </div>

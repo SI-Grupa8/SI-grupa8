@@ -9,11 +9,11 @@
 <div class="qr" style="text-align:center">
   <!--<qrcode [qrdata]="imageUrl" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>-->
   <img [src]="imageUrl" alt="">
-  <p class="key">{{key}}</p>
+  <p class="key">Key: {{key}}</p>
   <a target="_blank" [href]="imageUrl">Qr code</a>
   </div>
-<form (ngSubmit)="loginTfa()" action="post">
-  <input [(ngModel)]="loginTfaRequest.twoFactorCodeSix" type="text" name="new-category" id="new-category" [ngModelOptions]="{standalone: true}">
+<form (ngSubmit)="set2fa()" action="post">
+  <input [(ngModel)]="verifyRequest.twoFactorCodeSix" type="text" name="new-category" id="new-category" [ngModelOptions]="{standalone: true}">
   <br>
   <button type="submit" class="send-code">COMPLETE SETUP</button>
 </form>
