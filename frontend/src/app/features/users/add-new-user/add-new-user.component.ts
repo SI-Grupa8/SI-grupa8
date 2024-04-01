@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { UserRequest } from '../../../core/models/user-request';
+import { UserService } from '../../../core/services/http/user.service';
 
 @Component({
   selector: 'app-add-new-user',
@@ -9,13 +11,18 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrl: './add-new-user.component.scss'
 })
 export class AddNewUserComponent {
-  constructor(public dialogRef: MatDialogRef<AddNewUserComponent>) {}
+  userRequest: UserRequest = {
+    adminId: 0
+  };
+
+  constructor(public dialogRef: MatDialogRef<AddNewUserComponent>, private userService: UserService) {}
 
   closeDialog(): void {
     this.dialogRef.close();
   }
-  addNewUser(): void {
-    
+  add() {
+    this.userService.addUser(this.userRequest).subscribe(() => {
+      console.log('User added successfully');
+    });
   }
-
 }

@@ -1,27 +1,16 @@
 import { Component } from '@angular/core';
-import { NgIf } from '@angular/common'; 
-import { FormBuilder,FormControl,FormGroup,Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../core/services/http/auth.service';
-import { RegisterRequest } from '../../core/models/register-request';
+import { NgIf, NgFor } from '@angular/common'; 
+import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { AuthResponse } from '../../core/models/auth-response';
 import { AddNewUserComponent } from './add-new-user/add-new-user.component';
-
-function emailOrPhoneValidator(control: FormControl) {
-  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const phonePattern = /^\d{10}$/;
-
-  if (!emailPattern.test(control.value) && !phonePattern.test(control.value)) {
-    return { invalidFormat: true };
-  }
-  return null;
-}
+import { UserRequest } from '../../core/models/user-request';
+import { UserService } from '../../core/services/http/user.service';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, FormsModule, RouterModule ],
+  imports: [NgIf, ReactiveFormsModule, FormsModule, RouterModule, NgFor ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
@@ -29,8 +18,17 @@ function emailOrPhoneValidator(control: FormControl) {
 
 export class UsersComponent {
   modalVisible: boolean = false;
+  users: any[] = [];
 
-  constructor(public dialog: MatDialog) {}
+  userRequest: UserRequest = {
+    adminId: 0
+  }
+
+  constructor(public dialog: MatDialog, private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.getAll();
+  }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(AddNewUserComponent, {
@@ -41,10 +39,26 @@ export class UsersComponent {
       console.log('The dialog was closed');
     });
   }
-  edit(){
+
+  edit(user:any): void{
+    const userId = user.id;
+    this.userService.updateUser(this.userRequest, userId).subscribe(() => {
+      console.log("User updated successfully!");
+      this.getAll();
+    });
+  }
+  delete(user:any): void {
+    const userId = user.id;
+    this.userService.deleteUser(this.userRequest.adminId, userId).subscribe(() => {
+      console.log('User deleted successfully');
+      this.getAll();
+    });
 
   }
-  delete(){
-    
+
+  getAll(): void {
+    this.userService.getUsers(this.userRequest.adminId).subscribe(users => {
+      this.users = users;
+    });
   }
 }
