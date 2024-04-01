@@ -16,18 +16,18 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BLL.Services
 {
-	public class UserService : IUserService
-	{
-		private readonly IMapper _mapper;
-		private readonly IUserRepository _userRepository;
+    public class UserService : IUserService
+    {
+        private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
 
-		public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
-		{
-			_userRepository = userRepository;
-			_mapper = mapper;
+        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
+        {
+            _userRepository = userRepository;
+            _mapper = mapper;
             _configuration = configuration;
-		}
+        }
 
         public async Task<object> EnableTwoFactorAuthentication(int userID)
         {
@@ -116,16 +116,22 @@ namespace BLL.Services
                 {
                     twoFaEnabled = user.TwoFactorEnabled,
                     email = user.Email
-                });        
+                });
         }
 
-        public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogInTfa(UserLoginTfa request, int userID)
+        public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogInTfa(UserLoginTfa request)
         {
 
             var authenticator = new TwoFactorAuthenticator();
-            var user = await _userRepository.GetById(userID);
-
-            if (user == null) throw new Exception("User not found");
+            var user = new User();
+            if (!string.IsNullOrEmpty(request.Email))
+            {
+                user = await _userRepository.FindByEmail(request.Email);
+            }
+            else if (!string.IsNullOrEmpty(request.PhoneNumber))
+            {
+                user = await _userRepository.FindByPhoneNumber(request.PhoneNumber);
+            }
             bool isValid = authenticator.ValidateTwoFactorPIN(user.TwoFactorKey, request.TwoFactorCodeSix);
             if (!isValid)
             {
@@ -133,30 +139,30 @@ namespace BLL.Services
             }
             string token = CreateToken(user);
             var refreshToken = GenerateRefreshToken();
-                var cookieOptions = SetRefreshToken(refreshToken, user);
-                RefreshTokenDto refresh = new RefreshTokenDto()
-                {
-                    Token = refreshToken.Token,
-                    Created = refreshToken.Created,
-                    Expires = refreshToken.Expires,
-                };
-                await RefreshUserToken(user.UserID, refresh);
+            var cookieOptions = SetRefreshToken(refreshToken, user);
+            RefreshTokenDto refresh = new RefreshTokenDto()
+            {
+                Token = refreshToken.Token,
+                Created = refreshToken.Created,
+                Expires = refreshToken.Expires,
+            };
+            await RefreshUserToken(user.UserID, refresh);
 
-                return (cookieOptions, refreshToken.Token,
-                    new
-                    {
-                        token = token,
-                        twoFaEnabled = user.TwoFactorEnabled,
-                        email = user.Email,
-                        refresh = refresh.Token,
-                        expires = refresh.Expires.ToString()
-                    });
+            return (cookieOptions, refreshToken.Token,
+                new
+                {
+                    token = token,
+                    twoFaEnabled = user.TwoFactorEnabled,
+                    email = user.Email,
+                    refresh = refresh.Token,
+                    expires = refresh.Expires.ToString()
+                });
         }
 
         public async Task<User> GetUserByEmail(string email)
         {
             var user = await _userRepository.FindByEmail(email);
-            return user ;
+            return user;
         }
 
         public async Task<User> GetByToken(string token)
@@ -171,7 +177,7 @@ namespace BLL.Services
         }
 
         public async Task<UserDto> AddUser(UserRegisterDto userRegisterDto)
-		{
+        {
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegisterDto.Password);
 
             User user = new User
@@ -181,7 +187,7 @@ namespace BLL.Services
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
-                
+
                 PasswordSalt = [],
                 RoleID = 0
             };
@@ -189,14 +195,14 @@ namespace BLL.Services
 
             await _userRepository.SaveChangesAsync();
 
-            var userDto =  _mapper.Map<UserDto>(user);
-            return  userDto;
+            var userDto = _mapper.Map<UserDto>(user);
+            return userDto;
 
         }
 
         public async Task<User> UpdateUser(User user)
         {
-            
+
             _userRepository.Update(user);
             await _userRepository.SaveChangesAsync();
             return user;
@@ -219,7 +225,7 @@ namespace BLL.Services
             }
 
             var authenticator = new TwoFactorAuthenticator();
-            var code=authenticator.GenerateSetupCode("WebApplication", user.Name + user.Surname, ConvertToBytes(user.TwoFactorKey, false), 300);
+            var code = authenticator.GenerateSetupCode("WebApplication", user.Name + user.Surname, ConvertToBytes(user.TwoFactorKey, false), 300);
             return code;
         }
 

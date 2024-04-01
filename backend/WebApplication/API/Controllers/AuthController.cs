@@ -60,7 +60,7 @@ namespace API.Controllers
             var (cookieOptions, refresh, data) = await _userService.UserLogIn(request);
             Response.Cookies.Append("refreshToken", refresh, cookieOptions);
 
-            return Ok(data) ;
+            return Ok(data);
 
         }
 
@@ -99,18 +99,15 @@ namespace API.Controllers
         */
 
         [HttpPost("login/tfa")]
-        [Authorize(Roles = "User")]
         public async Task<ActionResult<object>> LoginTfa(UserLoginTfa request)
         {
-            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
-            var userId = JWTHelper.GetUserIDFromClaims(token);
-            var (cookieOptions, refresh, data) = await _userService.UserLogInTfa(request, userId);
+            var (cookieOptions, refresh, data) = await _userService.UserLogInTfa(request);
             Response.Cookies.Append("refreshToken", refresh, cookieOptions);
             return Ok(data);
         }
 
         [HttpPost("get-tfa")] // vraca tfa samo
-        [Authorize(Roles="User")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<object>> EnableTwoFactorAuthentication()
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
