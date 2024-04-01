@@ -33,6 +33,12 @@ namespace DAL.Repositories
         {
             return await _context.Users.FirstAsync(x => x.RefreshToken == token);
         }
+
+        public async Task<List<User>> GetAllByCompanyId(int companyID)
+        {
+            return await _context.Users.Where(x => x.CompanyID == companyID).ToListAsync();
+        }
+
     }
 }
 

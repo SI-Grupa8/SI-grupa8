@@ -8,7 +8,7 @@ namespace DAL.Interfaces
         Task<User> FindByEmail(string email);
         Task<User> FindByPhoneNumber(string phoneNumber);
         Task<User> GetByToken(string token);
-
+        Task<List<User>> GetAllByCompanyId(int companyID);
     }
 }
 

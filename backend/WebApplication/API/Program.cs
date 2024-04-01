@@ -23,10 +23,14 @@ builder.Services.AddEndpointsApiExplorer();
 //Services
 builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
 builder.Services.AddScoped(typeof(IRoleService), typeof(RoleService));
+builder.Services.AddScoped(typeof(ICompanyService), typeof(CompanyService));
+builder.Services.AddScoped(typeof(IDeviceService), typeof(DeviceService));
 
 //Repositories
 builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 builder.Services.AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
+builder.Services.AddScoped(typeof(ICompanyRepository), typeof(CompanyRepository));
+builder.Services.AddScoped(typeof(IDeviceRepository), typeof(DeviceRepository));
 
 //Db context
 builder.Services.AddDbContext<AppDbContext>(options =>

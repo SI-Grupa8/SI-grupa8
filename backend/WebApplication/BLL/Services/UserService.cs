@@ -7,6 +7,7 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
+using DAL.Repositories;
 using Google.Authenticator;
 
 namespace BLL.Services
@@ -50,9 +51,9 @@ namespace BLL.Services
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
-                
                 PasswordSalt = [],
-                RoleID = 0
+                RoleID = 0,
+                CompanyID = userRegisterDto.CompanyID
             };
             _userRepository.Add(user);
 
@@ -161,9 +162,17 @@ namespace BLL.Services
             var userDto = _mapper.Map<UserDto>(user);*/
         }
 
+        public async Task<List<UserDto>> GetAllByCompanyId(int companyID)
+        {
+            var users = await _userRepository.GetAllByCompanyId(companyID);
+            return _mapper.Map<List<UserDto>>(users);
+        }
 
-
-
+        public async void RemoveUser(User user)
+        {
+            _userRepository.Remove(user);
+            await _userRepository.SaveChangesAsync();
+        }
     }
 }
 

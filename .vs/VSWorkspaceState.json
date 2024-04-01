@@ -1,9 +1,6 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\backend",
-    "\\backend\\WebApplication",
-    "\\backend\\WebApplication\\API"
+    ""
   ],
   "SelectedNode": "\\backend\\WebApplication\\WebApplication.sln",
   "PreviewInSolutionExplorer": false

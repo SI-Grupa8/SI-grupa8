@@ -13,7 +13,6 @@
     <None Remove="DTOs\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Interfaces\" />
     <Folder Include="Mapper\" />
   </ItemGroup>
   <ItemGroup>
