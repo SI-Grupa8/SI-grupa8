@@ -1,0 +1,9 @@
+:host {
+    width: calc(100% - 200px);
+    margin-top: 60px;
+    margin-left: 200px;
+    min-height: 100vh;
+    background-color: #85a2dd;
+    display: flex;
+    flex-direction: column;
+}
