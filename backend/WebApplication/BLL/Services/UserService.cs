@@ -165,6 +165,7 @@ namespace BLL.Services
                     {
                         token = token,
                         twoFaEnabled = user.TwoFactorEnabled,
+                        role = user.Role.RoleName,
                         email = user.Email,
                         refresh = refresh.Token,
                         expires = refresh.Expires.ToString()
@@ -178,6 +179,7 @@ namespace BLL.Services
                     email = user.Email
                 });
         }
+
         public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogInTfa(UserLoginTfa request)
         {
 
@@ -212,6 +214,7 @@ namespace BLL.Services
                 {
                     token = token,
                     twoFaEnabled = user.TwoFactorEnabled,
+                    role = user.Role.RoleName,
                     email = user.Email,
                     refresh = refresh.Token,
                     expires = refresh.Expires.ToString()
