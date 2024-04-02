@@ -36,23 +36,43 @@ export class LoginComponent {
   loginTwofaForm: FormGroup;
   authResponse: AuthResponse = {};
 
+  
+
   constructor(private f: FormBuilder, private authService: AuthService, private router: Router){
     this.loginForm = this.f.group({
-      email: ['', [Validators.required, emailOrPhoneValidator]],
-      pass:['', [Validators.required]]
+      email: ['', [Validators.required, Validators.email]],
+      pass:['', [Validators.required, Validators.minLength(8)]]
     });
     this.loginTwofaForm = this.f.group({
-      email: ['', [Validators.required, emailOrPhoneValidator]],
-      pass:['', [Validators.required]],
-      pincode:['', [Validators.required]]
+      pincode:['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
     })
   }
 
+// for more readable validation in html
+  get emailControl() {
+    return this.loginForm.get('email');
+  }
+  get passControl() {
+    return this.loginForm.get('pass');
+  }
+  get pinControl() {
+    return this.loginTwofaForm.get('pincode');
+  }
+
+
+// auth methods
   forgotPass(): void{
     console.log("Link is clicked, must add logic.")
   }
 
   login() {
+    // Mark all form controls as touched to display errors
+    if (this.loginForm.invalid) {
+      Object.values(this.loginForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
+      return;
+    }
     this.authRequest.email = this.loginForm.get('email')?.value;
     this.authRequest.password = this.loginForm.get('pass')?.value;
 
@@ -84,8 +104,16 @@ export class LoginComponent {
           }
         }
       });
+      
   }
   verify(){
+    // Mark all form controls as touched to display errors
+    if (this.loginForm.invalid) {
+      Object.values(this.loginForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
+      return;
+    }
     this.authRequestTfa.email = this.authRequest.email;
     this.authRequestTfa.twoFactorCodeSix = this.loginTwofaForm.get('pincode')?.value;
     this.authService.loginTfa(this.authRequestTfa).subscribe({
