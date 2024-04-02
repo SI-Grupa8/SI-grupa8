@@ -131,6 +131,7 @@ html {
             flex-direction: column;
             justify-content: space-between;
             height: 180px;
+            
             input[name="pincode"] {
                 padding: 8px 10px;
                 padding-left: 40px;
@@ -187,4 +188,9 @@ html {
             }
         }
     }
+    }
+
+    .error {
+        color: red;
+        display: flex;
     }
