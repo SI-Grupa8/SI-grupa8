@@ -16,20 +16,17 @@ import { VerifyRequest } from '../../../core/models/verify-request';
 })
 export class EnableTwofaComponent {
   twoFaEnabled: boolean = false;
-  @Output() dialogClosed = new EventEmitter<boolean>();
-  public myAngularxQrCode: string = window.location.href
-
   loginTfaRequest: AuthTfaRequest = {};
   verifyRequest: VerifyRequest = {};
 
+  @Output() dialogClosed = new EventEmitter<boolean>();
   @Input() public imageUrl: string = localStorage.getItem("qrcode") as string;
-  @Input() public key: string = localStorage.getItem("key") as string;;
+  @Input() public key: string = localStorage.getItem("key") as string;
+
   constructor(
     private twofaService: OpenEnable2faService,
     private authService: AuthService
-    //private dialogRef: MatDialogRef<EnableTwofaComponent>,
     ) {
-      console.log("Loaded: " + this.imageUrl);
       this.imageUrl = localStorage.getItem("qrcode") as string; 
       this.key = localStorage.getItem("key") as string; 
       this.twoFaEnabled=false;
@@ -38,7 +35,6 @@ export class EnableTwofaComponent {
     }
 
   closeDialog(): void {
-    //this.dialogRef.close();
     this.twofaService.closeEnable2fa();
     this.dialogClosed.emit(this.twoFaEnabled);
   }
@@ -48,27 +44,14 @@ export class EnableTwofaComponent {
       console.log( 'response: ', response );
       if (response) {
          localStorage.setItem('2fa', 'true');
-         //console.log("toggle")
          this.closeDialog();
+         console.log("Correct pin");
       } else {
-        //this.checked=false;
         console.log("Wrong pin");
       }
     })
   }
-/*
-  enable2fa() {
-    this.authService.enable2fa().subscribe(response => {
-      if(response){
-        console.log("Good pin!");
-        this.closeDialog();
-      }
-      else {
-        console.log("Wrong pin!");
-      }
-    })
-  }
-  */
+  
   set2fa(){
     this.authService.store2fa(this.verifyRequest).subscribe(response => {
       if(response){

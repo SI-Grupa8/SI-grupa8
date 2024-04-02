@@ -14,16 +14,15 @@ import { AuthService } from '../../../core/services/http/auth.service';
 export class RemoveTwofaComponent {
   twoFaEnabled: boolean = true;
   twoFaRequest: TwoFaRequest = {}//, item.getStorage na false
+
   @Output() dialogClosed = new EventEmitter<boolean>();
+
   constructor(
-    //private dialogRef: MatDialogRef<RemoveTwofaComponent>,
     private twofaService: OpenEnable2faService,
     private authService: AuthService
     ) {
       this.twoFaRequest.email = localStorage.getItem("email");
     }
-
-    
 
   closeDialog(): void {
     this.twofaService.closeRemove2fa();
@@ -38,7 +37,6 @@ export class RemoveTwofaComponent {
     this.closeDialog();
   }
   nothing() {
-//this.authService.enable2fa(this.twoFaRequest);
     localStorage.setItem('2fa', 'true');
     this.closeDialog();
   }

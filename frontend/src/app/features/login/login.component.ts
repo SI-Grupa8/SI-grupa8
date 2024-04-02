@@ -27,13 +27,14 @@ function emailOrPhoneValidator(control: FormControl) {
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  temp=true;
-   refreshToken = '';
+  showLoginForm=true;
+  refreshToken = '';
   authRequest: AuthRequest = {};
   authRequestTfa: AuthTfaRequest = {};
   authResponseTfa: AuthTfaResponse = {};
   loginForm: FormGroup;
   authResponse: AuthResponse = {};
+
   constructor(private f: FormBuilder, private authService: AuthService, private router: Router){
     this.loginForm = this.f.group({
       usermail: ['', [Validators.required, emailOrPhoneValidator]],
@@ -41,30 +42,10 @@ export class LoginComponent {
     });
   }
 
-
-  onClick(): void{
-    this.temp=!this.temp;
-
-    if(this.loginForm.valid){
-      console.log('It is valid!')
-    }
-    else{
-      console.log('Invalid form.')
-    }
-  }
-
   forgotPass(): void{
     console.log("Link is clicked, must add logic.")
   }
 
-
-  //code related
-  onCodeChanged(code: string) {
-
-  }
-  onCodeCompleted(code: string) {
-    
-  }
   login() {
     this.authService.login(this.authRequest)
       .subscribe({
@@ -84,7 +65,7 @@ export class LoginComponent {
             this.router.navigate(['profile']);
           }
           else {
-            this.temp = false;
+            this.showLoginForm = false;
             this.authRequestTfa.email = this.authRequest.email;
 
           }
@@ -92,18 +73,14 @@ export class LoginComponent {
       });
   }
   verify(){
-    //this.authRequestTfa.twoFactorCodeSix
     this.authService.loginTfa(this.authRequestTfa).subscribe({
       next: (response) => {
         this.authResponseTfa = response;
         localStorage.setItem('email', this.authResponseTfa.email as string);
-            localStorage.setItem('token', this.authResponseTfa.token as string);
-            localStorage.setItem("2fa", "true");
-            //this.authService.setRefreshToken();
+        localStorage.setItem('token', this.authResponseTfa.token as string);
+        localStorage.setItem("2fa", "true");
 
-            console.log(this.authResponse.email)
-            console.log(this.authResponse.token);
-            this.router.navigate(['profile']);
+        this.router.navigate(['profile']);
             
       }
     })

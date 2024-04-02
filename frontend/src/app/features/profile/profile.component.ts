@@ -44,76 +44,33 @@ export class ProfileComponent {
       const dialogRef = this.dialog.open(EnableTwofaComponent, {
         data: {
           imageUrl: this.twoFaResponse.qrCodeImageUrl,
-          key: this.twoFaResponse.manualEntryKey,
-          
-        }
-        
+          key: this.twoFaResponse.manualEntryKey,          
+        }        
       });
       dialogRef.componentInstance.dialogClosed.subscribe((twoFaEnabled: boolean) => {
         this.twoFaEnabled = twoFaEnabled;
-        console.log(twoFaEnabled);
       });
   }
   get2fa() {
     this.authService.enable2fa().subscribe({
       next: (response) => {
         if(response) {
-          //this.allow2faDialogOpen = true;
           this.twoFaResponse = response;
           localStorage.setItem("qrcode", this.twoFaResponse.qrCodeImageUrl as string);
           localStorage.setItem("key", this.twoFaResponse.manualEntryKey as string);
-
-          console.log("key: " +this.twoFaResponse.manualEntryKey);
-          console.log("image:" + this.twoFaResponse.qrCodeImageUrl);
           this.openEnable2fa();
         }
         else {
-          console.log("nothing");
+          console.log("Could not open enable 2fa");
         }
       }
     })
   }
   openRemove2fa(): void {
-    //this.openEnable2faService.openRemove2fa();
-    //this.dialog.open(RemoveTwofaComponent, { disableClose: true, });
-    const dialogRef = this.dialog.open(RemoveTwofaComponent, {
-    });
+    const dialogRef = this.dialog.open(RemoveTwofaComponent, {});
     dialogRef.componentInstance.dialogClosed.subscribe((twoFaEnabled: boolean) => {
       this.twoFaEnabled = twoFaEnabled;
-      console.log("twofa:" + twoFaEnabled);
     });
   }
-/*
-  toggleChanged(event: any) {
-    if (event.target.checked) {
-      this.allow2faDialogOpen = true;
-      //this.openEnable2fa();
-    } else {
-      this.allow2faDialogOpen = false;
-      this.openRemove2fa();
-    }
-  }*/
 
-/*
-  enable2fa(): void {
-    console.log(this.twoFaRequest.email)
-    //this.allow2faDialogOpen = true;
-
-    this.authService.enable2fa().subscribe({
-      next: (response) => {
-        if(response) {
-          //this.allow2faDialogOpen = true;
-          this.twoFaResponse = response;
-          localStorage.setItem("qrcode", this.twoFaResponse.qrCodeImageUrl as string);
-          console.log("key: " +this.twoFaResponse.manualEntryKey);
-          console.log("image:" + this.twoFaResponse.qrCodeImageUrl);
-          this.openEnable2fa();
-        }
-        else {
-          console.log("nothing");
-        }
-      }
-    })
-  }
-  */
 }
