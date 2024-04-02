@@ -15,7 +15,7 @@ import { DevicesComponent } from './features/devices/devices.component';
     standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
-    imports: [SidebarComponent, RouterOutlet, HomeComponent, HeaderComponent, LoginComponent,ReactiveFormsModule,CommonModule, DevicesComponent]
+    imports: [SidebarComponent, RouterOutlet, HomeComponent, HeaderComponent, LoginComponent, ReactiveFormsModule, CommonModule, DevicesComponent]
 })
 export class AppComponent implements OnDestroy {
   title = 'frontend';
