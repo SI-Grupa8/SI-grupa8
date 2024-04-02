@@ -1,6 +1,7 @@
 ﻿using BLL.DTOs;
 using DAL.Entities;
 using Google.Authenticator;
+using Microsoft.AspNetCore.Http;
 using System;
 namespace BLL.Interfaces
 {
@@ -9,7 +10,6 @@ namespace BLL.Interfaces
         Task<UserDto> AddUser(UserRegisterDto userRegisterDto);
         Task<List<User>> GetAll();
         Task<SetupCode> SetupCode(User user);
-        Task<string> GenerateQRCodeImageUrl(User user, SetupCode setupCode);
         Task<User> GetUserByPhoneNumber(string phoneNumber);
         Task<User> GetUserByEmail(string email);
         Task RefreshUserToken(int userID, RefreshTokenDto refreshTokenDto);
@@ -20,6 +20,10 @@ namespace BLL.Interfaces
         Task<List<UserDto>> GetAllByRole(string role);
         Task<User> GetUserById(int id);
         Task<List<int>> ExtractUserIDs(List<UserDto> users);
+
+        Task<(CookieOptions cookiesOption, string refreshToken, object data)> UserLogIn(UserLogIn userRequest);
+        Task<object> EnableTwoFactorAuthentication(int userID);
+        Task<UserDto> GetUser(int userID);
     }
 }
 

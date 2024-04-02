@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BLL.DTOs;
+﻿using BLL.DTOs;
 using BLL.Interfaces;
-using BLL.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    
+
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("api/[controller]"),Authorize]
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
@@ -25,6 +20,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<RoleDto>> GetRoleByID(int id)
         {
             return await _roleService.GetRoleByID(id);

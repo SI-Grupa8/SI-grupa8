@@ -16,14 +16,11 @@ namespace DAL.Repositories
 			_context = context;
 		}
 
-        public async Task<List<User>> GetAll()
-        {
-            return await _context.Users.ToListAsync();
-        }
-
 		public async Task<User> FindByEmail(string email)
 		{
+
 			return await _context.Users.Include(u => u.Role).FirstAsync(x => x.Email == email);
+
 		}
 
         public async Task<User> FindByPhoneNumber(string phoneNumber)
@@ -33,7 +30,7 @@ namespace DAL.Repositories
 
         public async Task<User> GetByToken(string token)
         {
-            return await _context.Users.FirstAsync(x => x.RefreshToken == token);
+            return await _context.Users.Include(x => x.Role).FirstAsync(x => x.RefreshToken == token);
         }
 
         public async Task<List<User>> GetAllByCompanyId(int companyID)
