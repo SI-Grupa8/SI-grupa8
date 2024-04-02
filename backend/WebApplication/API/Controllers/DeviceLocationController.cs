@@ -31,7 +31,15 @@ namespace API.Controllers
         {
             string token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
             var mac = JWTHelper.GetDeviceClaims(token);
+            try
+            {
             await _deviceLocationService.SaveCurrentLocation(lat, lg, mac);
+
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
             return Ok(new { Message = "Location saved" });
         }

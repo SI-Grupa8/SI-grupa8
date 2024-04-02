@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -40,8 +41,16 @@ namespace BLL.Services
 
         public async Task SaveCurrentLocation(string lat, string lgi, string macAddress)
         {
-            //mac address whitelist
-            //TODO
+            
+            var allowedMacString = _configuration.GetSection("AppSettings:MacWhitelist").Value!;
+            var allowedMacList = allowedMacString.Split(';', StringSplitOptions.RemoveEmptyEntries)
+            .Select(host => host.Trim())
+            .ToList();
+
+            if (!allowedMacList.Contains(macAddress))
+            {
+                throw new UnauthorizedAccessException("Unauthorized: Device's MAC address not whitelisted.");
+            }
 
             //algoritam
             //TODO
