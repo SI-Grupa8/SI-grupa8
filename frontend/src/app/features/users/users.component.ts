@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common'; 
+import { NgIf, NgFor, CommonModule } from '@angular/common'; 
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,7 +10,7 @@ import { UserService } from '../../core/services/http/user.service';
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, FormsModule, RouterModule, NgFor ],
+  imports: [NgIf, ReactiveFormsModule, FormsModule, RouterModule, NgFor, CommonModule ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
@@ -19,7 +19,7 @@ import { UserService } from '../../core/services/http/user.service';
 export class UsersComponent {
   modalVisible: boolean = false;
   users: any[] = [];
-  adminId: number = 0;
+  adminId: number = 2;
 
   userRequest: UserRequest = {
   }

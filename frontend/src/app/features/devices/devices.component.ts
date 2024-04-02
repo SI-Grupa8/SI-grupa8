@@ -3,11 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddNewDeviceComponent } from './add-new-device/add-new-device.component';
 import { DeviceService } from '../../core/services/http/device.service';
 import { DeviceRequest } from '../../core/models/device-request';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-devices',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './devices.component.html',
   styleUrl: './devices.component.scss'
 })
