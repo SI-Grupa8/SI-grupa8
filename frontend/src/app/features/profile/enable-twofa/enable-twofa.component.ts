@@ -47,7 +47,7 @@ export class EnableTwofaComponent {
     this.authService.loginTfa(this.loginTfaRequest).subscribe(response => {
       console.log( 'response: ', response );
       if (response) {
-         localStorage.setItem('checked', 'true');
+         localStorage.setItem('2fa', 'true');
          //console.log("toggle")
          this.closeDialog();
       } else {
@@ -73,6 +73,7 @@ export class EnableTwofaComponent {
     this.authService.store2fa(this.verifyRequest).subscribe(response => {
       if(response){
         console.log("Good pin!");
+        localStorage.setItem("2fa", "true");
         this.twoFaEnabled = true;
         this.closeDialog();
       }

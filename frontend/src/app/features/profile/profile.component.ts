@@ -29,7 +29,7 @@ export class ProfileComponent {
     private authService: AuthService
   ) {
     this.twoFaRequest.email = localStorage.getItem("email");
-    if(localStorage.getItem('checked') == "true"){
+    if(localStorage.getItem('2fa') == "true"){
       this.twoFaEnabled = true;
     }
    }

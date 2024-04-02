@@ -21,6 +21,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Authorization;
 using API.JWTHelpers;
+using System.Linq;
 
 namespace API.Controllers
 {
@@ -49,7 +50,7 @@ namespace API.Controllers
             var userDto = await _userService.AddUser(userRegisterDto);
             return Ok(userDto);
         }
-
+        
         [HttpPost("login")]
         public async Task<ActionResult<object>> Login(UserLogIn request)
         {
@@ -58,12 +59,56 @@ namespace API.Controllers
                 return BadRequest("Cannot login without at least an email or a phone number!");
 
             var (cookieOptions, refresh, data) = await _userService.UserLogIn(request);
-            Response.Cookies.Append("refreshToken", refresh, cookieOptions);
+
+            if (refresh != null)
+            {
+                Response.Cookies.Append("refreshToken", refresh, cookieOptions);
+            }
 
             return Ok(data);
 
         }
+        /*
+        [HttpPost("login")]
+        public async Task<ActionResult<object>> Login(UserLogIn request)
+        {
+            try
+            {
+                // Validate input: Ensure either email or phone number is provided
+                if (string.IsNullOrEmpty(request.Email) && string.IsNullOrEmpty(request.PhoneNumber))
+                    return BadRequest("Cannot login without at least an email or a phone number!");
 
+                // Authenticate user using provided email/phone and password
+                var (cookieOptions, refresh, data) = await _userService.UserLogIn(request);
+
+                // If user has 2FA enabled, return response indicating 2FA is required
+                if (data)
+                {
+                    return Ok(new { RequiresTwoFactorAuthentication = true });
+                }
+
+                // If login successful and 2FA not required
+                if (!string.IsNullOrEmpty(refresh))
+                {
+                    // If QR code image URL is generated successfully
+                    if (!string.IsNullOrEmpty(data.QRCodeImageUrl))
+                    {
+                        // Append refresh token to response cookies
+                        Response.Cookies.Append("refreshToken", refresh, cookieOptions);
+                    }
+
+                    // Return login data
+                    return Ok(data);
+                }
+
+                return BadRequest("Invalid login credentials");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately
+                return StatusCode(500, $"An error occurred while logging in: {ex.Message}");
+            }
+        }*/
         /*
         [HttpPost("refresh-token")]
         public async Task<ActionResult<string>> RefreshToken()

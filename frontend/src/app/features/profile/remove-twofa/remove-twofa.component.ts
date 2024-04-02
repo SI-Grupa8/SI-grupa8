@@ -29,13 +29,13 @@ export class RemoveTwofaComponent {
     this.twofaService.closeRemove2fa();
   }
   disable2fa() {
-    this.authService.disable2fa(this.twoFaRequest);
-    localStorage.setItem('checked', 'false');
+    this.authService.disable2fa();
+    localStorage.setItem('2fa', 'false');
     this.closeDialog();
   }
   nothing() {
 //this.authService.enable2fa(this.twoFaRequest);
-    localStorage.setItem('checked', 'true');
+    localStorage.setItem('2fa', 'true');
     this.closeDialog();
   }
 }

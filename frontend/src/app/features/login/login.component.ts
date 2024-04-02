@@ -74,6 +74,7 @@ export class LoginComponent {
           if (!this.authResponse.twoFaEnabled) {
             localStorage.setItem('email', this.authResponse.email as string);
             localStorage.setItem('token', this.authResponse.token as string);
+            localStorage.setItem('2fa', this.authResponse.twoFaEnabled as unknown as string);
             document.cookie = "refresh="+this.authResponse.refresh+"; expires="+this.authResponse.expires;
             
             localStorage.setItem("refresh", this.authResponse.refresh as string);
@@ -95,9 +96,9 @@ export class LoginComponent {
     this.authService.loginTfa(this.authRequestTfa).subscribe({
       next: (response) => {
         this.authResponseTfa = response;
-        localStorage.setItem('email', this.authResponse.email as string);
-            localStorage.setItem('token', this.authResponse.token as string);
-            localStorage.setItem("checked", "true");
+        localStorage.setItem('email', this.authResponseTfa.email as string);
+            localStorage.setItem('token', this.authResponseTfa.token as string);
+            localStorage.setItem("2fa", "true");
             //this.authService.setRefreshToken();
 
             console.log(this.authResponse.email)

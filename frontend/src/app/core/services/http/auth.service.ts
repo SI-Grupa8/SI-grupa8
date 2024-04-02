@@ -61,9 +61,13 @@ export class AuthService {
     return this.http.post<any>
     (`${this.apiUrl}/store-tfa`, verifyRequest, { headers });
   }
-  disable2fa(twoFaRequest: TwoFaRequest) {
-    return this.http.post<string>
-    (`${this.apiUrl}/disable-tfa`, twoFaRequest);
+  disable2fa() {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>
+    (`${this.apiUrl}/disable-tfa`, {} , { headers });
   }
   logout() {
     localStorage.clear();

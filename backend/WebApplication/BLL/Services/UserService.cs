@@ -71,7 +71,7 @@ namespace BLL.Services
             await _userRepository.SaveChangesAsync();
             return _mapper.Map<UserDto>(user);
         }
-
+        /*
         public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogIn(UserLogIn userRequest)
         {
             var user = new User();
@@ -88,11 +88,13 @@ namespace BLL.Services
             {
                 throw new Exception("Wrong password.");
             }
+            var refreshToken = GenerateRefreshToken();//edis
+            var cookieOptions = SetRefreshToken(refreshToken, user);//edis
             if (user.TwoFactorEnabled == false)
             {
                 string token = CreateToken(user);
-                var refreshToken = GenerateRefreshToken();
-                var cookieOptions = SetRefreshToken(refreshToken, user);
+                //var refreshToken = GenerateRefreshToken();
+                //var cookieOptions = SetRefreshToken(refreshToken, user);
                 RefreshTokenDto refresh = new RefreshTokenDto()
                 {
                     Token = refreshToken.Token,
@@ -111,14 +113,70 @@ namespace BLL.Services
                         expires = refresh.Expires.ToString()
                     });
             }
-            return (null, null,
+            return (cookieOptions, null,
                 new
                 {
                     twoFaEnabled = user.TwoFactorEnabled,
                     email = user.Email
                 });
         }
+        */
+        public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogIn(UserLogIn userRequest)
+        {
+            var user = new User();
+            if (!string.IsNullOrEmpty(userRequest.Email))
+            {
+                user = await _userRepository.FindByEmail(userRequest.Email);
+            }
+            else if (!string.IsNullOrEmpty(userRequest.PhoneNumber))
+            {
+                user = await _userRepository.FindByPhoneNumber(userRequest.PhoneNumber);
+            }
 
+            if (user == null || user.PasswordHash == null)
+            {
+                throw new Exception("User not found or password hash is null.");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(userRequest.Password, Encoding.UTF8.GetString(user.PasswordHash)))
+            {
+                throw new Exception("Wrong password.");
+            }
+
+            var refreshToken = GenerateRefreshToken();
+            var cookieOptions = SetRefreshToken(refreshToken, user);
+
+            if (user.TwoFactorEnabled == false)
+            {
+                string token = CreateToken(user);
+
+                RefreshTokenDto refresh = new RefreshTokenDto()
+                {
+                    Token = refreshToken?.Token, // Ensure Token is not null
+                    Created = refreshToken?.Created ?? DateTime.UtcNow,
+                    Expires = refreshToken?.Expires ?? DateTime.UtcNow.AddMinutes(30),
+                };
+
+                await RefreshUserToken(user.UserID, refresh);
+
+                return (cookieOptions, refreshToken?.Token,
+                    new
+                    {
+                        token = token,
+                        twoFaEnabled = user.TwoFactorEnabled,
+                        email = user.Email,
+                        refresh = refresh.Token,
+                        expires = refresh.Expires.ToString()
+                    });
+            }
+
+            return (cookieOptions, null,
+                new
+                {
+                    twoFaEnabled = user.TwoFactorEnabled,
+                    email = user.Email
+                });
+        }
         public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogInTfa(UserLoginTfa request)
         {
 
@@ -228,7 +286,17 @@ namespace BLL.Services
             var code = authenticator.GenerateSetupCode("WebApplication", user.Name + user.Surname, ConvertToBytes(user.TwoFactorKey, false), 300);
             return code;
         }
+        public string GenerateQRCodeImageUrl(User user, SetupCode setupCode)
+        {
+            string manualEntryKey = setupCode.ManualEntryKey;
+            string fullName = $"{Uri.EscapeDataString(user.Name)}+{Uri.EscapeDataString(user.Surname)}";
+            string qrCodeContent = $"otpauth://totp/WebApplication:{fullName}?secret={manualEntryKey}&issuer=WebApplicationApp";
 
+            var qrCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl={Uri.EscapeDataString(qrCodeContent)}";
+
+            return qrCodeImageUrl;
+        }
+        /*
         public string GenerateQRCodeImageUrl(User user, SetupCode setupCode)
         {
             string manualEntryKey = setupCode.ManualEntryKey;
@@ -238,7 +306,7 @@ namespace BLL.Services
             var qrCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl={qrCodeContent}";
 
             return qrCodeImageUrl;
-        }
+        }*/
 
         private byte[] ConvertToBytes(string secret, bool secretIsBase32) =>
                secretIsBase32 ? Base32Encoding.ToBytes(secret) : Encoding.UTF8.GetBytes(secret);
