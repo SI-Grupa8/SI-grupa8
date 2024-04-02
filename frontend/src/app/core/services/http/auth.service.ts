@@ -72,6 +72,8 @@ export class AuthService {
   logout() {
     localStorage.clear();
     this.router.navigateByUrl('login');
+    //this will clear refrsh token from cookies
+    document.cookie = "refresh=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
   }
 
   

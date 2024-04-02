@@ -57,15 +57,32 @@
                 max-width: 500px;
                 .twofa-button {
                   display: flex;
-                  height: 30px;
+                  align-items: center;
+                  justify-content: center;
+                  height: 35px;
+                  width: 120px;
                   margin-top: 10px;
                   border-radius: 6px;
-                  border: 1px solid lightblue;
+                  
+                  //border: 1px solid lightblue;
                   cursor: pointer;
                 }
-                #setup-twofa {}
+                #setup-twofa {
+                  background-color: lightseagreen;
+                  color: white;
+                  border: none;
+                }
+                #setup-twofa:hover {
+                  background-color: rgb(63, 220, 212)
+                }
                 #remove-twofa {
+                  background-color: rgb(255, 66, 66);
+                  color: white;
+                  border: none;
                   //display: none;
+                }
+                #remove-twofa:hover {
+                  background-color: rgb(255, 86, 86);
                 }
                 .disappear {
                   display: none;
