@@ -56,8 +56,12 @@ export class LoginComponent {
             localStorage.setItem('email', this.authResponse.email as string);
             localStorage.setItem('token', this.authResponse.token as string);
             localStorage.setItem('2fa', this.authResponse.twoFaEnabled as unknown as string);
-            document.cookie = "refresh="+this.authResponse.refresh+"; expires="+this.authResponse.expires;
-            
+
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 30); 
+            console.log(expirationDate);
+            document.cookie = "refresh="+this.authResponse.refresh+"; expires="+expirationDate;
+
             localStorage.setItem("refresh", this.authResponse.refresh as string);
             console.log(this.authResponse.email)
             console.log(this.authResponse.token);
@@ -79,6 +83,13 @@ export class LoginComponent {
         localStorage.setItem('email', this.authResponseTfa.email as string);
         localStorage.setItem('token', this.authResponseTfa.token as string);
         localStorage.setItem("2fa", "true");
+        document.cookie = "refresh="+this.authResponseTfa.refresh+"; expires="+this.authResponse.expires;
+        localStorage.setItem("refresh", this.authResponseTfa.refresh as string);
+
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 30); 
+        console.log(expirationDate);
+        document.cookie = "refresh="+this.authResponse.refresh+"; expires="+expirationDate;
 
         this.router.navigate(['profile']);
             
