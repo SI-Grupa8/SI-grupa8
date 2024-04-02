@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using BLL.DTOs;
 using BLL.Interfaces;
+using DAL.Entities;
 using DAL.Interfaces;
+using DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +23,42 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<CompanyDto> GetCompanyByID(int id)
+        public async Task<Company> GetCompanyByID(int id)
         {
             var company = await _companyRepository.GetById(id);
 
+            return company;
+        }
+
+        public async Task<List<CompanyDto>> GetAll()
+        {
+            var companies=await _companyRepository.GetAll();
+            return _mapper.Map<List<CompanyDto>>(companies);
+        }
+
+        public async Task<CompanyDto> GetCompanyByName(string name)
+        {
+            var company = await _companyRepository.GetByName(name);
+
             return _mapper.Map<CompanyDto>(company);
+        }
+        public async Task RemoveCompany(Company company)
+        {
+            _companyRepository.Remove(company);
+            await _companyRepository.SaveChangesAsync();
+        }
+        public async Task<CompanyDto> AddCompany(CompanyDto request)
+        {
+            var company = _mapper.Map<Company>(request);
+            _companyRepository.Add(company);
+            _companyRepository.SaveChangesAsync();
+            return request;
+        }
+
+        public async Task UpdateCompany(Company company)
+        {
+            _companyRepository.Update(company);
+            await _companyRepository.SaveChangesAsync();
         }
     }
 }

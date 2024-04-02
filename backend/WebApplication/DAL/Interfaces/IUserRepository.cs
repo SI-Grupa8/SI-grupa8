@@ -9,6 +9,8 @@ namespace DAL.Interfaces
         Task<User> FindByPhoneNumber(string phoneNumber);
         Task<User> GetByToken(string token);
         Task<List<User>> GetAllByCompanyId(int companyID);
+        Task<List<User>> GetAllByRole(string role);
+        Task<User> GetUserById(int userId);
     }
 }
 

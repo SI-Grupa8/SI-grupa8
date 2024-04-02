@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RegisterRequest } from '../../models/register-request';
 import { AuthResponse } from '../../models/auth-response';
@@ -34,22 +34,46 @@ export class AuthService {
     return this.http.post<AuthTfaResponse>(`${this.apiUrl}/login/tfa`, authTfaRequest);
   }
 
-  verifyCode(verificationRequest: VerifyRequest) {
-    return this.http.post<AuthResponse>
-    (`${this.apiUrl}/verify`, verificationRequest);
+  enable2fa() {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<{}>
+    (`${this.apiUrl}/get-tfa`, {}, { headers });
   }
+/*
+  enable2fa() {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<{}>
+    (`${this.apiUrl}/enable-tfa`,{}, { headers });
+  }*/
 
-  enable2fa(twoFaRequest: TwoFaRequest) {
-    return this.http.post<TwoFaResponse>
-    (`${this.apiUrl}/enable-tfa`, twoFaRequest);
+
+  store2fa(verifyRequest: VerifyRequest){
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>
+    (`${this.apiUrl}/store-tfa`, verifyRequest, { headers });
   }
-  disable2fa(twoFaRequest: TwoFaRequest) {
-    return this.http.post<string>
-    (`${this.apiUrl}/disable-tfa`, twoFaRequest);
+  disable2fa() {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>
+    (`${this.apiUrl}/disable-tfa`, {} , { headers });
   }
   logout() {
     localStorage.clear();
     this.router.navigateByUrl('login');
+    //this will clear refrsh token from cookies
+    document.cookie = "refresh=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
   }
 
   

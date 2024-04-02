@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using static QRCoder.PayloadGenerator;
 
 namespace DAL.Repositories
 {
@@ -14,14 +16,11 @@ namespace DAL.Repositories
 			_context = context;
 		}
 
-        public async Task<List<User>> GetAll()
-        {
-            return await _context.Users.ToListAsync();
-        }
-
 		public async Task<User> FindByEmail(string email)
 		{
-			return await _context.Users.FirstAsync(x => x.Email == email);
+
+			return await _context.Users.Include(u => u.Role).FirstAsync(x => x.Email == email);
+
 		}
 
         public async Task<User> FindByPhoneNumber(string phoneNumber)
@@ -31,7 +30,7 @@ namespace DAL.Repositories
 
         public async Task<User> GetByToken(string token)
         {
-            return await _context.Users.FirstAsync(x => x.RefreshToken == token);
+            return await _context.Users.Include(x => x.Role).FirstAsync(x => x.RefreshToken == token);
         }
 
         public async Task<List<User>> GetAllByCompanyId(int companyID)
@@ -39,6 +38,15 @@ namespace DAL.Repositories
             return await _context.Users.Where(x => x.CompanyID == companyID).ToListAsync();
         }
 
+        public async Task<List<User>> GetAllByRole(string role)
+        {
+            return await _context.Users.Where(x => x.Role.RoleName == role).ToListAsync();
+        }
+
+        public async Task<User> GetUserById(int userID)
+        {
+            return await _context.Users.Include(u => u.Role).FirstAsync(x => x.UserID == userID);
+        }
     }
 }
 

@@ -22,5 +22,9 @@ namespace DAL.Repositories
         {
             return await _context.Companies.FirstAsync(x => x.AdminID == id);
         }
+        public async Task<Company> GetByName(string name)
+        {
+            return await _context.Companies.FirstAsync(x => x.CompanyName == name);
+        }
     }
 }

@@ -28,7 +28,8 @@ export class RegisterComponent {
   temp=true;
 
   registerRequest: RegisterRequest = {};
-  authResponse: AuthResponse = {};
+  authResponse: AuthResponse = {
+  };
   message = '';
   registerForm: FormGroup;
   constructor(private f: FormBuilder, private router: Router, private authService: AuthService){

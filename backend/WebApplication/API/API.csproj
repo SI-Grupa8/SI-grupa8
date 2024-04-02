@@ -36,4 +36,10 @@
     </ProjectReference>
     <ProjectReference Include="..\DAL\DAL.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="JWTHelpers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="JWTHelpers\" />
+  </ItemGroup>
 </Project>

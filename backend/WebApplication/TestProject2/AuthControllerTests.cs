@@ -25,7 +25,7 @@ namespace TestProject
             var userServiceMock = new Mock<IUserService>();
 
             // Act
-            var controller = new AuthController(configMock.Object, userServiceMock.Object);
+            var controller = new AuthController(userServiceMock.Object, configMock.Object);
 
             // Assert
             Assert.IsNotNull(controller);

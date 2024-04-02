@@ -13,6 +13,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -54,6 +56,7 @@ builder.Services.AddSwaggerGen(options=>
 
 builder.Services.AddAuthentication().AddJwtBearer(options =>
 {
+    options.IncludeErrorDetails = true;
     var token = builder.Configuration.GetSection("AppSettings:Token").Value!;
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -72,28 +75,25 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-app.UseAuthentication();
-
 app.UseCors(options =>
 {
     options.AllowAnyOrigin();
     options.AllowAnyHeader();
     options.AllowAnyMethod();
 });
-app.UseAuthorization();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Configure the HTTP request pipeline.
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.MapControllers();
+app.UseAuthentication();
 
-app.UseCors();
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
 
