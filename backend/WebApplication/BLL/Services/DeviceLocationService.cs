@@ -2,6 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using AutoMapper;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -52,8 +53,42 @@ namespace BLL.Services
                 throw new UnauthorizedAccessException("Unauthorized: Device's MAC address not whitelisted.");
             }
 
-            //algoritam
-            //TODO
+            var locCode = _configuration.GetSection("AppSettings:LocationCode").Value;
+
+            if (IsValidLatitude(lat, locCode) && IsValidLongitude(lgi, locCode))
+            {
+                string decodedLat = DecodeLocation(lat, locCode);
+                string decodedLng = DecodeLocation(lgi, locCode);
+
+                // Save the location data in DB
+                // when connected with branch where DB for device is implemented
+            }
+            else
+            {
+                // error: location not valid, acess denied
+                // maybe return a string and write BadRequest("Invalid latitude or longitude. Access denied.");
+                // in DeviceLocationController or: 
+                // throw new InvalidOperationException();
+                // and use try catch in DeviceLocationController 
+            }
+        }
+
+        private static bool IsValidLatitude(string location, string locationCode)
+        {
+            return Regex.IsMatch(location, @"^-?\d{2}\.\d{3}{locationCode}\w{3}$");
+        }
+
+        private static bool IsValidLongitude(string location, string locationCode)
+        {
+            return Regex.IsMatch(location, @"^-?\d{2,3}\.\d{3}{locationCode}\w{3}$");
+        }
+
+        private static string DecodeLocation(string location, string locationCode)
+        {
+            string beforeCode = location.Split(locationCode)[0];
+            string afterCode = location.Split(locationCode)[1];
+            string decodedLocation = beforeCode + afterCode;
+            return decodedLocation;
         }
     }
 }
