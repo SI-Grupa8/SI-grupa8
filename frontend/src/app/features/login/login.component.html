@@ -1,63 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Log in</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-</head>
-
-<body>
-    <div class="background">
-        <div class="forma"  *ngIf="temp">
+<div class="background">
+    @if (showLoginForm) {
+        <div class="forma">
             <div class="logo-container">
                 <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>    
                 <p>DeliverEase</p>
             </div>
-            <form  (ngSubmit)="login()">
-                                
-                <input name="usermail" [(ngModel)]="authRequest.email" type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}" >
-                
-                <input name="pass" [(ngModel)]="authRequest.password" type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;"[ngModelOptions]="{standalone: true}">
-                
-                
-                <!--<a href="#" (click)="forgotPass()">Forgot password?</a>-->
-            
+            <form  (ngSubmit)="login()" [formGroup]="loginForm">                 
+                <input formControlName="email" name="usermail"  type="text" placeholder="E-mail" style="margin-top: 20px; margin-bottom: 5px;">
+                <!--validation of email-->
+                @if (emailControl?.dirty || emailControl?.touched) {
+                    @if (emailControl?.hasError('required')) {
+                        <span class="error">Email is required</span>
+                    }
+                    @else if (emailControl?.hasError('email')) {
+                        <span class="error">Email not valid</span>
+                    }
+                }               
+                <input formControlName="pass" name="pass"  type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;">
+                <!--validation of password-->
+                @if (passControl?.dirty || passControl?.touched) {
+                    @if (passControl?.hasError('required')) {
+                        <span class="error">Password is required</span>
+                    }
+                    @else if (passControl?.hasError('minlength')) {
+                        <span class="error">Password has to be atleast 8 chars</span>
+                    }
+                }  
+
                 <button   type="submit" style="margin-top: 40px; margin-bottom: 5px;">LOGIN</button>
             </form>
         </div>
-        <div class="twoauth" *ngIf="!temp">
+    } 
+    @else {
+        <div class="twoauth" *ngIf="!showLoginForm">
             <h2 style="margin-top: -20px; margin-bottom: 40px;">Two-Factor Authentication</h2>
-            <form id="authForm" (ngSubmit)="verify()">
+            <form [formGroup]="loginTwofaForm" id="authForm" (ngSubmit)="verify()">
                 <label for="pincode" style="margin-top: 5px; margin-bottom: 5px;">Enter the six digit code:</label>
-                    <input [(ngModel)]="authRequestTfa.twoFactorCodeSix" type="text" name="pincode" id="pincode">
-                <!--<code-input [(ngModel)]="" class="code-input" [isCodeHidden]="false"
-                    [codeLength]="6"
-                    isCharsCode:false
-                    (codeChanged)="onCodeChanged($event)"
-                    (codeCompleted)="onCodeCompleted($event)">
-                </code-input>-->
-    
-                <!--<div class="digit-group">
-                    <input class="digit-input" type="text" id="digit-1" name="digit-1" maxlength="1" pattern="[0-9]{1}">
-                    <input class="digit-input" type="text" id="digit-2" name="digit-2" maxlength="1" pattern="[0-9]{1}">
-                    <input class="digit-input" type="text" id="digit-3" name="digit-3" maxlength="1" pattern="[0-9]{1}">
-                    <input class="digit-input" type="text" id="digit-4" name="digit-4" maxlength="1" pattern="[0-9]{1}">
-                    <input class="digit-input" type="text" id="digit-5" name="digit-5" maxlength="1" pattern="[0-9]{1}">
-                    <input class="digit-input" type="text" id="digit-6" name="digit-6" maxlength="1" pattern="[0-9]{1}">
-                </div>-->
-                
+                <input formControlName="pincode"  type="text" name="pincode" id="pincode">
+                <!--validation of pincode-->
+                @if (pinControl?.dirty || pinControl?.touched) {
+                    @if (pinControl?.hasError('required')) {
+                        <span class="error">Pin is required</span>
+                    }
+                    @else if (pinControl?.hasError('minlength') || pinControl?.hasError('maxlength')) {
+                        <span class="error">Pin should be 6 digits</span>
+                    }
+                }  
                 <button class="verify" type="submit" style="margin-top: 15px; margin-bottom: 5px;">VERIFY</button>
             </form>
         </div>
-    </div>
+    }
+</div>
 
-        
+<!--BETTER CODE INPUT SOLUTIONS, NOT READY YET-->
 
+<!--<code-input [(ngModel)]="" class="code-input" [isCodeHidden]="false"
+    [codeLength]="6"
+    isCharsCode:false
+    (codeChanged)="onCodeChanged($event)"
+    (codeCompleted)="onCodeCompleted($event)">
+</code-input>-->
     
-</body>
-
-</html>
+<!--<div class="digit-group">
+    <input class="digit-input" type="text" id="digit-1" name="digit-1" maxlength="1" pattern="[0-9]{1}">
+    <input class="digit-input" type="text" id="digit-2" name="digit-2" maxlength="1" pattern="[0-9]{1}">
+    <input class="digit-input" type="text" id="digit-3" name="digit-3" maxlength="1" pattern="[0-9]{1}">
+    <input class="digit-input" type="text" id="digit-4" name="digit-4" maxlength="1" pattern="[0-9]{1}">
+    <input class="digit-input" type="text" id="digit-5" name="digit-5" maxlength="1" pattern="[0-9]{1}">
+    <input class="digit-input" type="text" id="digit-6" name="digit-6" maxlength="1" pattern="[0-9]{1}">
+</div>-->
