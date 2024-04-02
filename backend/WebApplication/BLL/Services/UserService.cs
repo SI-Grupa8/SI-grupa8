@@ -1,5 +1,9 @@
 ﻿using System;
+
+using System.ComponentModel.Design;
+
 using System.IdentityModel.Tokens.Jwt;
+
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,11 +12,15 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
+using DAL.Repositories;
 using Google.Authenticator;
+using Newtonsoft.Json.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+
 
 namespace BLL.Services
 {
@@ -112,9 +120,9 @@ namespace BLL.Services
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
-                
                 PasswordSalt = [],
-                RoleID = 0
+                RoleID = userRegisterDto.RoleID,
+                CompanyID = userRegisterDto.CompanyID
             };
             _userRepository.Add(user);
 
@@ -222,6 +230,42 @@ namespace BLL.Services
             await _userRepository.SaveChangesAsync();
             var userDto = _mapper.Map<UserDto>(user);*/
         }
+
+
+        public async Task<List<UserDto>> GetAllByCompanyId(int companyID)
+        {
+            var users = await _userRepository.GetAllByCompanyId(companyID);
+            return _mapper.Map<List<UserDto>>(users);
+        }
+
+        public async Task RemoveUser(User user)
+        {
+            _userRepository.Remove(user);
+            await _userRepository.SaveChangesAsync();
+        }
+
+        public async Task<List<UserDto>> GetAllByRole(string role)
+        {
+            var users = await _userRepository.GetAllByRole(role);
+            return _mapper.Map<List<UserDto>>(users);
+        }
+
+        public async Task<User> GetUserById(int userId)
+        {
+            return await _userRepository.GetUserById(userId);
+        }
+
+        public async Task<List<int>> ExtractUserIDs(List<UserDto> users)
+        {
+            List<int> userIds = new List<int>();
+
+            foreach (UserDto user in users)
+            {
+                int userId = user.UserID;
+                userIds.Add(userId);
+            }
+
+            return userIds;
 
         private string CreateToken(User user)
         {

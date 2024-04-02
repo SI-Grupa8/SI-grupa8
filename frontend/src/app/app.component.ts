@@ -2,19 +2,20 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { LoginComponent } from './features/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DashboardComponent } from "./features/dashboard/dashboard.component";
+import { HomeComponent } from "./features/home/home.component";
 import { SidebarComponent } from "./core/layout/sidebar/sidebar.component";
 import { HeaderComponent } from "./core/layout/header/header.component";
 import { Subscription, filter, interval } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './core/services/http/auth.service';
+import { DevicesComponent } from './features/devices/devices.component';
 
 @Component({
     selector: 'app-root',
     standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
-    imports: [SidebarComponent, RouterOutlet, DashboardComponent, HeaderComponent, LoginComponent,ReactiveFormsModule,CommonModule]
+    imports: [SidebarComponent, RouterOutlet, HomeComponent, HeaderComponent, LoginComponent,ReactiveFormsModule,CommonModule, DevicesComponent]
 })
 export class AppComponent implements OnDestroy {
   title = 'frontend';
