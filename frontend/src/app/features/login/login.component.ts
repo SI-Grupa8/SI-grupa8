@@ -33,13 +33,19 @@ export class LoginComponent {
   authRequestTfa: AuthTfaRequest = {};
   authResponseTfa: AuthTfaResponse = {};
   loginForm: FormGroup;
+  loginTwofaForm: FormGroup;
   authResponse: AuthResponse = {};
 
   constructor(private f: FormBuilder, private authService: AuthService, private router: Router){
     this.loginForm = this.f.group({
-      usermail: ['', [Validators.required, emailOrPhoneValidator]],
+      email: ['', [Validators.required, emailOrPhoneValidator]],
       pass:['', [Validators.required]]
     });
+    this.loginTwofaForm = this.f.group({
+      email: ['', [Validators.required, emailOrPhoneValidator]],
+      pass:['', [Validators.required]],
+      pincode:['', [Validators.required]]
+    })
   }
 
   forgotPass(): void{
@@ -47,6 +53,9 @@ export class LoginComponent {
   }
 
   login() {
+    this.authRequest.email = this.loginForm.get('email')?.value;
+    this.authRequest.password = this.loginForm.get('pass')?.value;
+
     this.authService.login(this.authRequest)
       .subscribe({
         next: (response) => {
@@ -77,6 +86,8 @@ export class LoginComponent {
       });
   }
   verify(){
+    this.authRequestTfa.email = this.authRequest.email;
+    this.authRequestTfa.twoFactorCodeSix = this.loginTwofaForm.get('pincode')?.value;
     this.authService.loginTfa(this.authRequestTfa).subscribe({
       next: (response) => {
         this.authResponseTfa = response;
