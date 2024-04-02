@@ -74,7 +74,14 @@ export class ProfileComponent {
     })
   }
   openRemove2fa(): void {
-    this.openEnable2faService.openRemove2fa();
+    //this.openEnable2faService.openRemove2fa();
+    //this.dialog.open(RemoveTwofaComponent, { disableClose: true, });
+    const dialogRef = this.dialog.open(RemoveTwofaComponent, {
+    });
+    dialogRef.componentInstance.dialogClosed.subscribe((twoFaEnabled: boolean) => {
+      this.twoFaEnabled = twoFaEnabled;
+      console.log("twofa:" + twoFaEnabled);
+    });
   }
 /*
   toggleChanged(event: any) {

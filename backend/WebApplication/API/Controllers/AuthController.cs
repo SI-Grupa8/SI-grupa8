@@ -50,24 +50,8 @@ namespace API.Controllers
             var userDto = await _userService.AddUser(userRegisterDto);
             return Ok(userDto);
         }
-        
-        [HttpPost("login")]
-        public async Task<ActionResult<object>> Login(UserLogIn request)
-        {
-            //Check if input contains at least an email or a phone number
-            if (request.Email.IsNullOrEmpty() && request.PhoneNumber.IsNullOrEmpty())
-                return BadRequest("Cannot login without at least an email or a phone number!");
 
-            var (cookieOptions, refresh, data) = await _userService.UserLogIn(request);
 
-            if (refresh != null)
-            {
-                Response.Cookies.Append("refreshToken", refresh, cookieOptions);
-            }
-
-            return Ok(data);
-
-        }
         /*
         [HttpPost("login")]
         public async Task<ActionResult<object>> Login(UserLogIn request)
@@ -142,7 +126,23 @@ namespace API.Controllers
 
         }
         */
+        [HttpPost("login")]
+        public async Task<ActionResult<object>> Login(UserLogIn request)
+        {
+            //Check if input contains at least an email or a phone number
+            if (request.Email.IsNullOrEmpty() && request.PhoneNumber.IsNullOrEmpty())
+                return BadRequest("Cannot login without at least an email or a phone number!");
 
+            var (cookieOptions, refresh, data) = await _userService.UserLogIn(request);
+
+            if (refresh != null)
+            {
+                Response.Cookies.Append("refreshToken", refresh, cookieOptions);
+            }
+
+            return Ok(data);
+
+        }
         [HttpPost("login/tfa")]
         public async Task<ActionResult<object>> LoginTfa(UserLoginTfa request)
         {

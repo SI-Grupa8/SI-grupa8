@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { OpenEnable2faService } from '../../../core/services/dialogs/open-enable-2fa.service';
 import { TwoFaRequest } from '../../../core/models/two-fa-request';
@@ -12,9 +12,9 @@ import { AuthService } from '../../../core/services/http/auth.service';
   styleUrl: './remove-twofa.component.scss'
 })
 export class RemoveTwofaComponent {
-
+  twoFaEnabled: boolean = true;
   twoFaRequest: TwoFaRequest = {}//, item.getStorage na false
-
+  @Output() dialogClosed = new EventEmitter<boolean>();
   constructor(
     //private dialogRef: MatDialogRef<RemoveTwofaComponent>,
     private twofaService: OpenEnable2faService,
@@ -27,10 +27,14 @@ export class RemoveTwofaComponent {
 
   closeDialog(): void {
     this.twofaService.closeRemove2fa();
+    this.dialogClosed.emit(this.twoFaEnabled);
   }
   disable2fa() {
-    this.authService.disable2fa();
+    this.authService.disable2fa().subscribe((response)=> {
+      console.log(response);
+    })
     localStorage.setItem('2fa', 'false');
+    this.twoFaEnabled = false;
     this.closeDialog();
   }
   nothing() {
