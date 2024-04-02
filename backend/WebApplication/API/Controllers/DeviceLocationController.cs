@@ -19,7 +19,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<string> SetDeviceToken(string macAddress)
         {
             return Ok(_deviceLocationService.CreateDeviceToken(macAddress));
@@ -33,7 +33,7 @@ namespace API.Controllers
             var mac = JWTHelper.GetDeviceClaims(token);
             try
             {
-            await _deviceLocationService.SaveCurrentLocation(lat, lg, mac);
+                await _deviceLocationService.SaveCurrentLocation(lat, lg, mac);
 
             }
             catch (UnauthorizedAccessException ex)

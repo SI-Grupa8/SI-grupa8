@@ -65,11 +65,7 @@ namespace BLL.Services
             }
             else
             {
-                // error: location not valid, acess denied
-                // maybe return a string and write BadRequest("Invalid latitude or longitude. Access denied.");
-                // in DeviceLocationController or: 
-                // throw new InvalidOperationException();
-                // and use try catch in DeviceLocationController 
+                throw new UnauthorizedAccessException("Unauthorized: Incorrect longitude and latitude values.");
             }
         }
 
