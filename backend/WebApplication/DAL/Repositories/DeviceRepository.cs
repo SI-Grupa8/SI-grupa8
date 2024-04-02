@@ -18,12 +18,13 @@ namespace DAL.Repositories
             _context = context;
         }
 
-        public async Task<List<Device>> GetAllByCompanyId(int companyID)
+        public async Task<List<Device>> GetAllByCompanyUsersIds(List<int> usersIds)
         {
             return await _context.Devices
-                .Where(x => x.CompanyID == companyID)
-                .Include(d => d.Company) 
+                .Where(d => usersIds.Contains(d.UserID))
+                .Include(d => d.User)
                 .ToListAsync();
         }
+
     }
 }

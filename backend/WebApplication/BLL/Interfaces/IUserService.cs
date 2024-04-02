@@ -19,6 +19,7 @@ namespace BLL.Interfaces
         Task<List<UserDto>> GetAllByCompanyId(int companyID);
         Task<List<UserDto>> GetAllByRole(string role);
         Task<User> GetUserById(int id);
+        Task<List<int>> ExtractUserIDs(List<UserDto> users);
     }
 }
 

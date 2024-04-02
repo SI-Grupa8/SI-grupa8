@@ -10,6 +10,8 @@ using DAL.Entities;
 using DAL.Interfaces;
 using DAL.Repositories;
 using Google.Authenticator;
+using Newtonsoft.Json.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BLL.Services
 {
@@ -184,6 +186,19 @@ namespace BLL.Services
         public async Task<User> GetUserById(int userId)
         {
             return await _userRepository.GetUserById(userId);
+        }
+
+        public async Task<List<int>> ExtractUserIDs(List<UserDto> users)
+        {
+            List<int> userIds = new List<int>();
+
+            foreach (UserDto user in users)
+            {
+                int userId = user.UserID;
+                userIds.Add(userId);
+            }
+
+            return userIds;
         }
     }
 }

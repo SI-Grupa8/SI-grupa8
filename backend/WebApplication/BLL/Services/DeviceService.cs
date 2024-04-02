@@ -30,9 +30,9 @@ namespace BLL.Services
             return device;
         }
 
-        public async Task<List<DeviceDto>> GetAllByCompanyId(int companyID)
+        public async Task<List<DeviceDto>> GetAllByCompanyUsersIds(List<int> usersIds)
         {
-            var devices = await _deviceRepository.GetAllByCompanyId(companyID);
+            var devices = await _deviceRepository.GetAllByCompanyUsersIds(usersIds);
             return _mapper.Map<List<DeviceDto>>(devices);
         }
 

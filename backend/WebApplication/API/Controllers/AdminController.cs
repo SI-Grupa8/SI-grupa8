@@ -175,7 +175,10 @@ namespace API.Controllers
                 return BadRequest("Company not found");
             }
 
-            var devices = await _deviceService.GetAllByCompanyId(company.CompanyID);
+            var users = await _userService.GetAllByCompanyId(company.CompanyID);
+            var userIds = await _userService.ExtractUserIDs(users);
+
+            var devices = await _deviceService.GetAllByCompanyUsersIds(userIds);
             return devices;
         }
 
@@ -196,9 +199,15 @@ namespace API.Controllers
             }
 
             var device = await _deviceService.GetDeviceByID(deviceId);
-            if (device == null || device.CompanyID != company.CompanyID)
+            if (device == null)
             {
-                return NotFound("Device not found or does not belong to the company");
+                return NotFound("Device not found");
+            }
+
+            var userOwner = await _userService.GetUserById(device.UserID);
+            if (userOwner == null || userOwner.CompanyID != admin.CompanyID)
+            {
+                return NotFound("Device doesn't belong to this company");
             }
 
             await _deviceService.RemoveDevice(device);
@@ -207,7 +216,7 @@ namespace API.Controllers
 
 
         [HttpPost("add-device")]
-        public async Task<ActionResult<DeviceDto>> AddDevice( AdminCRUDDeviceDto request)
+        public async Task<ActionResult<DeviceDto>> AddDevice(AdminCRUDDeviceDto request)
         {
 
             var admin = await _userService.GetUserById(request.AdminId);
@@ -226,7 +235,9 @@ namespace API.Controllers
             {
                 Reference = request.Reference,
                 DeviceName = request.DeviceName,
-                CompanyID = company.CompanyID
+                UserID = request.UserId,
+                XCoordinate = request.XCoordinate,
+                YCoordinate = request.YCoordinate
             };
 
             var device = await _deviceService.AddDevice(deviceDto);
@@ -249,9 +260,15 @@ namespace API.Controllers
             }
 
             var device = await _deviceService.GetDeviceByID(deviceId);
-            if (device == null || device.CompanyID != company.CompanyID)
+            if (device == null)
             {
-                return NotFound("Device not found or does not belong to the company");
+                return NotFound("Device not found");
+            }
+
+            var userOwner = await _userService.GetUserById(device.UserID);
+            if(userOwner == null || userOwner.CompanyID != admin.CompanyID) 
+            {
+                return NotFound("Device doesn't belong to this company");
             }
 
             if (request.DeviceName != null)
@@ -261,6 +278,10 @@ namespace API.Controllers
             if (request.Reference != null)
             {
                 device.Reference = request.Reference;
+            }
+            if(request.UserId != null)
+            {
+                device.UserID = request.UserId;
             }
 
             await _deviceService.UpdateDevice(device);
