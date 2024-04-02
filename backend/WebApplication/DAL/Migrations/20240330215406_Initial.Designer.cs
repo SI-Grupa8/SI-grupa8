@@ -3,6 +3,7 @@ using System;
 using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240330215406_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,6 +53,9 @@ namespace DAL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DeviceId"));
 
+                    b.Property<int>("CompanyID")
+                        .HasColumnType("integer");
+
                     b.Property<string>("DeviceName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -57,9 +63,6 @@ namespace DAL.Migrations
                     b.Property<string>("Reference")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("integer");
 
                     b.Property<string>("XCoordinate")
                         .IsRequired()
@@ -71,7 +74,7 @@ namespace DAL.Migrations
 
                     b.HasKey("DeviceId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("CompanyID");
 
                     b.ToTable("Devices");
                 });
@@ -101,7 +104,7 @@ namespace DAL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserID"));
 
-                    b.Property<int?>("CompanyID")
+                    b.Property<int>("CompanyID")
                         .HasColumnType("integer");
 
                     b.Property<string>("Email")
@@ -160,20 +163,22 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.Device", b =>
                 {
-                    b.HasOne("DAL.Entities.User", "User")
+                    b.HasOne("DAL.Entities.Company", "CompanyName")
                         .WithMany()
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("CompanyID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("CompanyName");
                 });
 
             modelBuilder.Entity("DAL.Entities.User", b =>
                 {
                     b.HasOne("DAL.Entities.Company", "Company")
                         .WithMany()
-                        .HasForeignKey("CompanyID");
+                        .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DAL.Entities.Role", "Role")
                         .WithMany()

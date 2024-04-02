@@ -4,8 +4,8 @@ namespace DAL.Entities
 {
 	public class User
 	{
-		public int UserID { get; set; }
-		public string Email { get; set; } = string.Empty;
+        public int UserID { get; set; }
+        public string Email { get; set; } = string.Empty;
 		public string PhoneNumber { get; set; } = string.Empty;
 		public string Name { get; set; } = string.Empty;
 		public string Surname { get; set; } = string.Empty;
@@ -17,9 +17,10 @@ namespace DAL.Entities
         public string RefreshToken { get; set; } = string.Empty;
         public DateTime TokenCreated { get; set; }
         public DateTime TokenExpires { get; set; }
-
-
         public Role Role { get; set; }
+		public int? CompanyID { get; set; } 
+		public Company? Company { get; set; }
+
     }
 }
 
