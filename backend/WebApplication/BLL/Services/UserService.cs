@@ -1,9 +1,5 @@
 ﻿using System;
-
-using System.ComponentModel.Design;
-
 using System.IdentityModel.Tokens.Jwt;
-
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,15 +8,11 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
-using DAL.Repositories;
 using Google.Authenticator;
-using Newtonsoft.Json.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-
 
 namespace BLL.Services
 {
@@ -158,6 +150,7 @@ namespace BLL.Services
             {
                 string token = CreateToken(user);
 
+
                 RefreshTokenDto refresh = new RefreshTokenDto()
                 {
                     Token = refreshToken?.Token, // Ensure Token is not null
@@ -253,9 +246,9 @@ namespace BLL.Services
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
+
                 PasswordSalt = [],
-                RoleID = userRegisterDto.RoleID,
-                CompanyID = userRegisterDto.CompanyID
+                RoleID = 0
             };
             _userRepository.Add(user);
 
@@ -373,6 +366,24 @@ namespace BLL.Services
             var userDto = _mapper.Map<UserDto>(user);*/
         }
 
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, user.Email.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.RoleName.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString())
+            };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: credentials
+                );
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            return jwt;
+        }
 
         public async Task<List<UserDto>> GetAllByCompanyId(int companyID)
         {
@@ -408,27 +419,9 @@ namespace BLL.Services
             }
 
             return userIds;
-
-        private string CreateToken(User user)
-        {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Email, user.Email.ToString()),
-                new Claim(ClaimTypes.Role, user.Role.RoleName.ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString())
-            };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: credentials
-                );
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-            return jwt;
         }
 
-        private RefreshTokenDto GenerateRefreshToken()
+            private RefreshTokenDto GenerateRefreshToken()
         {
             var refreshToken = new RefreshTokenDto
             {
@@ -463,6 +456,8 @@ namespace BLL.Services
 
             return _mapper.Map<UserDto>(user);
         }
-    }
+
+            
+        }
 }
 
