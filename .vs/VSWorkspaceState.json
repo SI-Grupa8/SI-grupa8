@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\backend",
+    "\\backend\\WebApplication",
+    "\\backend\\WebApplication\\API",
+    "\\backend\\WebApplication\\API\\Controllers",
+    "\\backend\\WebApplication\\BLL",
+    "\\backend\\WebApplication\\BLL\\Interfaces",
+    "\\backend\\WebApplication\\BLL\\Services",
+    "\\backend\\WebApplication\\DAL",
+    "\\backend\\WebApplication\\DAL\\Entities"
+  ],
+  "SelectedNode": "\\backend\\WebApplication\\API\\Controllers\\AuthController.cs",
+  "PreviewInSolutionExplorer": false
+}

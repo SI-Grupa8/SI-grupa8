@@ -27,13 +27,14 @@ function emailOrPhoneValidator(control: FormControl) {
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  temp=true;
-   refreshToken = '';
+  showLoginForm=true;
+  refreshToken = '';
   authRequest: AuthRequest = {};
   authRequestTfa: AuthTfaRequest = {};
   authResponseTfa: AuthTfaResponse = {};
   loginForm: FormGroup;
   authResponse: AuthResponse = {};
+
   constructor(private f: FormBuilder, private authService: AuthService, private router: Router){
     this.loginForm = this.f.group({
       usermail: ['', [Validators.required, emailOrPhoneValidator]],
@@ -41,30 +42,10 @@ export class LoginComponent {
     });
   }
 
-
-  onClick(): void{
-    this.temp=!this.temp;
-
-    if(this.loginForm.valid){
-      console.log('It is valid!')
-    }
-    else{
-      console.log('Invalid form.')
-    }
-  }
-
   forgotPass(): void{
     console.log("Link is clicked, must add logic.")
   }
 
-
-  //code related
-  onCodeChanged(code: string) {
-
-  }
-  onCodeCompleted(code: string) {
-    
-  }
   login() {
     this.authService.login(this.authRequest)
       .subscribe({
@@ -74,8 +55,13 @@ export class LoginComponent {
           if (!this.authResponse.twoFaEnabled) {
             localStorage.setItem('email', this.authResponse.email as string);
             localStorage.setItem('token', this.authResponse.token as string);
-            document.cookie = "refresh="+this.authResponse.refresh+"; expires="+this.authResponse.expires;
-            
+            localStorage.setItem('2fa', this.authResponse.twoFaEnabled as unknown as string);
+
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 30); 
+            console.log(expirationDate);
+            document.cookie = "refresh="+this.authResponse.refresh+"; expires="+expirationDate;
+
             localStorage.setItem("refresh", this.authResponse.refresh as string);
             console.log(this.authResponse.email)
             console.log(this.authResponse.token);
@@ -83,7 +69,7 @@ export class LoginComponent {
             this.router.navigate(['profile']);
           }
           else {
-            this.temp = false;
+            this.showLoginForm = false;
             this.authRequestTfa.email = this.authRequest.email;
 
           }
@@ -91,18 +77,21 @@ export class LoginComponent {
       });
   }
   verify(){
-    //this.authRequestTfa.twoFactorCodeSix
     this.authService.loginTfa(this.authRequestTfa).subscribe({
       next: (response) => {
         this.authResponseTfa = response;
-        localStorage.setItem('email', this.authResponse.email as string);
-            localStorage.setItem('token', this.authResponse.token as string);
-            localStorage.setItem("checked", "true");
-            //this.authService.setRefreshToken();
+        localStorage.setItem('email', this.authResponseTfa.email as string);
+        localStorage.setItem('token', this.authResponseTfa.token as string);
+        localStorage.setItem("2fa", "true");
+        document.cookie = "refresh="+this.authResponseTfa.refresh+"; expires="+this.authResponse.expires;
+        localStorage.setItem("refresh", this.authResponseTfa.refresh as string);
 
-            console.log(this.authResponse.email)
-            console.log(this.authResponse.token);
-            this.router.navigate(['profile']);
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 30); 
+        console.log(expirationDate);
+        document.cookie = "refresh="+this.authResponse.refresh+"; expires="+expirationDate;
+
+        this.router.navigate(['profile']);
             
       }
     })

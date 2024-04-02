@@ -7,13 +7,13 @@
 <p class="text">Step 1: Visit the App Store to get an authenticator app like Google Authenticator or Authy, then follow the app’s instructions to set up an account with them.</p>
 <p class="text">Step 2: Use your authenticator app to scan the barcode below</p>
 <div class="qr" style="text-align:center">
-  <!--<qrcode [qrdata]="imageUrl" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>-->
-  <img [src]="imageUrl" alt="">
-  <p class="key">{{key}}</p>
-  <a target="_blank" [href]="imageUrl">Qr code</a>
+  <!--<qrcode [qrdata]="imageUrl" [width]="150" [errorCorrectionLevel]="'M'"></qrcode>-->
+  <img [src]="imageUrl" alt="Loading qr">
+  <p class="key">Key: {{key}}</p>
+  <!--<a target="_blank" [href]="imageUrl">Qr code</a>-->
   </div>
-<form (ngSubmit)="loginTfa()" action="post">
-  <input [(ngModel)]="loginTfaRequest.twoFactorCodeSix" type="text" name="new-category" id="new-category" [ngModelOptions]="{standalone: true}">
+<form (ngSubmit)="set2fa()" action="post">
+  <input [(ngModel)]="verifyRequest.twoFactorCodeSix" type="text" name="new-category" id="new-category" [ngModelOptions]="{standalone: true}">
   <br>
   <button type="submit" class="send-code">COMPLETE SETUP</button>
 </form>
