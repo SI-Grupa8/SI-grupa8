@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RegisterRequest } from '../../models/register-request';
 import { AuthResponse } from '../../models/auth-response';
@@ -9,15 +9,21 @@ import { TwoFaResponse } from '../../models/two-fa-response';
 import { AuthTfaRequest } from '../../models/auth-tfa-request';
 import { AuthTfaResponse } from '../../models/auth-tfa-response';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiUrl = 'https://localhost:7126/Api/Auth';
+  userRole: string | undefined= '';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  private apiUrl = 'https://localhost:7126/Api/Auth';
+  private apiShorterUrl = 'https://localhost:7126/Api';
+
+  constructor(private http: HttpClient, private router: Router) { 
+    this.userRole = localStorage.getItem('role') as string;
+  }
 
   register(registerRequest: RegisterRequest) {
     console.log(registerRequest);
@@ -28,30 +34,107 @@ export class AuthService {
     authRequest: AuthRequest
   ) {
     return this.http.post<AuthResponse>
-    (`${this.apiUrl}/login`, authRequest);
+    (`${this.apiUrl}/login`, authRequest).pipe(
+      tap(response => {
+        localStorage.setItem('role', response.role as string);
+        this.userRole = response.role;
+        console.log("Role:" + this.userRole);
+      })
+    )
+    
+    /*.subscribe(response => {
+      this.userRole = response.role;
+      console.log("Role:" + this.userRole);
+    })*/
   }
   loginTfa(authTfaRequest: AuthTfaRequest) {
-    return this.http.post<AuthTfaResponse>(`${this.apiUrl}/login/tfa`, authTfaRequest);
+    return this.http.post<AuthTfaResponse>
+    (`${this.apiUrl}/login/tfa`, authTfaRequest).pipe(
+      tap(response => {
+        this.userRole = response.role;
+        console.log("Role:" + this.userRole);
+      })
+    )
+    
+    /*.subscribe(response => {
+      this.userRole = response.role;
+      console.log("Role:" + this.userRole);
+    })*/
   }
 
-  verifyCode(verificationRequest: VerifyRequest) {
-    return this.http.post<AuthResponse>
-    (`${this.apiUrl}/verify`, verificationRequest);
+  enable2fa() {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<{}>
+    (`${this.apiUrl}/get-tfa`, {}, { headers });
   }
+  /*
+  getRole() {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<{}>
+    (`${this.apiShorterUrl}/User`, {}, { headers });
+  }
+*/
 
-  enable2fa(twoFaRequest: TwoFaRequest) {
-    return this.http.post<TwoFaResponse>
-    (`${this.apiUrl}/enable-tfa`, twoFaRequest);
+
+
+
+/*
+  enable2fa() {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<{}>
+    (`${this.apiUrl}/enable-tfa`,{}, { headers });
+  }*/
+
+
+  store2fa(verifyRequest: VerifyRequest){
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>
+    (`${this.apiUrl}/store-tfa`, verifyRequest, { headers });
   }
-  disable2fa(twoFaRequest: TwoFaRequest) {
-    return this.http.post<string>
-    (`${this.apiUrl}/disable-tfa`, twoFaRequest);
+  disable2fa() {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>
+    (`${this.apiUrl}/disable-tfa`, {} , { headers });
   }
   logout() {
     localStorage.clear();
     this.router.navigateByUrl('login');
+    //this will clear refrsh token from cookies
+    document.cookie = "refresh=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
   }
 
+  isAdmin(): boolean {
+    return this.userRole == 'Admin\n';
+  }
+  isSuperAdmin(): boolean {
+    return this.userRole == 'SuperAdmin\n';
+  }
+  setUserRole(role: string | undefined) {
+    this.userRole = role;
+  }
+
+  getUserRole(): string | undefined {
+    return this.userRole;
+  }
+
+  clearUserRole() {
+    this.userRole = undefined;
+  }
   
   isCookiePresent(cookieName: string): boolean {
     return document.cookie.includes(`refresh`);

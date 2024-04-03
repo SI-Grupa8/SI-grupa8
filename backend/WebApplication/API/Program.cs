@@ -28,10 +28,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
 builder.Services.AddScoped(typeof(IRoleService), typeof(RoleService));
 builder.Services.AddScoped(typeof(IDeviceLocationService), typeof(DeviceLocationService));
+builder.Services.AddScoped(typeof(ICompanyService), typeof(CompanyService));
+builder.Services.AddScoped(typeof(IDeviceService), typeof(DeviceService));
 
 //Repositories
 builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 builder.Services.AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
+builder.Services.AddScoped(typeof(ICompanyRepository), typeof(CompanyRepository));
+builder.Services.AddScoped(typeof(IDeviceRepository), typeof(DeviceRepository));
 
 //Db context
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -51,6 +55,7 @@ builder.Services.AddSwaggerGen(options=>
     });
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
+
 
 
 builder.Services.AddAuthentication(options =>
@@ -99,6 +104,13 @@ builder.Services.AddAuthentication(options =>
 
 
 var app = builder.Build();
+
+app.UseCors(options =>
+{
+    options.AllowAnyOrigin();
+    options.AllowAnyHeader();
+    options.AllowAnyMethod();
+});
 
 // Configure the HTTP request pipeline.
 
