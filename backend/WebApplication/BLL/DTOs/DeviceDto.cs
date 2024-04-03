@@ -8,7 +8,7 @@ namespace BLL.DTOs
 {
     public class DeviceDto
     {
-        public int DeviceId { get; set; }
+        public int DeviceID { get; set; }
         public required string Reference { get; set; }
         public required string DeviceName { get; set; }
         public int UserID { get; set; }

@@ -3,12 +3,6 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
-using DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Services
 {
@@ -16,43 +10,77 @@ namespace BLL.Services
     {
         private readonly IMapper _mapper;
         private readonly IDeviceRepository _deviceRepository;
+        private readonly ICompanyRepository _companyRepository;
+        private readonly IDeviceLocationService _deviceLocationService;
 
-        public DeviceService(IDeviceRepository deviceRepository, IMapper mapper)
+        public DeviceService(IDeviceRepository deviceRepository, IMapper mapper, ICompanyRepository companyRepository, IDeviceLocationService deviceLocationService)
         {
             _deviceRepository = deviceRepository;
             _mapper = mapper;
+            _companyRepository = companyRepository;
+            _deviceLocationService = deviceLocationService;
         }
 
         public async Task<Device> GetDeviceByID(int id)
         {
             var device = await _deviceRepository.GetById(id);
 
-            return device;
+            return device!;
         }
 
-        public async Task<List<DeviceDto>> GetAllByCompanyUsersIds(List<int> usersIds)
+        public async Task<List<DeviceDto>> GetAllForCompany(int adminId)
         {
-            var devices = await _deviceRepository.GetAllByCompanyUsersIds(usersIds);
+            var company = await _companyRepository.GetByAdminId(adminId);
+
+            var users = company.Users.Select(x => x!.UserID).ToList();
+
+            var devices = await _deviceRepository.GetAllByCompanyUsersIds(users);
+            
             return _mapper.Map<List<DeviceDto>>(devices);
         }
 
-        public async Task<DeviceDto> AddDevice(DeviceDto request)
+        public async Task<object> AddDevice(DeviceDto request)
         {
+            var deviceToken = _deviceLocationService.CreateDeviceToken(request.Reference);
+
             var device = _mapper.Map<Device>(request);
             _deviceRepository.Add(device);
             await _deviceRepository.SaveChangesAsync();
-            return request;
+            return new {
+                deviceToken,
+                response = request
+            };
         }
 
-        public async Task RemoveDevice(Device device)
+        public async Task RemoveDevice(int deviceId, int adminId)
         {
+            var device = await _deviceRepository.GetWithUser(deviceId);
+
+            var company = await _companyRepository.GetByAdminId(adminId);
+
+            if(company.CompanyID != device!.User!.CompanyID)
+            {
+                throw new Exception("You do not have permissions to remove this device.");
+            }
+
             _deviceRepository.Remove(device);
             await _deviceRepository.SaveChangesAsync();
         }
 
-        public async Task UpdateDevice(Device device)
+        public async Task UpdateDevice(DeviceDto deviceDto, int adminId)
         {
-            _deviceRepository.Update(device);
+            var device = await _deviceRepository.GetWithUser(deviceDto.DeviceID);
+
+            var company = await _companyRepository.GetByAdminId(adminId);
+
+            if (company.CompanyID != device!.User!.CompanyID)
+            {
+                throw new Exception("You do not have permissions to update this device.");
+            }
+
+            var updatedDevice = _mapper.Map<Device>(deviceDto);
+
+            _deviceRepository.Update(updatedDevice);
             await _deviceRepository.SaveChangesAsync();
         }
     }

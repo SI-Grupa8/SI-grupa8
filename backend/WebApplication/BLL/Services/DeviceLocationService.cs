@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using AutoMapper;
 using BLL.Interfaces;
+using DAL.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -15,11 +16,13 @@ namespace BLL.Services
 	{
 		private readonly IMapper _mapper;
 		private readonly IConfiguration _configuration;
+        private readonly IDeviceRepository _deviceRepository;
 
-		public DeviceLocationService(IConfiguration configuration, IMapper mapper)
+		public DeviceLocationService(IConfiguration configuration, IMapper mapper, IDeviceRepository deviceRepository)
 		{
 			_configuration = configuration;
 			_mapper = mapper;
+            _deviceRepository = deviceRepository;
 		}
 
         public string CreateDeviceToken(string macAddressName)
@@ -61,7 +64,14 @@ namespace BLL.Services
                 string decodedLng = DecodeLocation(lgi, locCode);
 
                 // Save the location data in DB
-                // when connected with branch where DB for device is implemented
+
+                var device = await _deviceRepository.GetByMacAddress(macAddress);
+                
+                device.XCoordinate = decodedLng;
+                device.YCoordinate = decodedLat;
+
+                _deviceRepository.Update(device);
+                await _deviceRepository.SaveChangesAsync();
             }
             else
             {

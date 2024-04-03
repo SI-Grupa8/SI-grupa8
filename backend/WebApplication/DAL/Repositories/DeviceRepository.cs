@@ -26,5 +26,17 @@ namespace DAL.Repositories
                 .ToListAsync();
         }
 
+        public async Task<Device> GetByMacAddress(string macAddress)
+        {
+            return await _context.Devices.FirstAsync(x => x.Reference == macAddress);
+        }
+
+        public async Task<Device> GetWithUser(int deviceId)
+        {
+            return await _context.Devices
+                .Include(x => x.User)
+                .FirstAsync(x => x.DeviceID == deviceId);
+        }
+
     }
 }

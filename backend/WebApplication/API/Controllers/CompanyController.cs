@@ -21,7 +21,7 @@ namespace API.Controllers
 
         [HttpGet("get-all-companies")]
         [Authorize(Roles = "SuperAdmin")]
-        public async Task<ActionResult<List<DeviceDto>>> GetAll()
+        public async Task<ActionResult<List<CompanyDto>>> GetAll()
         {
             return Ok(await _companyService.GetAll());
         }
