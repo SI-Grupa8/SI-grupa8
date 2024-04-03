@@ -2,6 +2,7 @@
 using BLL.Interfaces;
 using BLL.Services;
 using DAL.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,16 +28,17 @@ namespace API.Controllers
         }
 
         [HttpGet("get-company-users/{adminId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<UserDto>>> GetAllUsers(int adminId)
         {
             var admin = await _userService.GetUserById(adminId);
             
-            if (admin == null || admin.Role?.RoleName != "Admin")
+            if (admin == null)
             {
                 return BadRequest("Admin not found or not authorized");
             }
 
-            var company = _companyService.GetCompanyByID((int)admin.CompanyID).Result;
+            var company = await _companyService.GetCompanyByID((int)admin.CompanyID!);
             if (company == null)
             {
                 return BadRequest("Company not found");
@@ -48,15 +50,16 @@ namespace API.Controllers
 
 
         [HttpDelete("remove-user/{userId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> RemoveUser(int adminId, int userId)
         {
             var admin = await _userService.GetUserById(adminId);
-            if (admin == null || admin.Role?.RoleName != "Admin")
+            if (admin == null)
             {
                 return BadRequest("Admin not found or not authorized");
             }
 
-            var company = _companyService.GetCompanyByID((int)admin.CompanyID).Result;
+            var company = await _companyService.GetCompanyByID((int)admin.CompanyID!);
             if (company == null)
             {
                 return BadRequest("Company not found");
@@ -73,22 +76,23 @@ namespace API.Controllers
                 return BadRequest("User does not belong to the same company as the admin.");
             }
 
-            _userService.RemoveUser(user);
+            await _userService.RemoveUser(user);
             return Ok("User successfully removed.");
         }
 
 
 
         [HttpPost("add-user")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserDto>> AddUser(AdminCRUDUserDto request)
         {
             var admin = await _userService.GetUserById(request.AdminId);
-            if (admin == null || admin.Role?.RoleName != "Admin")
+            if (admin == null)
             {
                 return BadRequest("Admin not found or not authorized");
             }
 
-            var company = await _companyService.GetCompanyByID((int)admin.CompanyID);
+            var company = await _companyService.GetCompanyByID((int)admin.CompanyID!);
             if (company == null)
             {
                 return BadRequest("Company not found");
@@ -116,16 +120,17 @@ namespace API.Controllers
 
 
         [HttpPut("update-user/{userId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateUser(int userId, AdminCRUDUserDto request)
         {
            
             var admin = await _userService.GetUserById(request.AdminId);
-            if (admin == null || admin.Role?.RoleName != "Admin")
+            if (admin == null)
             {
                 return BadRequest("Admin not found or not authorized");
             }
 
-            var company = await _companyService.GetCompanyByID((int)admin.CompanyID);
+            var company = await _companyService.GetCompanyByID((int)admin.CompanyID!);
             if (company == null)
             {
                 return BadRequest("Company not found");
@@ -152,7 +157,7 @@ namespace API.Controllers
                 user.PasswordHash = Encoding.UTF8.GetBytes(BCrypt.Net.BCrypt.HashPassword(request.Password));
                 user.PasswordSalt = []; 
             }
-            if(request.RoleId != null) user.RoleID = request.RoleId;
+            if(request.RoleId != -1) user.RoleID = request.RoleId;
 
             await _userService.UpdateUser(user);
             return Ok("User successfully updated.");
@@ -161,15 +166,16 @@ namespace API.Controllers
 
 
         [HttpGet("get-company-devices/{adminId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<DeviceDto>>> GetAllDevices(int adminId)
         {
             var admin = await _userService.GetUserById(adminId);
-            if (admin == null || admin.Role?.RoleName != "Admin")
+            if (admin == null)
             {
                 return BadRequest("Admin not found or not authorized");
             }
 
-            var company = await _companyService.GetCompanyByID((int)admin.CompanyID);
+            var company = await _companyService.GetCompanyByID((int)admin.CompanyID!);
             if (company == null)
             {
                 return BadRequest("Company not found");
@@ -245,15 +251,16 @@ namespace API.Controllers
         }
 
         [HttpPut("update-device/{deviceId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateDevice(int deviceId, AdminCRUDDeviceDto request)
         {
             var admin = await _userService.GetUserById(request.AdminId);
-            if (admin == null || admin.Role?.RoleName != "Admin")
+            if (admin == null)
             {
                 return BadRequest("Admin not found or not authorized");
             }
 
-            var company = await _companyService.GetCompanyByID((int)admin.CompanyID);
+            var company = await _companyService.GetCompanyByID((int)admin.CompanyID!);
             if (company == null)
             {
                 return BadRequest("Company not found");
@@ -291,6 +298,7 @@ namespace API.Controllers
 
 
         [HttpGet("get-all-companies/{superAdminId}")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult<List<DeviceDto>>> GetAllCompanies(int superAdminId)
         {
             if (superAdminId <= 0)
@@ -299,7 +307,7 @@ namespace API.Controllers
             }
 
             var superAdmin = await _userService.GetUserById(superAdminId);
-            if (superAdmin == null || superAdmin.Role?.RoleName != "Super Admin")
+            if (superAdmin == null)
             {
                 return BadRequest("Only super admin allowed.");
             }
@@ -309,10 +317,11 @@ namespace API.Controllers
         }
 
         [HttpDelete("remove-company/{companyId}")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> RemoveCompany(int adminId, int companyId)
         {
             var superAdmin = await _userService.GetUserById(adminId);
-            if (superAdmin == null || superAdmin.Role?.RoleName != "Super Admin")
+            if (superAdmin == null)
             {
                 return BadRequest("Only super admin allowed.");
             }
@@ -329,10 +338,11 @@ namespace API.Controllers
 
 
         [HttpPost("add-company")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult<CompanyDto>> AddCompany(SuperAdminDto request)
         {
             var superAdmin = await _userService.GetUserById(request.SuperAdminId);
-            if (superAdmin == null || superAdmin.Role?.RoleName != "Super Admin")
+            if (superAdmin == null)
             {
                 return BadRequest("Only super admin allowed.");
             }
@@ -351,10 +361,11 @@ namespace API.Controllers
 
 
         [HttpPut("update-company/{companyId}")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> UpdateCompany(int companyId, SuperAdminDto request)
         {
             var admin = await _userService.GetUserById(request.SuperAdminId);
-            if (admin == null || admin.Role?.RoleName != "Super Admin")
+            if (admin == null)
             {
                 return BadRequest("Only super admin allowed.");
             }
@@ -381,10 +392,11 @@ namespace API.Controllers
 
 
         [HttpGet("get-admins/{superAdminId}")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult<List<UserDto>>> GetAllAdmins(int superAdminId)
         {
             var admin = await _userService.GetUserById(superAdminId);
-            if (admin == null || admin.Role?.RoleName != "Super Admin")
+            if (admin == null)
             {
                 return BadRequest("Super admin not found or not authorized");
             }
