@@ -37,6 +37,7 @@ builder.Services.AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
 builder.Services.AddScoped(typeof(ICompanyRepository), typeof(CompanyRepository));
 builder.Services.AddScoped(typeof(IDeviceRepository), typeof(DeviceRepository));
 
+
 //Db context
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

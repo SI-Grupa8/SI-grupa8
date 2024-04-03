@@ -3,12 +3,6 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
-using DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Services
 {
@@ -27,7 +21,7 @@ namespace BLL.Services
         {
             var company = await _companyRepository.GetById(id);
 
-            return company;
+            return company!;
         }
 
         public async Task<List<CompanyDto>> GetAll()
@@ -42,23 +36,49 @@ namespace BLL.Services
 
             return _mapper.Map<CompanyDto>(company);
         }
-        public async Task RemoveCompany(Company company)
+
+        public async Task RemoveCompany(int companyId)
         {
-            _companyRepository.Remove(company);
+            var company = await _companyRepository.GetById(companyId);
+
+            _companyRepository.Remove(company!);
+
             await _companyRepository.SaveChangesAsync();
-        }
-        public async Task<CompanyDto> AddCompany(CompanyDto request)
-        {
-            var company = _mapper.Map<Company>(request);
-            _companyRepository.Add(company);
-            _companyRepository.SaveChangesAsync();
-            return request;
         }
 
-        public async Task UpdateCompany(Company company)
+        public async Task<CompanyDto> AddCompany(CompanyDto companyDto)
         {
-            _companyRepository.Update(company);
+            var company = new Company
+            {
+                CompanyName = companyDto.CompanyName,
+                AdminID = companyDto.AdminID
+            };
+
+            _companyRepository.Add(company);
             await _companyRepository.SaveChangesAsync();
+
+            return companyDto;
+        }
+
+        public async Task<CompanyDto> UpdateCompany(CompanyDto companyDto)
+        {
+            var company = _mapper.Map<Company>(companyDto);
+
+            _companyRepository.Update(company);
+
+            await _companyRepository.SaveChangesAsync();
+
+            return companyDto;
+        }
+
+        public async Task<List<UserDto>> GetAllUsers(int adminId)
+        {
+            var company = await _companyRepository.GetByAdminId(adminId);
+
+            var users = _mapper.Map<List<UserDto>>(company.Users.ToList());
+
+            return users;
+
         }
     }
 }

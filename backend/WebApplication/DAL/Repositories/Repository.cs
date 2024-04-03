@@ -8,7 +8,7 @@ namespace DAL.Repositories
 	{
 		private readonly AppDbContext _context;
 
-		public Repository(AppDbContext context)
+        public Repository(AppDbContext context)
 		{
 			_context = context;
 		}
@@ -24,7 +24,14 @@ namespace DAL.Repositories
 
         public async Task<TEntity?> GetById(int id)
         {
-            return await _context.Set<TEntity>().FindAsync(id);
+            var result = await _context.Set<TEntity>().FindAsync(id);
+
+            if (result != null)
+            {
+                _context.Entry<TEntity>(result).State = EntityState.Detached;
+            }
+
+            return result;
         }
 
         public void Remove(TEntity entity)
@@ -40,6 +47,7 @@ namespace DAL.Repositories
         public void Update(TEntity entity)
         {
             _context.Set<TEntity>().Update(entity);
+            _context.Entry(entity).State = EntityState.Modified;
         }
     }
 }

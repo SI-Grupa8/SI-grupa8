@@ -17,9 +17,9 @@ namespace BLL.DTOs
         public DateTime TokenCreated { get; set; }
         public DateTime TokenExpires { get; set; }
 
-        public RoleDto Role { get; set; }
+        public RoleDto? Role { get; set; }
         public int CompanyID { get; set; }
-        public CompanyDto Company { get; set; }
+        public CompanyDto? Company { get; set; }
 
     }
 }

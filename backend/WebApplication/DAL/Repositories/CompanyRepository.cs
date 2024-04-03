@@ -20,8 +20,11 @@ namespace DAL.Repositories
 
         public async Task<Company> GetByAdminId(int id)
         {
-            return await _context.Companies.FirstAsync(x => x.AdminID == id);
+            return await _context.Companies
+                .Include(x => x.Users)
+                .FirstAsync(x => x.AdminID == id);
         }
+
         public async Task<Company> GetByName(string name)
         {
             return await _context.Companies.FirstAsync(x => x.CompanyName == name);

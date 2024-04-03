@@ -47,7 +47,7 @@ namespace API.Controllers
 
             if (userRegisterDto.Email.IsNullOrEmpty() && userRegisterDto.PhoneNumber.IsNullOrEmpty())
                 return BadRequest("Cannot register without at least an email or a phone number!");
-            var userDto = await _userService.AddUser(userRegisterDto);
+            var userDto = await _userService.AddUserRegister(userRegisterDto);
             return Ok(userDto);
         }
 

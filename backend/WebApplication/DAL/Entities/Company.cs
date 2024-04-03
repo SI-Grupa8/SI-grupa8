@@ -10,6 +10,8 @@ namespace DAL.Entities
     {
         public int CompanyID { get; set; }
         public string CompanyName { get; set; } 
-        public int AdminID { get; set; } 
+        public int AdminID { get; set; }
+
+        public List<User?> Users { get; set; } = null!;
     }
 }

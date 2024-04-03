@@ -238,9 +238,11 @@ namespace BLL.Services
             return user;
         }
 
-        public async Task<UserDto> AddUser(UserRegisterDto userRegisterDto)
+        public async Task<UserDto> AddUser(UserRegisterDto userRegisterDto, int adminId)
         {
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegisterDto.Password);
+
+            var admin = await _userRepository.GetById(adminId);
 
             User user = new User
             {
@@ -249,7 +251,7 @@ namespace BLL.Services
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
-
+                CompanyID = admin!.CompanyID,
                 PasswordSalt = [],
                 RoleID = 0
             };
@@ -258,21 +260,32 @@ namespace BLL.Services
             await _userRepository.SaveChangesAsync();
 
             var userDto = _mapper.Map<UserDto>(user);
+
             return userDto;
 
         }
 
-        public async Task<User> UpdateUser(User user)
+        public async Task<UserDto> UpdateUser(UserDto userDto)
         {
+            var mappedUser = _mapper.Map<User>(userDto);
 
-            _userRepository.Update(user);
+            var user = await _userRepository.GetById(userDto.UserID);
+
+            mappedUser.PasswordHash = user!.PasswordHash;
+            mappedUser.PasswordSalt = user.PasswordSalt;
+
+
+            _userRepository.Update(mappedUser);
             await _userRepository.SaveChangesAsync();
-            return user;
+
+            return userDto;
         }
 
-        public async Task<List<User>> GetAll()
+        public async Task<List<UserDto>> GetAll()
         {
-            return await _userRepository.GetAll();
+            var users = await _userRepository.GetAll();
+
+            return _mapper.Map<List<UserDto>>(users);
         }
 
         public async Task<SetupCode> SetupCode(User user)
@@ -290,6 +303,7 @@ namespace BLL.Services
             var code = authenticator.GenerateSetupCode("WebApplication", user.Name + user.Surname, ConvertToBytes(user.TwoFactorKey, false), 300);
             return code;
         }
+
         public string GenerateQRCodeImageUrl(User user, SetupCode setupCode)
         {
             string manualEntryKey = setupCode.ManualEntryKey;
@@ -388,15 +402,17 @@ namespace BLL.Services
             return jwt;
         }
 
-        public async Task<List<UserDto>> GetAllByCompanyId(int companyID)
+        public async Task<List<UserDto>> GetAllAdmins()
         {
-            var users = await _userRepository.GetAllByCompanyId(companyID);
+            var users = await _userRepository.GetAllByRole("Admin");
             return _mapper.Map<List<UserDto>>(users);
         }
 
-        public async Task RemoveUser(User user)
+        public async Task RemoveUser(int userId)
         {
-            _userRepository.Remove(user);
+            var user = await _userRepository.GetById(userId);
+            _userRepository.Remove(user!);
+
             await _userRepository.SaveChangesAsync();
         }
 
@@ -424,7 +440,7 @@ namespace BLL.Services
             return userIds;
         }
 
-            private RefreshTokenDto GenerateRefreshToken()
+        private RefreshTokenDto GenerateRefreshToken()
         {
             var refreshToken = new RefreshTokenDto
             {
@@ -460,7 +476,29 @@ namespace BLL.Services
             return _mapper.Map<UserDto>(user);
         }
 
-            
+        public async Task<UserDto> AddUserRegister(UserRegisterDto userRegisterDto)
+        {
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegisterDto.Password);
+
+            User user = new User
+            {
+                Name = userRegisterDto.Name,
+                Surname = userRegisterDto.Surname,
+                Email = userRegisterDto.Email,
+                PhoneNumber = userRegisterDto.PhoneNumber,
+                PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
+                PasswordSalt = [],
+                RoleID = 0
+            };
+            _userRepository.Add(user);
+
+            await _userRepository.SaveChangesAsync();
+
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return userDto;
         }
+
+    }
 }
 

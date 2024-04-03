@@ -7,17 +7,20 @@ namespace BLL.Interfaces
 {
     public interface IUserService
     {
-        Task<UserDto> AddUser(UserRegisterDto userRegisterDto);
-        Task<List<User>> GetAll();
+        Task<UserDto> AddUser(UserRegisterDto userRegisterDto, int adminId);
+        Task<List<UserDto>> GetAll();
         Task<SetupCode> SetupCode(User user);
         Task<User> GetUserByPhoneNumber(string phoneNumber);
         Task<User> GetUserByEmail(string email);
         Task RefreshUserToken(int userID, RefreshTokenDto refreshTokenDto);
         Task<User> GetByToken(string token);
-        Task<User> UpdateUser(User user);
-        
-        Task RemoveUser(User user);
-        Task<List<UserDto>> GetAllByCompanyId(int companyID);
+        Task<UserDto> UpdateUser(UserDto userDto);
+
+        Task<UserDto> AddUserRegister(UserRegisterDto userRegister);
+
+
+        Task RemoveUser(int userId);
+        Task<List<UserDto>> GetAllAdmins();
         Task<List<UserDto>> GetAllByRole(string role);
         Task<User> GetUserById(int id);
         Task<List<int>> ExtractUserIDs(List<UserDto> users);
