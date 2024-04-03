@@ -40,7 +40,7 @@ namespace BLL.Services
         {
             var device = _mapper.Map<Device>(request);
             _deviceRepository.Add(device);
-            _deviceRepository.SaveChangesAsync();
+            await _deviceRepository.SaveChangesAsync();
             return request;
         }
 
