@@ -253,7 +253,7 @@ namespace BLL.Services
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
                 CompanyID = admin!.CompanyID,
                 PasswordSalt = [],
-                RoleID = 0
+                RoleID = userRegisterDto.RoleID
             };
             _userRepository.Add(user);
 
