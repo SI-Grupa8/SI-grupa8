@@ -6,15 +6,12 @@
     background-color: #f0f1f3;
     display: flex;
     flex-direction: column;
-
     .home-header {
-        
         display: flex;
-        width: 80%;
+        width: 100%;
         margin-top: 30px;
-        margin-left: 55px;
-    
-    flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
 
         .greeting {
             margin-left: 55px;
@@ -22,117 +19,115 @@
             color: #1e5631;
             font-weight: 600;
         }
-        .search-container{
-            margin-left: auto;
-            
-        }
     }
 
-    input {
-        width: fit-content;
-        align-self: flex-end;
-        font-size: 12px;
-        font-weight: bold;
-        background-color: whitesmoke;
-        padding: 10px 20px;
-        cursor: text;
-        border: 1px solid #1e5631;
-        border-radius: 5px;
-        outline: none;
-    }
 
     .container {
         margin-top: 30px;
         margin-left: 55px;
-        width: 80%;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
+        width: calc(100% - 55px);
 
+        h3 {
+            font-size: 17px;
+            font-weight: 700;
+        }
     }
 
-    .section-line {
-        margin-top: 5px;
-        width: 80%;
-        height: 1px;
-        background-color: rgb(206, 206, 206);
-    }
+
 
     table {
-        width: 100%;
-        border-collapse: collapse;
         margin-top: 20px;
-        background-color: whitesmoke;
-        border-radius: 10px;
-        border: 0;
-
+        width: 95%;
+        border-collapse: collapse;
+        background-color:whitesmoke;
         th,
         td {
             border: 1px solid #b9cdbe;
-
-            padding: 8px 8px 8px 8px;
+            padding: 8px;
             text-align: left;
-
         }
-
-
-       
-
+        .button-container {
+            display: flex;
+            gap: 10px; 
+        }
+    
+        button {
+            background-color: transparent;
+            border: none;
+            padding: 1px 4px;
+            cursor: pointer;
+            svg {
+                width: 25px;
+                height: 25px;
+                fill: #1e5631;
+            }
+        }  
     }
-
    
 
-    button {
-        background-color: whitesmoke;
-        border: 3px solid #1e5631;
-        border-radius: 20px;
-        padding: 8px 16px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
 
+    .search-container{
+        margin-top: 20px;
+        display: flex;
+        width: 250px;
+    }
+
+    .add-button {
+        background-color: #1e5631;
+        color: #fdf1d3;
+        padding: 12px 20px;
+        cursor: pointer;
+        border: none;
+        border-radius: 20px;
+        outline: none;
+        transition: background-color 0.3s;
+        white-space: nowrap;
+        margin-top: 20px;
+        
+    }
+
+    input#search-bar{
+        width: 100%;
+        height: 35px;
+        padding: 0 12px;
+        font-size: 13px;
+        border: 1px solid #1e5631;
+        border-radius: 20px;
+        outline: none;
+        cursor: text;
+        background-color: whitesmoke;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    #search-bar::placeholder {
+        opacity: 0.7;
+        font-weight: 500;
+    }
+
+    .search-icon {
+        width: 25px;
+        height: 25px;
+        background-color: transparent;
+        border: none;
+        padding: 1px 4px;
+        cursor: pointer;
         svg {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             fill: #1e5631;
         }
-
-        width: fit-content;
-        height: 40px;
-
+        margin-left: -38px;
+        margin-top: 5px;
     }
-
-    button:hover {
-        transition: 0.2s;
-        background-color: #1e5631;
-        color: whitesmoke;
-
+    button {
+        background-color: transparent;
+        border: none;
+        padding: 1px 4px;
+        cursor: pointer;
         svg {
-            fill: whitesmoke;
-
+            width: 25px;
+            height: 25px;
+            fill: #1e5631;
         }
-    }
-
-
-    .action-buttons {
-        display: flex;
-        gap: 10px;
-    }
-input[name="query"]{
-    width: fit-content;
-    height: 20px;
-margin-right: 5px;
-    align-self: flex-end;
-    font-size: 12px;
-    font-weight: bold;
-    background-color: whitesmoke;
-    border: 3px solid #1e5631;
-    border-radius: 20px;
-    padding: 8px 16px;
-    cursor: text;
- 
-    outline: none;
-}
-
+    } 
 }
