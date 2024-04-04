@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { NgIf, NgFor, CommonModule } from '@angular/common'; 
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -17,6 +17,7 @@ import { UserService } from '../../core/services/http/user.service';
 
 
 export class UsersComponent {
+  @Output() userDeleted: EventEmitter<any> = new EventEmitter<any>();
   modalVisible: boolean = false;
   users: any[] = [];
   adminId: number = 2;
@@ -51,9 +52,12 @@ export class UsersComponent {
       this.getAll();
     });
   }
-  delete(user:any): void {
-    const userId = user.id;
+  delete(user:any, event: Event): void {
+    console.log(user)
+    const userId = user.userID;
+    event.preventDefault();
     this.userService.deleteUser(userId).subscribe(() => {
+      this.userDeleted.emit();
       console.log('User deleted successfully');
       this.getAll();
     });

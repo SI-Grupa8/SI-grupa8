@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddNewDeviceComponent } from './add-new-device/add-new-device.component';
 import { DeviceService } from '../../core/services/http/device.service';
@@ -13,6 +13,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './devices.component.scss'
 })
 export class DevicesComponent {
+  @Output() deviceDeleted: EventEmitter<any> = new EventEmitter<any>();
+  
   modalVisible: boolean = false;
   devices: any[] = [];
   deviceRequest: DeviceRequest = {
@@ -45,9 +47,12 @@ export class DevicesComponent {
     });
   }
 
-  delete(device:any): void {
-    const deviceId=device.id;
-    this.deviceService.deleteDevice(this.deviceRequest.userID,deviceId).subscribe(() => {
+  delete(device:any, event: Event): void {
+    console.log(device);
+    const deviceId=device.deviceID;
+    event.preventDefault();
+    this.deviceService.deleteDevice(deviceId).subscribe(() => {
+      this.deviceDeleted.emit();
       console.log('Device deleted successfully');
       this.getAll();
     });

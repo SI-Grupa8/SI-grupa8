@@ -38,8 +38,8 @@ namespace API.Controllers
 		{
 			await _userService.RemoveUser(userId);
 
-			return Ok("User removed");
-		}
+            return Ok(new { message = "Device removed." });
+        }
 
         [HttpPost("add-user")]
         [Authorize(Roles = "Admin, SuperAdmin")]

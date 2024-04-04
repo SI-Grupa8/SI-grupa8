@@ -23,7 +23,11 @@ export class UserService {
     return this.http.put<any>(`${this.apiUrl}/update-user/${userId}`,request);
   }
   deleteUser(userId: number):Observable<any>{
-    return this.http.delete<any>(`${this.apiUrl}/remove-user/${userId}`);
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.delete<any>(`${this.apiUrl}/User/remove-user/${userId}`, {headers});
 
   }
   getCompanyUsers():Observable<any[]>{

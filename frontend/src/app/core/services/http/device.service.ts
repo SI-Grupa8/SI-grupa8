@@ -22,8 +22,12 @@ export class DeviceService {
   updateDevice(request:DeviceRequest, deviceId: number):Observable<any>{
     return this.http.put<any>(`${this.apiUrl}/update-device/${deviceId}`,request);
   }
-  deleteDevice(adminId: number, deviceId: number):Observable<any>{
-    return this.http.delete<any>(`${this.apiUrl}/remove-device/${deviceId}`);
+  deleteDevice(deviceId: number):Observable<any>{
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.delete<any>(`${this.apiUrl}/Device/remove-device/${deviceId}`, {headers});
 
   }
   getCompanyDevices():Observable<any[]>{

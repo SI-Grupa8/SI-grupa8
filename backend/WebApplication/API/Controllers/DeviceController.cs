@@ -37,7 +37,7 @@ namespace API.Controllers
 
             await _deviceService.RemoveDevice(deviceId, adminId);
 
-            return Ok("Device removed.");
+            return Ok(new { message = "Device removed." });
         }
 
         [HttpPost("add-device")]
