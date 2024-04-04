@@ -81,12 +81,12 @@ namespace BLL.Services
 
         private static bool IsValidLatitude(string location, string locationCode)
         {
-            return Regex.IsMatch(location, @"^-?\d{2}\.\d{3}{locationCode}\w{3}$");
+            return Regex.IsMatch(location, @"^-?\d{2}\.\d{3}" + locationCode + @"\w{3}$");
         }
 
         private static bool IsValidLongitude(string location, string locationCode)
         {
-            return Regex.IsMatch(location, @"^-?\d{2,3}\.\d{3}{locationCode}\w{3}$");
+            return Regex.IsMatch(location, @"^-?\d{2,3}\.\d{3}" + locationCode + @"\w{3}$");
         }
 
         private static string DecodeLocation(string location, string locationCode)
