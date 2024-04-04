@@ -40,29 +40,6 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Devices",
-                columns: table => new
-                {
-                    DeviceId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Reference = table.Column<string>(type: "text", nullable: false),
-                    DeviceName = table.Column<string>(type: "text", nullable: false),
-                    CompanyID = table.Column<int>(type: "integer", nullable: false),
-                    XCoordinate = table.Column<string>(type: "text", nullable: false),
-                    YCoordinate = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Devices", x => x.DeviceId);
-                    table.ForeignKey(
-                        name: "FK_Devices_Companies_CompanyID",
-                        column: x => x.CompanyID,
-                        principalTable: "Companies",
-                        principalColumn: "CompanyID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -80,7 +57,7 @@ namespace DAL.Migrations
                     RefreshToken = table.Column<string>(type: "text", nullable: false),
                     TokenCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     TokenExpires = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CompanyID = table.Column<int>(type: "integer", nullable: false)
+                    CompanyID = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -89,8 +66,7 @@ namespace DAL.Migrations
                         name: "FK_Users_Companies_CompanyID",
                         column: x => x.CompanyID,
                         principalTable: "Companies",
-                        principalColumn: "CompanyID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "CompanyID");
                     table.ForeignKey(
                         name: "FK_Users_Roles_RoleID",
                         column: x => x.RoleID,
@@ -99,10 +75,33 @@ namespace DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Devices",
+                columns: table => new
+                {
+                    DeviceID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Reference = table.Column<string>(type: "text", nullable: false),
+                    DeviceName = table.Column<string>(type: "text", nullable: false),
+                    UserID = table.Column<int>(type: "integer", nullable: false),
+                    XCoordinate = table.Column<string>(type: "text", nullable: false),
+                    YCoordinate = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Devices", x => x.DeviceID);
+                    table.ForeignKey(
+                        name: "FK_Devices_Users_UserID",
+                        column: x => x.UserID,
+                        principalTable: "Users",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Devices_CompanyID",
+                name: "IX_Devices_UserID",
                 table: "Devices",
-                column: "CompanyID");
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_CompanyID",
