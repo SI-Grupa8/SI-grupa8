@@ -20,7 +20,11 @@ export class DeviceService {
   }
 
   updateDevice(request:DeviceRequest, deviceId: number):Observable<any>{
-    return this.http.put<any>(`${this.apiUrl}/update-device/${deviceId}`,request);
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.put<any>(`${this.apiUrl}/Device/update-device/${deviceId}`,request, {headers});
   }
   deleteDevice(deviceId: number):Observable<any>{
     const token = localStorage.getItem("token");

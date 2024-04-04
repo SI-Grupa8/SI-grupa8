@@ -41,12 +41,12 @@ export class DevicesComponent {
     });
   }
 
-  editDialog(user: any): void {
+  editDialog(device: any): void {
     const dialogRef = this.dialog.open(EditDeviceComponent, {
       disableClose: true ,
-      data: { user: user }
+      data: { device: device }
     });
-    console.log(user)
+    console.log(device)
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });

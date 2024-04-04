@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DeviceRequest } from '../../../core/models/device-request';
 import { DeviceService } from '../../../core/services/http/device.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,12 +19,12 @@ export class EditDeviceComponent {
   deviceRequest: DeviceRequest = {
     userID: 1
   };
-  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<EditDeviceComponent>, private deviceService: DeviceService) {
+  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<EditDeviceComponent>, private deviceService: DeviceService,  @Inject(MAT_DIALOG_DATA) public data: { device: any }) {
     this.editDeviceForm = this.f.group({
-      deviceName: [''],
-      ref: [''],
-      xcoord: [''], 
-      ycoord: ['']
+      deviceName: [data.device.deviceName],
+      ref: [data.device.reference],
+      xcoord: [data.device.xCoordinate], 
+      ycoord: [data.device.yCoordinate]
     });
   }
 
