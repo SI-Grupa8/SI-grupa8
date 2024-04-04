@@ -4,6 +4,7 @@ import { AddNewDeviceComponent } from './add-new-device/add-new-device.component
 import { DeviceService } from '../../core/services/http/device.service';
 import { DeviceRequest } from '../../core/models/device-request';
 import { CommonModule } from '@angular/common';
+import { EditDeviceComponent } from './edit-device/edit-device.component';
 
 @Component({
   selector: 'app-devices',
@@ -39,12 +40,20 @@ export class DevicesComponent {
       this.getAll(); // Refresh table after user is added
     });
   }
-  edit(device: any): void {
-    const deviceId=device.id;
-    this.deviceService.updateDevice(this.deviceRequest,deviceId).subscribe(() => {
-      console.log('Device updated successfully');
-      this.getAll();
+
+  editDialog(user: any): void {
+    const dialogRef = this.dialog.open(EditDeviceComponent, {
+      disableClose: true ,
+      data: { user: user }
     });
+    console.log(user)
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+    dialogRef.componentInstance.deviceEdited.subscribe(() => {
+      this.getAll(); // Refresh table after user is added
+    });
+
   }
 
   delete(device:any, event: Event): void {
