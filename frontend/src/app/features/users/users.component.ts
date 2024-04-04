@@ -22,6 +22,7 @@ export class UsersComponent {
   modalVisible: boolean = false;
   users: any[] = [];
   adminId: number = 2;
+  searchQuery: string = ''; 
 
   userRequest: UserRequest = {
   }
@@ -72,9 +73,23 @@ export class UsersComponent {
 
   }
 
-  getAll(): void {
+  
+  filterUsers(): void {
     this.userService.getCompanyUsers().subscribe(users => {
-      this.users = users;
+      this.users = users.filter(user => 
+        user.name.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
+        user.surname.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
+        user.phoneNumber.toLowerCase().startsWith(this.searchQuery.toLowerCase())
+      );
     });
   }
-}
+  
+    getAll(): void {
+      this.userService.getCompanyUsers().subscribe(users => {
+        this.users = users;
+        this.filterUsers();
+      });
+    }
+  
+  }
