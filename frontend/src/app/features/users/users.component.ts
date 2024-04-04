@@ -38,6 +38,10 @@ export class UsersComponent {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+    dialogRef.componentInstance.userAdded.subscribe(() => {
+      this.getAll(); // Refresh table after user is added
+    });
+
   }
 
   edit(user:any): void{

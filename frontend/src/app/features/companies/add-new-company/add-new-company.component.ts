@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CompanyRequest } from '../../../core/models/company-request';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CompanyService } from '../../../core/services/http/company.service';
@@ -9,11 +9,12 @@ import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-add-new-company',
   standalone: true,
-  imports: [],
+  imports: [FormsModule,NgIf, ReactiveFormsModule, CodeInputModule],
   templateUrl: './add-new-company.component.html',
   styleUrl: './add-new-company.component.scss'
 })
 export class AddNewCompanyComponent {
+  @Output() companyAdded: EventEmitter<any> = new EventEmitter<any>();
  
   addCompanyForm: FormGroup;
   companyRequest: CompanyRequest = {
@@ -31,12 +32,16 @@ export class AddNewCompanyComponent {
   closeDialog(): void {
     this.dialogRef.close();
   }
-  add(){
+  add(event: Event){
     this.companyRequest.companyName = this.addCompanyForm.get('companyName')?.value;
     this.companyRequest.adminID = this.addCompanyForm.get('adminID')?.value;
   
+    event.preventDefault();
+  
     this.companyService.createCompany(this.companyRequest).subscribe(()=>{
-      console.log('Device added successfully');
+      this.companyAdded.emit();
+      console.log('Company added successfully');
+      this.closeDialog();
     });
   }
 

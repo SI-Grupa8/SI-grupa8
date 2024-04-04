@@ -31,6 +31,10 @@ export class CompaniesComponent {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+    dialogRef.componentInstance.companyAdded.subscribe(() => {
+      this.getAll(); // Refresh table after user is added
+    });
+    
   }
 
   getAll(): void {

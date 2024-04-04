@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UserRequest } from '../../../core/models/user-request';
 import { UserService } from '../../../core/services/http/user.service';
@@ -14,6 +14,7 @@ import { NgIf } from '@angular/common';
   styleUrl: './add-new-user.component.scss'
 })
 export class AddNewUserComponent {
+  @Output() userAdded: EventEmitter<any> = new EventEmitter<any>();
   addUserForm: FormGroup;
   userRequest: UserRequest = {
   };
@@ -39,8 +40,11 @@ export class AddNewUserComponent {
 
     event.preventDefault();
     this.userService.addUser(this.userRequest).subscribe(() => {
+      this.userAdded.emit();
       console.log('User added successfully');
+      this.closeDialog();
     });
+
     
   }
 }
