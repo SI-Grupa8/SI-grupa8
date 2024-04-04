@@ -29,13 +29,19 @@
         </thead>
         <tbody>
             <tr *ngFor = "let user of users">
-                <th>{{user.userID}}</th>
-                <th>{{user.name}}</th>
-                <th>{{user.surname}}</th>
-                <th>{{user.email}}</th>
-                <th>{{user.phoneNumber}}</th>
-                <th>{{user.roleID}}</th>
-                <th>{{user.companyID}}</th>
+                <td>{{user.userID}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.surname}}</td>
+                <td>
+                    <span *ngIf="user.email">{{ user.email }}</span>
+                    <span *ngIf="!user.email" style="font-style: italic;">No email</span>
+                </td>
+                <td>
+                    <span *ngIf="user.phoneNumber">{{ user.phoneNumber }}</span>
+                    <span *ngIf="!user.phoneNumber" style="font-style: italic;">No phone number</span>
+                </td>
+                <td>{{user.roleID}}</td>
+                <td>{{user.companyID}}</td>
                 <!-- <th class="actcolumn"></th> -->
                 <td style="width: 20px;">
                     <div class="button-container">
