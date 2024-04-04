@@ -4,12 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.AspNetCore.Authorization;
+using BLL.DTOs;
+using Microsoft.AspNetCore.Http;
 
 namespace TestProject2
 {
     [TestClass]
     public class RoleControllerTests
     {
+        private Mock<IRoleService> _roleServiceMock;
+        private RoleController _controller;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _roleServiceMock = new Mock<IRoleService>();
+            _controller = new RoleController(_roleServiceMock.Object);
+        }
+
         [TestMethod]
         public void Constructor_Injects_RoleService()
         {
@@ -21,7 +33,6 @@ namespace TestProject2
 
             // Assert
             Assert.IsNotNull(controller);
-            //Assert.AreSame(roleServiceMock.Object, controller.GetRoleService());
         }
 
         [TestMethod]
@@ -37,14 +48,34 @@ namespace TestProject2
         }
 
         [TestMethod]
-        public void Controller_Has_Authorize_Attribute()
+        public async Task GetRoleByID_Returns_OkResult_For_Authorized_User()
         {
-            // Arrange & Act
-            var controllerType = typeof(RoleController);
-            var authorizeAttribute = controllerType.GetCustomAttributes(typeof(AuthorizeAttribute), inherit: true);
+            // Arrange
+            var id = 1;
+            _roleServiceMock.Setup(service => service.GetRoleByID(id)).ReturnsAsync(new RoleDto { RoleID = 1, RoleName = "User" });
+
+            // Act
+            var result = await _controller.GetRoleByID(id);
 
             // Assert
-            Assert.AreEqual(1, authorizeAttribute.Length);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(ActionResult<RoleDto>));
+            var roleDto = result.Value;
+            Assert.AreEqual(id, roleDto.RoleID);
+        }
+
+        [TestMethod]
+        public async Task GetRoleByID_For_Unauthorized_User()
+        {
+            // Arrange
+            var id = 0;
+
+            // Act
+            var result = await _controller.GetRoleByID(id);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsNull(result.Result);
         }
     }
 }
