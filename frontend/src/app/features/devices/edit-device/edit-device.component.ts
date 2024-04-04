@@ -32,20 +32,21 @@ export class EditDeviceComponent {
     this.dialogRef.close();
   }
 
-  edit(event: Event) {
-    
-  }
-  /*add(event: Event){
-    this.deviceRequest.deviceName = this.addDeviceForm.get('deviceName')?.value;
-      this.deviceRequest.reference = this.addDeviceForm.get('ref')?.value;
-      this.deviceRequest.xCoordinate = this.addDeviceForm.get('xcoord')?.value;
-      this.deviceRequest.yCoordinate = this.addDeviceForm.get('ycoord')?.value;
-
-      event.preventDefault();
-    this.deviceService.createDevice(this.deviceRequest).subscribe(()=>{
-      this.deviceAdded.emit();
-      console.log('Device added successfully');
+  edit(device:any, event: Event) {
+    const deviceId = device.deviceID;
+    console.log(deviceId)
+    this.deviceRequest.deviceName = this.editDeviceForm.get('deviceName')?.value;
+    this.deviceRequest.reference = this.editDeviceForm.get('ref')?.value;
+    this.deviceRequest.xCoordinate = this.editDeviceForm.get('xcoord')?.value;
+    this.deviceRequest.yCoordinate = this.editDeviceForm.get('ycoord')?.value;
+    this.deviceRequest.userID = this.data.device.userID;
+    this.deviceRequest.deviceID = deviceId;
+    event.preventDefault();
+    this.deviceService.updateDevice(this.deviceRequest, deviceId).subscribe(() => {
+      this.deviceEdited.emit();
+      console.log('Device edited successfully');
       this.closeDialog();
-    });*/
+    });
+  }
 }
 

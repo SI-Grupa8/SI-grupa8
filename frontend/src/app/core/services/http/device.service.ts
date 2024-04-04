@@ -7,7 +7,7 @@ import { DeviceRequest } from '../../models/device-request';
   providedIn: 'root'
 })
 export class DeviceService {
-  private apiUrl = 'https://localhost:7126/Api'
+  private apiUrl = 'https://localhost:7126/api'
 
   constructor(private http: HttpClient) { }
 

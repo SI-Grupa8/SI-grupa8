@@ -3,6 +3,6 @@ export interface DeviceRequest {
     reference?: string;
     deviceName?:string;
     xCoordinate?: string;
-    yCoordinate?: string
-
+    yCoordinate?: string;
+    deviceID?: number
 }
