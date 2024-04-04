@@ -29,9 +29,9 @@
         </thead>
         <tbody>
             <tr *ngFor="let device of devices">
-                <td>{{device.name}}</td>
+                <td>{{device.deviceName}}</td>
                 <td>{{device.reference}}</td>
-                <td>{{device.company}}</td>
+                <td>{{device.user.company.companyName}}</td>
                 <td>{{device.xCoordinate}}</td>
                 <td>{{device.yCoordinate}}</td>
                 <td>

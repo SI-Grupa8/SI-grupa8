@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DeviceRequest } from '../../models/device-request';
@@ -7,7 +7,7 @@ import { DeviceRequest } from '../../models/device-request';
   providedIn: 'root'
 })
 export class DeviceService {
-  private apiUrl = 'https://localhost:7126/Api/Admin'
+  private apiUrl = 'https://localhost:7126/api'
 
   constructor(private http: HttpClient) { }
 
@@ -22,7 +22,11 @@ export class DeviceService {
     return this.http.delete<any>(`${this.apiUrl}/remove-device/${deviceId}`);
 
   }
-  getCompanyDevices(adminId:number):Observable<any[]>{
-    return this.http.get<any[]>(`${this.apiUrl}/get-company-devices/${adminId}`);
+  getCompanyDevices():Observable<any[]>{
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any[]>(`${this.apiUrl}/Device/get-company-devices`, {headers});
   }
 }
