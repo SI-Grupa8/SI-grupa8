@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserRequest } from '../../models/user-request';
@@ -7,7 +7,7 @@ import { UserRequest } from '../../models/user-request';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'https://localhost:7126/Api/Admin'
+  private apiUrl = 'https://localhost:7126/Api'
 
   constructor(private http: HttpClient) { }
 
@@ -22,7 +22,11 @@ export class UserService {
     return this.http.delete<any>(`${this.apiUrl}/remove-user/${userId}`);
 
   }
-  getCompanyUsers(adminId:number):Observable<any[]>{
-    return this.http.get<any[]>(`${this.apiUrl}/get-company-users/${adminId}`);
+  getCompanyUsers():Observable<any[]>{
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return  this.http.get<any[]>(`${this.apiUrl}/Company/get-company-users` , { headers });
   }
 }

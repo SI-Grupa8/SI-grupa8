@@ -57,7 +57,7 @@ export class UsersComponent {
   }
 
   getAll(): void {
-    this.userService.getCompanyUsers(this.adminId).subscribe(users => {
+    this.userService.getCompanyUsers().subscribe(users => {
       this.users = users;
     });
   }
