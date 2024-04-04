@@ -1,5 +1,5 @@
 export interface CompanyRequest {
-    adminId: number;
+    adminID: number;
     companyName?: string;
 
 

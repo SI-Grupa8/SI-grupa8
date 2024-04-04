@@ -12,7 +12,11 @@ export class CompanyService {
   constructor(private http: HttpClient) { }
 
   createCompany(request: CompanyRequest): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/add-company`, request);
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(`${this.apiUrl}/Company/add-company`, request, {headers});
   }
   getCompanies():Observable<any[]>{
     const token = localStorage.getItem("token");

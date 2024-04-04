@@ -16,7 +16,7 @@ export class CompaniesComponent {
   modalVisible: boolean = false;
   companies: any[] = [];
   companyRequest: CompanyRequest = { 
-    adminId:0
+    adminID:0
   };
 
   constructor(public dialog: MatDialog ,    private companyService: CompanyService ) { }
