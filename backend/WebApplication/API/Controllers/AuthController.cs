@@ -152,6 +152,7 @@ namespace API.Controllers
         }
 
         [HttpPost("get-tfa")] // vraca tfa samo
+        [Authorize]
         public async Task<ActionResult<object>> EnableTwoFactorAuthentication()
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
@@ -160,6 +161,7 @@ namespace API.Controllers
         }
 
         [HttpPost("store-tfa")] // ako se poklope enabled u bazu
+        [Authorize]
         public async Task<ActionResult<UserDto>> StoreTwoFactorAuthentication(UserLoginTfa request)
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
@@ -168,6 +170,7 @@ namespace API.Controllers
         }
 
         [HttpPost("disable-tfa")]
+        [Authorize]
         public async Task<ActionResult> DisableTwoFactorAuthentication()
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
