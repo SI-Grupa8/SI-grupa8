@@ -5,11 +5,13 @@ import { DeviceService } from '../../core/services/http/device.service';
 import { DeviceRequest } from '../../core/models/device-request';
 import { CommonModule } from '@angular/common';
 import { EditDeviceComponent } from './edit-device/edit-device.component';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-devices',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './devices.component.html',
   styleUrl: './devices.component.scss'
 })
@@ -21,6 +23,7 @@ export class DevicesComponent {
   deviceRequest: DeviceRequest = {
     userID: 0
   };
+  searchQuery: string = ''; 
 
   constructor(public dialog: MatDialog,
     private deviceService: DeviceService) { }
@@ -67,10 +70,21 @@ export class DevicesComponent {
     });
 
   }
+  
+  filterDevices(): void {
+    this.deviceService.getCompanyDevices().subscribe(devices => {
+      this.devices = devices.filter(device => 
+        device.deviceName.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
+        device.reference.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
+        device.user.company.companyName.toLowerCase().startsWith(this.searchQuery.toLowerCase())
+      );
+    });
+  }
 
   getAll(): void {
     this.deviceService.getCompanyDevices().subscribe(devices => {
       this.devices = devices;
+      this.filterDevices();
     });
   }
 }
