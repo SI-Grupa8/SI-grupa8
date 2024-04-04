@@ -18,7 +18,7 @@ export class AuthService {
 
   userRole: string | undefined= '';
 
-  private apiUrl = 'https://localhost:7126/Api/Auth';
+  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/Auth';
   private apiShorterUrl = 'https://localhost:7126/Api';
 
   constructor(private http: HttpClient, private router: Router) { 
