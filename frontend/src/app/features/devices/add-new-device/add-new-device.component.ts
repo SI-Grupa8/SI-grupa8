@@ -12,10 +12,15 @@ import { DeviceService } from '../../../core/services/http/device.service';
 })
 export class AddNewDeviceComponent {
   deviceRequest: DeviceRequest = {
-    adminId: 0
+    userID: 0
   };
+  form=document.querySelector("form");
 
-  constructor(public dialogRef: MatDialogRef<AddNewDeviceComponent>, private deviceService: DeviceService) {}
+  constructor(public dialogRef: MatDialogRef<AddNewDeviceComponent>, private deviceService: DeviceService) {
+    this.form.addEventListener('submit', function(event) {
+      event.preventDefault();  
+    });
+  }
 
   closeDialog(): void {
     this.dialogRef.close();

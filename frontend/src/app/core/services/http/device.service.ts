@@ -7,12 +7,16 @@ import { DeviceRequest } from '../../models/device-request';
   providedIn: 'root'
 })
 export class DeviceService {
-  private apiUrl = 'https://localhost:7126/api'
+  private apiUrl = 'https://localhost:7126/Api'
 
   constructor(private http: HttpClient) { }
 
   createDevice(request: DeviceRequest): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/add-device`, request);
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(`${this.apiUrl}/Device/add-device`, request, {headers});
   }
 
   updateDevice(request:DeviceRequest, deviceId: number):Observable<any>{

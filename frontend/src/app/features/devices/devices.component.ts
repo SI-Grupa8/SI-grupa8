@@ -16,7 +16,7 @@ export class DevicesComponent {
   modalVisible: boolean = false;
   devices: any[] = [];
   deviceRequest: DeviceRequest = {
-    adminId: 0
+    userID: 0
   };
 
   constructor(public dialog: MatDialog,
@@ -44,7 +44,7 @@ export class DevicesComponent {
 
   delete(device:any): void {
     const deviceId=device.id;
-    this.deviceService.deleteDevice(this.deviceRequest.adminId,deviceId).subscribe(() => {
+    this.deviceService.deleteDevice(this.deviceRequest.userID,deviceId).subscribe(() => {
       console.log('Device deleted successfully');
       this.getAll();
     });

@@ -1,8 +1,8 @@
 export interface DeviceRequest {
-    adminId: number;
+    userID: number;
     reference?: string;
     deviceName?:string;
-    xCoordcinate?: string;
+    xCoordinate?: string;
     yCoordinate?: string
 
 }
