@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CompanyRequest } from '../../models/company-request';
@@ -7,14 +7,18 @@ import { CompanyRequest } from '../../models/company-request';
   providedIn: 'root'
 })
 export class CompanyService {
-  private apiUrl = 'https://localhost:7126/Api/Admin'
+  private apiUrl = 'https://localhost:7126/Api'
 
   constructor(private http: HttpClient) { }
 
   createCompany(request: CompanyRequest): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/add-company`, request);
   }
-  getCompanies(adminId:number):Observable<any[]>{
-    return this.http.get<any[]>(`${this.apiUrl}/get-all-companies/${adminId}`);
+  getCompanies():Observable<any[]>{
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any[]>(`${this.apiUrl}/Company/get-all-companies`, {headers});
   }
 }

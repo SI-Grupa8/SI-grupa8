@@ -3,11 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { CompanyRequest } from '../../core/models/company-request';
 import { CompanyService } from '../../core/services/http/company.service';
 import { AddNewCompanyComponent } from './add-new-company/add-new-company.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-companies',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './companies.component.html',
   styleUrl: './companies.component.scss'
 })
@@ -34,7 +35,7 @@ export class CompaniesComponent {
   }
 
   getAll(): void {
-    this.companyService.getCompanies(this.companyRequest.adminId).subscribe(companies => {
+    this.companyService.getCompanies().subscribe(companies => {
       this.companies = companies;
     });
   }

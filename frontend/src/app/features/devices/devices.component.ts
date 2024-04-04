@@ -53,7 +53,6 @@ export class DevicesComponent {
 
   getAll(): void {
     this.deviceService.getCompanyDevices().subscribe(devices => {
-      console.log(devices[0]);
       this.devices = devices;
     });
   }
