@@ -33,6 +33,9 @@ export class DevicesComponent {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+    dialogRef.componentInstance.deviceAdded.subscribe(() => {
+      this.getAll(); // Refresh table after user is added
+    });
   }
   edit(device: any): void {
     const deviceId=device.id;
