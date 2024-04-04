@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240402130448_deviceUpdate")]
-    partial class deviceUpdate
+    [Migration("20240404090309_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,11 +47,11 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.Device", b =>
                 {
-                    b.Property<int>("DeviceId")
+                    b.Property<int>("DeviceID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DeviceId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DeviceID"));
 
                     b.Property<string>("DeviceName")
                         .IsRequired()
@@ -72,7 +72,7 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("DeviceId");
+                    b.HasKey("DeviceID");
 
                     b.HasIndex("UserID");
 
@@ -175,7 +175,7 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.User", b =>
                 {
                     b.HasOne("DAL.Entities.Company", "Company")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("CompanyID");
 
                     b.HasOne("DAL.Entities.Role", "Role")
@@ -187,6 +187,11 @@ namespace DAL.Migrations
                     b.Navigation("Company");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Company", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

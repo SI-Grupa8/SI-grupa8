@@ -1,21 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddNewDeviceComponent } from './add-new-device/add-new-device.component';
 import { DeviceService } from '../../core/services/http/device.service';
 import { DeviceRequest } from '../../core/models/device-request';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-devices',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './devices.component.html',
   styleUrl: './devices.component.scss'
 })
 export class DevicesComponent {
+  @Output() deviceDeleted: EventEmitter<any> = new EventEmitter<any>();
+  
   modalVisible: boolean = false;
   devices: any[] = [];
   deviceRequest: DeviceRequest = {
-    adminId: 0
+    userID: 0
   };
 
   constructor(public dialog: MatDialog,
@@ -32,6 +35,9 @@ export class DevicesComponent {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+    dialogRef.componentInstance.deviceAdded.subscribe(() => {
+      this.getAll(); // Refresh table after user is added
+    });
   }
   edit(device: any): void {
     const deviceId=device.id;
@@ -41,9 +47,12 @@ export class DevicesComponent {
     });
   }
 
-  delete(device:any): void {
-    const deviceId=device.id;
-    this.deviceService.deleteDevice(this.deviceRequest.adminId,deviceId).subscribe(() => {
+  delete(device:any, event: Event): void {
+    console.log(device);
+    const deviceId=device.deviceID;
+    event.preventDefault();
+    this.deviceService.deleteDevice(deviceId).subscribe(() => {
+      this.deviceDeleted.emit();
       console.log('Device deleted successfully');
       this.getAll();
     });
@@ -51,7 +60,7 @@ export class DevicesComponent {
   }
 
   getAll(): void {
-    this.deviceService.getCompanyDevices(this.deviceRequest.adminId).subscribe(devices => {
+    this.deviceService.getCompanyDevices().subscribe(devices => {
       this.devices = devices;
     });
   }

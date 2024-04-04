@@ -9,7 +9,7 @@ namespace BLL.DTOs
     public class CompanyDto
     {
         public int CompanyID { get; set; }
-        public string CompanyName { get; set; }
+        public string CompanyName { get; set; } = string.Empty;
         public int AdminID { get; set; }
     }
 }

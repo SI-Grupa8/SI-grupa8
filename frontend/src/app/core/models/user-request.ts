@@ -3,6 +3,7 @@ export interface UserRequest {
     name?:string;
     surname?:string;
     email?: string;
+    password?: string;
     phoneNumber?: string;
     roleID?: number;
     twoFactorKey?: string;

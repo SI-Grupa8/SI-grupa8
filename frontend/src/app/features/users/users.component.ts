@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common'; 
+import { Component, EventEmitter, Output } from '@angular/core';
+import { NgIf, NgFor, CommonModule } from '@angular/common'; 
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,16 +10,17 @@ import { UserService } from '../../core/services/http/user.service';
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, FormsModule, RouterModule, NgFor ],
+  imports: [NgIf, ReactiveFormsModule, FormsModule, RouterModule, NgFor, CommonModule ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
 
 
 export class UsersComponent {
+  @Output() userDeleted: EventEmitter<any> = new EventEmitter<any>();
   modalVisible: boolean = false;
   users: any[] = [];
-  adminId: number = 0;
+  adminId: number = 2;
 
   userRequest: UserRequest = {
   }
@@ -38,6 +39,10 @@ export class UsersComponent {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+    dialogRef.componentInstance.userAdded.subscribe(() => {
+      this.getAll(); // Refresh table after user is added
+    });
+
   }
 
   edit(user:any): void{
@@ -47,9 +52,12 @@ export class UsersComponent {
       this.getAll();
     });
   }
-  delete(user:any): void {
-    const userId = user.id;
+  delete(user:any, event: Event): void {
+    console.log(user)
+    const userId = user.userID;
+    event.preventDefault();
     this.userService.deleteUser(userId).subscribe(() => {
+      this.userDeleted.emit();
       console.log('User deleted successfully');
       this.getAll();
     });
@@ -57,7 +65,7 @@ export class UsersComponent {
   }
 
   getAll(): void {
-    this.userService.getCompanyUsers(this.adminId).subscribe(users => {
+    this.userService.getCompanyUsers().subscribe(users => {
       this.users = users;
     });
   }

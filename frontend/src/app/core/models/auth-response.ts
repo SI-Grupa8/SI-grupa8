@@ -4,4 +4,5 @@ export interface AuthResponse {
     twoFaEnabled?: boolean;
     refresh?: string;
     expires?: Date;
+    role?:string;
 }

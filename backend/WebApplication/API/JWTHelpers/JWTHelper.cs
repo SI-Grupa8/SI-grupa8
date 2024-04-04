@@ -22,6 +22,12 @@ namespace API.JWTHelpers
 
 			return id;
 		}
+
+		public static string GetDeviceClaims(string token)
+		{
+			var claims = GetClaimsFromToken(token);
+			return claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)!.Value;
+		}
 	}
 }
 

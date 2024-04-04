@@ -1,0 +1,135 @@
+:host {
+    width: calc(100% - 200px);
+    margin-top: 60px;
+    margin-left: 200px;
+    min-height: 100vh;
+    background-color: #f0f1f3;
+    display: flex;
+    flex-direction: column;
+
+    .home-header {
+        display: flex;
+        width: 100%;
+        margin-top: 30px;
+        justify-content: space-between;
+        align-items: center;
+
+        .greeting {
+            margin-left: 55px;
+            font-size: 25px;
+            color: #1e5631;
+            font-weight: 600;
+        }
+    }
+
+
+    .container {
+        margin-top: 30px;
+        margin-left: 55px;
+        width: calc(100% - 55px);
+
+        h3 {
+            font-size: 17px;
+            font-weight: 700;
+        }
+    }
+
+
+
+    table {
+        margin-top: 20px;
+        width: 95%;
+        border-collapse: collapse;
+        background-color:whitesmoke;
+        th,
+        td {
+            border: 1px solid #b9cdbe;
+            padding: 8px;
+            text-align: left;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px; 
+        }
+    
+        button {
+            background-color: transparent;
+            border: none;
+            padding: 1px 4px;
+            cursor: pointer;
+            svg {
+                width: 25px;
+                height: 25px;
+                fill: #1e5631;
+            }
+        }  
+    }
+   
+
+
+    .search-container{
+        margin-top: 20px;
+        display: flex;
+        width: 250px;
+    }
+
+    .add-button {
+        background-color: #1e5631;
+        color: #fdf1d3;
+        padding: 12px 20px;
+        cursor: pointer;
+        border: none;
+        border-radius: 20px;
+        outline: none;
+        transition: background-color 0.3s;
+        white-space: nowrap;
+        margin-top: 20px;
+        
+    }
+
+    input#search-bar{
+        width: 100%;
+        height: 35px;
+        padding: 0 12px;
+        font-size: 13px;
+        border: 1px solid #1e5631;
+        border-radius: 20px;
+        outline: none;
+        cursor: text;
+        background-color: whitesmoke;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    #search-bar::placeholder {
+        opacity: 0.7;
+        font-weight: 500;
+    }
+
+    .search-icon {
+        width: 25px;
+        height: 25px;
+        background-color: transparent;
+        border: none;
+        padding: 1px 4px;
+        cursor: pointer;
+        svg {
+            width: 20px;
+            height: 20px;
+            fill: #1e5631;
+        }
+        margin-left: -38px;
+        margin-top: 5px;
+    }
+    button {
+        background-color: transparent;
+        border: none;
+        padding: 1px 4px;
+        cursor: pointer;
+        svg {
+            width: 25px;
+            height: 25px;
+            fill: #1e5631;
+        }
+    } 
+  
+}

@@ -4,4 +4,5 @@ export interface AuthTfaResponse {
     email?: string;
     refresh?: string;
     expires?: Date;
+    role?:string;
 }

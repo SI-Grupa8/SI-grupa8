@@ -94,7 +94,7 @@ export class LoginComponent {
             localStorage.setItem("refresh", this.authResponse.refresh as string);
             console.log(this.authResponse.email)
             console.log(this.authResponse.token);
-            
+            this.authService.setUserRole(response.role);
             this.router.navigate(['profile']);
           }
           else {
@@ -124,6 +124,7 @@ export class LoginComponent {
         localStorage.setItem("2fa", "true");
         document.cookie = "refresh="+this.authResponseTfa.refresh+"; expires="+this.authResponse.expires;
         localStorage.setItem("refresh", this.authResponseTfa.refresh as string);
+        this.authService.setUserRole(response.role);
 
         const expirationDate = new Date();
         expirationDate.setDate(expirationDate.getDate() + 30); 

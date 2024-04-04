@@ -40,7 +40,7 @@ export class EnableTwofaComponent {
   }
 
   loginTfa() {
-    this.authService.loginTfa(this.loginTfaRequest).subscribe(response => {
+    this.authService.loginTfa(this.loginTfaRequest).subscribe((response) => {
       console.log( 'response: ', response );
       if (response) {
          localStorage.setItem('2fa', 'true');

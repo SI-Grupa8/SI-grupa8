@@ -1,9 +1,5 @@
 ﻿using System;
-
-using System.ComponentModel.Design;
-
 using System.IdentityModel.Tokens.Jwt;
-
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,15 +8,11 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
-using DAL.Repositories;
 using Google.Authenticator;
-using Newtonsoft.Json.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-
 
 namespace BLL.Services
 {
@@ -158,6 +150,7 @@ namespace BLL.Services
             {
                 string token = CreateToken(user);
 
+
                 RefreshTokenDto refresh = new RefreshTokenDto()
                 {
                     Token = refreshToken?.Token, // Ensure Token is not null
@@ -172,6 +165,7 @@ namespace BLL.Services
                     {
                         token = token,
                         twoFaEnabled = user.TwoFactorEnabled,
+                        role = user.Role.RoleName,
                         email = user.Email,
                         refresh = refresh.Token,
                         expires = refresh.Expires.ToString()
@@ -185,6 +179,7 @@ namespace BLL.Services
                     email = user.Email
                 });
         }
+
         public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogInTfa(UserLoginTfa request)
         {
 
@@ -219,6 +214,7 @@ namespace BLL.Services
                 {
                     token = token,
                     twoFaEnabled = user.TwoFactorEnabled,
+                    role = user.Role.RoleName,
                     email = user.Email,
                     refresh = refresh.Token,
                     expires = refresh.Expires.ToString()
@@ -242,9 +238,11 @@ namespace BLL.Services
             return user;
         }
 
-        public async Task<UserDto> AddUser(UserRegisterDto userRegisterDto)
+        public async Task<UserDto> AddUser(UserRegisterDto userRegisterDto, int adminId)
         {
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegisterDto.Password);
+
+            var admin = await _userRepository.GetById(adminId);
 
             User user = new User
             {
@@ -253,30 +251,41 @@ namespace BLL.Services
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
+                CompanyID = admin!.CompanyID,
                 PasswordSalt = [],
-                RoleID = userRegisterDto.RoleID,
-                CompanyID = userRegisterDto.CompanyID
+                RoleID = userRegisterDto.RoleID
             };
             _userRepository.Add(user);
 
             await _userRepository.SaveChangesAsync();
 
             var userDto = _mapper.Map<UserDto>(user);
+
             return userDto;
 
         }
 
-        public async Task<User> UpdateUser(User user)
+        public async Task<UserDto> UpdateUser(UserDto userDto)
         {
+            var mappedUser = _mapper.Map<User>(userDto);
 
-            _userRepository.Update(user);
+            var user = await _userRepository.GetById(userDto.UserID);
+
+            mappedUser.PasswordHash = user!.PasswordHash;
+            mappedUser.PasswordSalt = user.PasswordSalt;
+
+
+            _userRepository.Update(mappedUser);
             await _userRepository.SaveChangesAsync();
-            return user;
+
+            return userDto;
         }
 
-        public async Task<List<User>> GetAll()
+        public async Task<List<UserDto>> GetAll()
         {
-            return await _userRepository.GetAll();
+            var users = await _userRepository.GetAll();
+
+            return _mapper.Map<List<UserDto>>(users);
         }
 
         public async Task<SetupCode> SetupCode(User user)
@@ -294,6 +303,7 @@ namespace BLL.Services
             var code = authenticator.GenerateSetupCode("WebApplication", user.Name + user.Surname, ConvertToBytes(user.TwoFactorKey, false), 300);
             return code;
         }
+
         public string GenerateQRCodeImageUrl(User user, SetupCode setupCode)
         {
             string manualEntryKey = setupCode.ManualEntryKey;
@@ -373,16 +383,36 @@ namespace BLL.Services
             var userDto = _mapper.Map<UserDto>(user);*/
         }
 
-
-        public async Task<List<UserDto>> GetAllByCompanyId(int companyID)
+        private string CreateToken(User user)
         {
-            var users = await _userRepository.GetAllByCompanyId(companyID);
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, user.Email.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.RoleName.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString())
+            };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: credentials
+                );
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            return jwt;
+        }
+
+        public async Task<List<UserDto>> GetAllAdmins()
+        {
+            var users = await _userRepository.GetAllByRole("Admin");
             return _mapper.Map<List<UserDto>>(users);
         }
 
-        public async Task RemoveUser(User user)
+        public async Task RemoveUser(int userId)
         {
-            _userRepository.Remove(user);
+            var user = await _userRepository.GetById(userId);
+            _userRepository.Remove(user!);
+
             await _userRepository.SaveChangesAsync();
         }
 
@@ -408,24 +438,6 @@ namespace BLL.Services
             }
 
             return userIds;
-
-        private string CreateToken(User user)
-        {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Email, user.Email.ToString()),
-                new Claim(ClaimTypes.Role, user.Role.RoleName.ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString())
-            };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: credentials
-                );
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-            return jwt;
         }
 
         private RefreshTokenDto GenerateRefreshToken()
@@ -463,6 +475,31 @@ namespace BLL.Services
 
             return _mapper.Map<UserDto>(user);
         }
+
+        public async Task<UserDto> AddUserRegister(UserRegisterDto userRegisterDto)
+        {
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegisterDto.Password);
+
+            User user = new User
+            {
+                Name = userRegisterDto.Name,
+                Surname = userRegisterDto.Surname,
+                Email = userRegisterDto.Email,
+                PhoneNumber = userRegisterDto.PhoneNumber,
+                PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
+                PasswordSalt = [],
+                RoleID = userRegisterDto.RoleID,
+                CompanyID = userRegisterDto.CompanyID,
+            };
+            _userRepository.Add(user);
+
+            await _userRepository.SaveChangesAsync();
+
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return userDto;
+        }
+
     }
 }
 

@@ -7,8 +7,10 @@ using DAL.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +27,7 @@ builder.Services.AddEndpointsApiExplorer();
 //Services
 builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
 builder.Services.AddScoped(typeof(IRoleService), typeof(RoleService));
+builder.Services.AddScoped(typeof(IDeviceLocationService), typeof(DeviceLocationService));
 builder.Services.AddScoped(typeof(ICompanyService), typeof(CompanyService));
 builder.Services.AddScoped(typeof(IDeviceService), typeof(DeviceService));
 
@@ -33,6 +36,7 @@ builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 builder.Services.AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
 builder.Services.AddScoped(typeof(ICompanyRepository), typeof(CompanyRepository));
 builder.Services.AddScoped(typeof(IDeviceRepository), typeof(DeviceRepository));
+
 
 //Db context
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -54,21 +58,48 @@ builder.Services.AddSwaggerGen(options=>
 });
 
 
-builder.Services.AddAuthentication().AddJwtBearer(options =>
-{
-    options.IncludeErrorDetails = true;
-    var token = builder.Configuration.GetSection("AppSettings:Token").Value!;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        ValidateAudience = false,
-        ValidateIssuer = false,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            builder.Configuration.GetSection("AppSettings:Token").Value!))
-        //ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256Signature }
 
-    };
-});
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.IncludeErrorDetails = true;
+        var token = builder.Configuration.GetSection("AppSettings:Token").Value!;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                builder.Configuration.GetSection("AppSettings:Token").Value!))
+
+        };
+    })
+    .AddJwtBearer("DeviceJwtScheme", options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:DeviceToken").Value!))
+        };
+    })
+    .AddPolicyScheme("MultiAuthSchemes", JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        options.ForwardDefaultSelector = context =>
+        {
+            string authorization = context.Request.Headers[HeaderNames.Authorization]!;
+            var token = authorization.Substring("Bearer ".Length).Trim();
+            var jwtHandler = new JwtSecurityTokenHandler();
+            return (jwtHandler.CanReadToken(token))
+                ? JwtBearerDefaults.AuthenticationScheme : "SecondJwtScheme";
+
+        };
+    });
 
 
 
