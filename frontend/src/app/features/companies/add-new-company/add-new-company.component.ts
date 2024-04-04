@@ -12,7 +12,6 @@ import { CompanyService } from '../../../core/services/http/company.service';
 })
 export class AddNewCompanyComponent {
   companyRequest: CompanyRequest = {
-    adminID: 0
   };
 
   constructor(public dialogRef: MatDialogRef<AddNewCompanyComponent>, private companyService: CompanyService) {}

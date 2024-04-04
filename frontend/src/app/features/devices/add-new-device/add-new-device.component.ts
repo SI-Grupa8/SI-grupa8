@@ -14,13 +14,8 @@ export class AddNewDeviceComponent {
   deviceRequest: DeviceRequest = {
     userID: 0
   };
-  form=document.querySelector("form");
 
-  constructor(public dialogRef: MatDialogRef<AddNewDeviceComponent>, private deviceService: DeviceService) {
-    this.form.addEventListener('submit', function(event) {
-      event.preventDefault();  
-    });
-  }
+  constructor(public dialogRef: MatDialogRef<AddNewDeviceComponent>, private deviceService: DeviceService) {}
 
   closeDialog(): void {
     this.dialogRef.close();

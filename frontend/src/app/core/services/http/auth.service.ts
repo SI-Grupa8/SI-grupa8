@@ -119,7 +119,7 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.userRole == 'Admin\n';
+    return this.userRole == 'Admin';
   }
   isSuperAdmin(): boolean {
     return this.userRole == 'SuperAdmin';

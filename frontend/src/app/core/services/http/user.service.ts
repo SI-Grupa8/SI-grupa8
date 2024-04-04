@@ -7,12 +7,16 @@ import { UserRequest } from '../../models/user-request';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'https://localhost:7126/Api'
+  private apiUrl = 'https://localhost:7126/api'
 
   constructor(private http: HttpClient) { }
 
   addUser(request: UserRequest): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/add-user`, request);
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(`${this.apiUrl}/User/add-user`, request, { headers });
   }
 
   updateUser(request:UserRequest, userId: number):Observable<any>{
