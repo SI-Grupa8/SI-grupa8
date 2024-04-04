@@ -56,8 +56,9 @@ namespace BLL.Services
 
             _companyRepository.Add(company);
             await _companyRepository.SaveChangesAsync();
+            var returnedCompany = await GetCompanyByName(company.CompanyName); 
 
-            return companyDto;
+            return returnedCompany;
         }
 
         public async Task<CompanyDto> UpdateCompany(CompanyDto companyDto)

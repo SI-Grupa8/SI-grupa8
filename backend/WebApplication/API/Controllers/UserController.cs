@@ -42,7 +42,7 @@ namespace API.Controllers
 		}
 
         [HttpPost("add-user")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<ActionResult<UserDto>> AddUser(UserRegisterDto request)
         {
             string token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;

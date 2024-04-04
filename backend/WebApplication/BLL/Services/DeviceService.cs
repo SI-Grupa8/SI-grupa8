@@ -46,9 +46,12 @@ namespace BLL.Services
             var device = _mapper.Map<Device>(request);
             _deviceRepository.Add(device);
             await _deviceRepository.SaveChangesAsync();
+            // added to return correct id, instead of just returning request
+            // because request always has id 0
+            var returnedDevice = await _deviceRepository.GetByMacAddress(request.Reference);
             return new {
                 deviceToken,
-                response = request
+                response = returnedDevice
             };
         }
 
