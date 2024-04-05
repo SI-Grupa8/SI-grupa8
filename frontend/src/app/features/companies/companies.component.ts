@@ -33,6 +33,7 @@ export class CompaniesComponent {
     const dialogRef = this.dialog.open(AddNewCompanyComponent, {
       disableClose: true
     });
+  
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
@@ -49,6 +50,7 @@ export class CompaniesComponent {
         company.companyName.toLowerCase().startsWith(this.searchQuery.toLowerCase()) 
       );
     });
+  }
   openDialogAdmin(): void {
     const dialogRef = this.dialog.open(AddNewAdminComponent, {
       disableClose: true

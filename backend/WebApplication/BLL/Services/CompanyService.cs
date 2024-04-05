@@ -64,6 +64,7 @@ namespace BLL.Services
             var adminUser = await _userRepository.GetById(companyDto.AdminID);
 
             adminUser!.CompanyID = returnedCompany.CompanyID;
+            _userRepository.Update(adminUser);
 
             await _userRepository.SaveChangesAsync();
 

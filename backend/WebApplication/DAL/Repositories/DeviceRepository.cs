@@ -21,7 +21,7 @@ namespace DAL.Repositories
         public async Task<List<Device>> GetAllByCompanyUsersIds(List<int> usersIds)
         {
             return await _context.Devices
-                .Where(d => usersIds.Contains(d.UserID))
+                .Where(d => usersIds.Contains((int)d.UserID!))
                 .Include(d => d.User)
                 .ToListAsync();
         }

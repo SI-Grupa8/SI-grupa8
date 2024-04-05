@@ -11,7 +11,7 @@ namespace BLL.DTOs
         public int DeviceID { get; set; }
         public required string Reference { get; set; }
         public required string DeviceName { get; set; }
-        public int UserID { get; set; }
+        public int? UserID { get; set; }
         public UserDto? User { get; set; }
         public string XCoordinate { get; set; } = string.Empty;
         public string YCoordinate { get; set; } = string.Empty;

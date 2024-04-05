@@ -40,7 +40,7 @@ export class AddNewAdminComponent {
     this.userRequest.name = this.addAdminForm.get('name')?.value;
     this.userRequest.surname = this.addAdminForm.get('surname')?.value;
     this.userRequest.password = this.addAdminForm.get('password')?.value;
-    this.userRequest.roleID=2;
+    this.userRequest.roleID=1;
     event.preventDefault();
     this.userService.addUser(this.userRequest).subscribe(() => {
       this.userAdded.emit();

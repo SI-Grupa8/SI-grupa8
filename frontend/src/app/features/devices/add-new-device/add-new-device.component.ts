@@ -37,10 +37,10 @@ export class AddNewDeviceComponent {
     this.deviceRequest.deviceName = this.addDeviceForm.get('deviceName')?.value;
       this.deviceRequest.reference = this.addDeviceForm.get('ref')?.value;
       //hardkodiran userID
-      this.deviceRequest.userID=1;
+      //this.deviceRequest.userID=1;
       this.deviceRequest.xCoordinate = this.addDeviceForm.get('xcoord')?.value;
       this.deviceRequest.yCoordinate = this.addDeviceForm.get('ycoord')?.value;
-
+      this.deviceRequest.userID = 37;
       event.preventDefault();
     this.deviceService.createDevice(this.deviceRequest).subscribe(()=>{
       this.deviceAdded.emit();
