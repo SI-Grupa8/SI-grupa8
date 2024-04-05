@@ -5,8 +5,18 @@
 <form  [formGroup]="this.addCompanyForm" (ngSubmit)="add($event)">
     <div class="container-flex">
         <input formControlName="companyName" name="companyName" type="text" placeholder="Company name" >
-        <input formControlName="adminID" name="adminID" type="text" placeholder="Admin ID" >
-       
+        <div class="dropdown">
+            <select  name="adminid" id="admin">
+                <option  [value]="1">
+                    admin1
+                  </option>
+                  <option  [value]="2">
+                    admin2
+                  </option>
+            </select>
+        </div>
+        <button type="submit" class="add-button" style="margin-bottom: 25px;" (click)="openDialogAdmin()">ADD NEW ADMIN</button>
+
         <button type="submit" >ADD COMPANY</button>
     </div>
 </form> 

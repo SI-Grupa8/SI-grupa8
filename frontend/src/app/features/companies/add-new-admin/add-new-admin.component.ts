@@ -37,7 +37,6 @@ import { CommonModule } from '@angular/common';
       companyId:[''],
       roleID: 1
     });
-    console.log(data);//ISPISE IH DOBRO
     this.companies = data.companies;
 
   }

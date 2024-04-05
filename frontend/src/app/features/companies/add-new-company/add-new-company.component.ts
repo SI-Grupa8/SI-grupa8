@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CompanyRequest } from '../../../core/models/company-request';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CompanyService } from '../../../core/services/http/company.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormControl,Validators,ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CodeInputModule } from 'angular-code-input';
 import { NgIf } from '@angular/common';
+import { UserRequest } from '../../../core/models/user-request';
+import { UserService } from '../../../core/services/http/user.service';
 @Component({
   selector: 'app-add-new-company',
   standalone: true,
@@ -19,11 +21,12 @@ export class AddNewCompanyComponent {
   addCompanyForm: FormGroup;
   companyRequest: CompanyRequest = {
   };
+  userRequest: UserRequest={};
 
-  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<AddNewCompanyComponent>, private companyService: CompanyService) {
+  constructor(public dialog: MatDialog, public f: FormBuilder,public dialogRef: MatDialogRef<AddNewCompanyComponent>, private companyService: CompanyService, private userService: UserService) {
     this.addCompanyForm = this.f.group({
       companyName: [''],
-      adminID: ['']
+    
     });
     
   }
@@ -34,8 +37,7 @@ export class AddNewCompanyComponent {
   }
   add(event: Event){
     this.companyRequest.companyName = this.addCompanyForm.get('companyName')?.value;
-    this.companyRequest.adminID = this.addCompanyForm.get('adminID')?.value;
-  
+
     event.preventDefault();
   
     this.companyService.createCompany(this.companyRequest).subscribe(()=>{
@@ -43,6 +45,17 @@ export class AddNewCompanyComponent {
       console.log('Company added successfully');
       this.closeDialog();
     });
+  }
+  openDialogAdmin(): void {
+    const dialogRef = this.dialog.open(AddNewCompanyComponent, {
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  
+ 
   }
 
 }
