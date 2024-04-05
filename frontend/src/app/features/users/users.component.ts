@@ -65,11 +65,16 @@ export class UsersComponent {
     console.log(user)
     const userId = user.userID;
     event.preventDefault();
-    this.userService.deleteUser(userId).subscribe(() => {
-      this.userDeleted.emit();
-      console.log('User deleted successfully');
-      this.getAll();
-    });
+
+    const confirmDelete = window.confirm('Are you sure you want to delete this user?');
+  
+    if (confirmDelete) {
+      this.userService.deleteUser(userId).subscribe(() => {
+        this.userDeleted.emit();
+        console.log('User deleted successfully');
+        this.getAll();
+      });
+    }
 
   }
 

@@ -63,11 +63,16 @@ export class DevicesComponent {
     console.log(device);
     const deviceId=device.deviceID;
     event.preventDefault();
-    this.deviceService.deleteDevice(deviceId).subscribe(() => {
-      this.deviceDeleted.emit();
-      console.log('Device deleted successfully');
-      this.getAll();
-    });
+
+    const confirmDelete = window.confirm('Are you sure you want to delete this device?');
+
+    if(confirmDelete) {
+      this.deviceService.deleteDevice(deviceId).subscribe(() => {
+        this.deviceDeleted.emit();
+        console.log('Device deleted successfully');
+        this.getAll();
+      });
+    }
 
   }
   
