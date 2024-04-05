@@ -10,11 +10,13 @@ namespace BLL.Services
     {
         private readonly IMapper _mapper;
         private readonly ICompanyRepository _companyRepository;
+        private readonly IUserRepository _userRepository;
 
-        public CompanyService(ICompanyRepository companyRepository, IMapper mapper)
+        public CompanyService(ICompanyRepository companyRepository, IMapper mapper, IUserRepository userRepository)
         {
             _companyRepository = companyRepository;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
 
         public async Task<Company> GetCompanyByID(int id)
@@ -56,7 +58,14 @@ namespace BLL.Services
 
             _companyRepository.Add(company);
             await _companyRepository.SaveChangesAsync();
-            var returnedCompany = await GetCompanyByName(company.CompanyName); 
+
+            var returnedCompany = await GetCompanyByName(company.CompanyName);
+
+            var adminUser = await _userRepository.GetById(companyDto.AdminID);
+
+            adminUser!.CompanyID = returnedCompany.CompanyID;
+
+            await _userRepository.SaveChangesAsync();
 
             return returnedCompany;
         }

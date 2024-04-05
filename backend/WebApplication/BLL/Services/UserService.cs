@@ -251,7 +251,7 @@ namespace BLL.Services
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
-                CompanyID = admin!.CompanyID,
+                CompanyID = admin!.RoleID == 1 ? admin.CompanyID : null,
                 PasswordSalt = [],
                 RoleID = userRegisterDto.RoleID
             };
