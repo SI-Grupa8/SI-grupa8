@@ -18,12 +18,12 @@ export class AddNewDeviceComponent {
 
   addDeviceForm: FormGroup;
   deviceRequest: DeviceRequest = {
-    userID: 1
   };
 
   constructor(public f: FormBuilder,public dialogRef: MatDialogRef<AddNewDeviceComponent>, private deviceService: DeviceService) {
     this.addDeviceForm = this.f.group({
       deviceName: [''],
+      user: [''],
       ref: [''],
       xcoord: [''], 
       ycoord: ['']
@@ -36,6 +36,8 @@ export class AddNewDeviceComponent {
   add(event: Event){
     this.deviceRequest.deviceName = this.addDeviceForm.get('deviceName')?.value;
       this.deviceRequest.reference = this.addDeviceForm.get('ref')?.value;
+      //hardkodiran userID
+      this.deviceRequest.userID=1;
       this.deviceRequest.xCoordinate = this.addDeviceForm.get('xcoord')?.value;
       this.deviceRequest.yCoordinate = this.addDeviceForm.get('ycoord')?.value;
 

@@ -4,6 +4,7 @@ import { CompanyRequest } from '../../core/models/company-request';
 import { CompanyService } from '../../core/services/http/company.service';
 import { AddNewCompanyComponent } from './add-new-company/add-new-company.component';
 import { CommonModule } from '@angular/common';
+import { AddNewAdminComponent } from './add-new-admin/add-new-admin.component';
 
 @Component({
   selector: 'app-companies',
@@ -32,6 +33,19 @@ export class CompaniesComponent {
       console.log('The dialog was closed');
     });
     dialogRef.componentInstance.companyAdded.subscribe(() => {
+      this.getAll(); // Refresh table after user is added
+    });
+    
+  }
+  openDialogAdmin(): void {
+    const dialogRef = this.dialog.open(AddNewAdminComponent, {
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+   dialogRef.componentInstance.userAdded.subscribe(() => {
       this.getAll(); // Refresh table after user is added
     });
     
