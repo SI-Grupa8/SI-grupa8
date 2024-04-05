@@ -178,7 +178,7 @@ namespace API.Controllers
             return Ok(await _userService.DisableTfa(userId));
         }
 
-        private string CreateToken(User user)
+        /*private string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>
             {
@@ -196,6 +196,6 @@ namespace API.Controllers
                 );
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;
-        }
+        }*/
     }
 }

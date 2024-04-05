@@ -196,5 +196,93 @@ namespace TestProject
             Assert.AreEqual(expectedUserDto, okResult.Value); // Check if data matches expected UserDto object
         }
 
+        [TestMethod]
+        public async Task EnableTwoFactorAuthentication_OkResult()
+        {
+            // Arrange
+            var expectedData = new object(); // Provide expected data here
+            var userId = 1; // Sample user ID for testing
+
+            // Mock UserService.EnableTwoFactorAuthentication to return valid data
+            userServiceMock.Setup(service => service.EnableTwoFactorAuthentication(userId))
+                           .ReturnsAsync(expectedData);
+
+            // Set up mock HttpContext with a valid authorization token
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmc1NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIwIiwiZXhwIjoxNzEyMzE1NjY4fQ.FKkvIzmtzHnUUEeFrIqQEzc0chQTZhHnbWdAyWsvG2s"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = await controller.EnableTwoFactorAuthentication();
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult)); // Check if result is Ok
+        }
+
+        [TestMethod]
+        public async Task DisableTwoFactorAuthentication_OkResult()
+        {
+            // Arrange
+            var userId = 1; // Sample user ID for testing
+
+            // Mock UserService.DisableTfa to return an ActionResult
+            userServiceMock.Setup(service => service.DisableTfa(userId));
+
+            // Set up mock HttpContext with a valid authorization token
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmc1NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIwIiwiZXhwIjoxNzEyMzE1NjY4fQ.FKkvIzmtzHnUUEeFrIqQEzc0chQTZhHnbWdAyWsvG2s"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = await controller.DisableTwoFactorAuthentication();
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult)); // Check if result is Ok
+        }
+
+        [TestMethod]
+        public async Task StoreTwoFactorAuthentication_OkResult()
+        {
+            // Arrange
+            var request = new UserLoginTfa(); // Create a sample UserLoginTfa object
+            var userId = 1; // Sample user ID for testing
+
+            // Mock UserService.ConfirmTfa to return a UserDto
+            var expectedUserDto = new UserDto(); // Create a sample UserDto object
+            userServiceMock.Setup(service => service.ConfirmTfa(request, userId))
+                           .ReturnsAsync(expectedUserDto);
+
+            // Set up mock HttpContext with a valid authorization token
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmc1NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIwIiwiZXhwIjoxNzEyMzE1NjY4fQ.FKkvIzmtzHnUUEeFrIqQEzc0chQTZhHnbWdAyWsvG2s"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = await controller.StoreTwoFactorAuthentication(request);
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult)); // Check if result is Ok
+        }
     }
 }
