@@ -6,12 +6,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormControl,Validators,ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CodeInputModule } from 'angular-code-input';
 import { NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-add-new-admin',
   standalone: true,
-  imports: [FormsModule,NgIf, ReactiveFormsModule, CodeInputModule ],
+  imports: [FormsModule, NgIf, ReactiveFormsModule, CodeInputModule, CommonModule ],
   templateUrl: './add-new-admin.component.html',
   styleUrl: './add-new-admin.component.scss'
 })export class AddNewAdminComponent {
@@ -33,10 +34,12 @@ import { NgIf } from '@angular/common';
       surname: [''],
       email: [''],
       password: [''],
-      companies:['']
+      companyId:[''],
+      roleID: 1
     });
     console.log(data);//ISPISE IH DOBRO
-    this.companies = data; 
+    this.companies = data.companies;
+
   }
 
   closeDialog(): void {
@@ -48,7 +51,8 @@ import { NgIf } from '@angular/common';
     this.userRequest.name = this.addAdminForm.get('name')?.value;
     this.userRequest.surname = this.addAdminForm.get('surname')?.value;
     this.userRequest.password = this.addAdminForm.get('password')?.value;
-    this.userRequest.companyID=this.addAdminForm.get('companies')?.value;
+    this.userRequest.companyID=this.addAdminForm.get('companyId')?.value;
+    this.userRequest.roleID=1;
     event.preventDefault();
     this.userService.addUser(this.userRequest).subscribe(() => {
       this.userAdded.emit();
