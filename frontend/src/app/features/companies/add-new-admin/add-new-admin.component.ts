@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserRequest } from '../../../core/models/user-request';
 import { UserService } from '../../../core/services/http/user.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -14,40 +14,46 @@ import { NgIf } from '@angular/common';
   imports: [FormsModule,NgIf, ReactiveFormsModule, CodeInputModule ],
   templateUrl: './add-new-admin.component.html',
   styleUrl: './add-new-admin.component.scss'
-})
-export class AddNewAdminComponent {
+})export class AddNewAdminComponent {
   @Output() userAdded: EventEmitter<any> = new EventEmitter<any>();
   addAdminForm: FormGroup;
-  userRequest: UserRequest = {
-  };
+  userRequest: UserRequest = {};
+  companies: any[]; 
 
-  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<AddNewAdminComponent>, private userService: UserService) {
+  constructor(
+    public f: FormBuilder,
+    public dialogRef: MatDialogRef<AddNewAdminComponent>,
+    private userService: UserService,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+
+
     this.addAdminForm = this.f.group({
       name: [''],
       surname: [''],
       email: [''],
       password: [''],
-      roleID: 2
+      companies:['']
     });
-    
+    console.log(data);//ISPISE IH DOBRO
+    this.companies = data; 
   }
 
   closeDialog(): void {
     this.dialogRef.close();
   }
+
   add(event: Event) {
     this.userRequest.email = this.addAdminForm.get('email')?.value;
     this.userRequest.name = this.addAdminForm.get('name')?.value;
     this.userRequest.surname = this.addAdminForm.get('surname')?.value;
     this.userRequest.password = this.addAdminForm.get('password')?.value;
-    this.userRequest.roleID=1;
+    this.userRequest.companyID=this.addAdminForm.get('companies')?.value;
     event.preventDefault();
     this.userService.addUser(this.userRequest).subscribe(() => {
       this.userAdded.emit();
       console.log('Admin added successfully');
       this.closeDialog();
     });
-
-    
   }
 }

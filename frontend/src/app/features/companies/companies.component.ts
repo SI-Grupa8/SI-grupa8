@@ -5,7 +5,7 @@ import { CompanyService } from '../../core/services/http/company.service';
 import { AddNewCompanyComponent } from './add-new-company/add-new-company.component';
 import { CommonModule } from '@angular/common';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AddNewAdminComponent } from './add-new-admin/add-new-admin.component';
 
@@ -13,7 +13,7 @@ import { AddNewAdminComponent } from './add-new-admin/add-new-admin.component';
 @Component({
   selector: 'app-companies',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule], 
   templateUrl: './companies.component.html',
   styleUrl: './companies.component.scss'
 })
@@ -53,18 +53,19 @@ export class CompaniesComponent {
   }
   openDialogAdmin(): void {
     const dialogRef = this.dialog.open(AddNewAdminComponent, {
-      disableClose: true
+      disableClose: true,
+      data: {
+        companies: this.companies
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
-   dialogRef.componentInstance.userAdded.subscribe(() => {
+  
+    dialogRef.componentInstance.userAdded.subscribe(() => {
       this.getAll(); // Refresh table after user is added
     });
-    
-
-    
   }
 
   getAll(): void {
