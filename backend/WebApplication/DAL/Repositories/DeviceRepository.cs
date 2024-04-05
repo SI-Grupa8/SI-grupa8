@@ -33,9 +33,16 @@ namespace DAL.Repositories
 
         public async Task<Device> GetWithUser(int deviceId)
         {
-            return await _context.Devices
+            var result =  await _context.Devices
                 .Include(x => x.User)
                 .FirstAsync(x => x.DeviceID == deviceId);
+
+            if (result != null)
+            {
+                _context.Entry(result).State = EntityState.Detached;
+            }
+
+            return result!;
         }
 
     }

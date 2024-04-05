@@ -19,8 +19,13 @@ export class UserService {
     return this.http.post<any>(`${this.apiUrl}/User/add-user`, request, { headers });
   }
 
-  updateUser(request:UserRequest, userId: number):Observable<any>{
-    return this.http.put<any>(`${this.apiUrl}/update-user/${userId}`,request);
+  updateUser(request: UserRequest): Observable<any>{
+    console.log(request)
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.put<any>(`${this.apiUrl}/User/update-user`, request, { headers });
   }
   deleteUser(userId: number):Observable<any>{
     const token = localStorage.getItem("token");
