@@ -309,8 +309,7 @@ namespace BLL.Services
             string manualEntryKey = setupCode.ManualEntryKey;
             string fullName = $"{Uri.EscapeDataString(user.Name)}+{Uri.EscapeDataString(user.Surname)}";
             string qrCodeContent = $"otpauth://totp/WebApplication:{fullName}?secret={manualEntryKey}&issuer=WebApplicationApp";
-            int size = 200;
-            string qrCodeImageUrl = $"https://api.qrserver.com/v1/create-qr-code/?size={size}x{size}&data={Uri.EscapeDataString(qrCodeContent)}&ecc=M";
+            string qrCodeImageUrl = $"https://quickchart.io/qr?text={Uri.EscapeDataString(qrCodeContent)}";
             return qrCodeImageUrl;
         }
         /*
