@@ -6,26 +6,28 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormControl,Validators,ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CodeInputModule } from 'angular-code-input';
 import { NgIf } from '@angular/common';
+
+
 @Component({
-  selector: 'app-add-new-user',
+  selector: 'app-add-new-admin',
   standalone: true,
   imports: [FormsModule,NgIf, ReactiveFormsModule, CodeInputModule ],
-  templateUrl: './add-new-user.component.html',
-  styleUrl: './add-new-user.component.scss'
+  templateUrl: './add-new-admin.component.html',
+  styleUrl: './add-new-admin.component.scss'
 })
-export class AddNewUserComponent {
+export class AddNewAdminComponent {
   @Output() userAdded: EventEmitter<any> = new EventEmitter<any>();
-  addUserForm: FormGroup;
+  addAdminForm: FormGroup;
   userRequest: UserRequest = {
   };
 
-  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<AddNewUserComponent>, private userService: UserService) {
-    this.addUserForm = this.f.group({
+  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<AddNewAdminComponent>, private userService: UserService) {
+    this.addAdminForm = this.f.group({
       name: [''],
       surname: [''],
-      role:[''],
       email: [''],
-      password: ['']
+      password: [''],
+      roleID: 2
     });
     
   }
@@ -34,16 +36,15 @@ export class AddNewUserComponent {
     this.dialogRef.close();
   }
   add(event: Event) {
-    this.userRequest.email = this.addUserForm.get('email')?.value;
-    this.userRequest.name = this.addUserForm.get('name')?.value;
-    this.userRequest.surname = this.addUserForm.get('surname')?.value;
-    this.userRequest.password = this.addUserForm.get('password')?.value;
-    this.userRequest.roleID=this.addUserForm.get('role')?.value;
-
+    this.userRequest.email = this.addAdminForm.get('email')?.value;
+    this.userRequest.name = this.addAdminForm.get('name')?.value;
+    this.userRequest.surname = this.addAdminForm.get('surname')?.value;
+    this.userRequest.password = this.addAdminForm.get('password')?.value;
+    this.userRequest.roleID=2;
     event.preventDefault();
     this.userService.addUser(this.userRequest).subscribe(() => {
       this.userAdded.emit();
-      console.log('User added successfully');
+      console.log('Admin added successfully');
       this.closeDialog();
     });
 

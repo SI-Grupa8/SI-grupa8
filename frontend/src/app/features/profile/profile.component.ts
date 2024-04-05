@@ -10,6 +10,7 @@ import { AuthService } from '../../core/services/http/auth.service';
 import { TwoFaRequest } from '../../core/models/two-fa-request';
 import { TwoFaResponse } from '../../core/models/two-fa-response';
 import { EnableTwofaComponent } from './enable-twofa/enable-twofa.component';
+import { UserService } from '../../core/services/http/user.service';
 
 @Component({
   selector: 'app-profile',
@@ -22,11 +23,12 @@ export class ProfileComponent {
 
   twoFaEnabled: boolean = false;
   qrCode: string = '';
-
+userData: any={};
   constructor(
     private openEnable2faService: OpenEnable2faService,
     private dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService:  UserService
   ) {
     this.twoFaRequest.email = localStorage.getItem("email");
     if(localStorage.getItem('2fa') == "true"){
@@ -37,7 +39,14 @@ export class ProfileComponent {
   twoFaRequest: TwoFaRequest = {}
   twoFaResponse: TwoFaResponse = {}
   message='';
-
+ngOnInit(): void{
+  if(localStorage.getItem("email")){
+    this.userService.getUser().subscribe(
+      (data) => {
+        this.userData = data;
+      },
+  )};
+};
   openEnable2fa(): void {
     //this.get2fa();
       console.log("code:" + this.twoFaResponse.qrCodeImageUrl);

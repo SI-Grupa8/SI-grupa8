@@ -7,7 +7,7 @@ import { UserRequest } from '../../models/user-request';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'https://localhost:7126/api'
+  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
 
   constructor(private http: HttpClient) { }
 
@@ -41,5 +41,12 @@ export class UserService {
       'Authorization': `Bearer ${token}`
     });
     return  this.http.get<any[]>(`${this.apiUrl}/Company/get-company-users` , { headers });
+  }
+  getUser():Observable<any>{
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+return this.http.get<any>(`${this.apiUrl}/User/get-current-user`, {headers});
   }
 }

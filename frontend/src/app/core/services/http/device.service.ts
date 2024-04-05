@@ -7,7 +7,7 @@ import { DeviceRequest } from '../../models/device-request';
   providedIn: 'root'
 })
 export class DeviceService {
-  private apiUrl = 'https://localhost:7126/api'
+  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
 
   constructor(private http: HttpClient) { }
 
