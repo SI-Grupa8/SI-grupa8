@@ -1,5 +1,7 @@
 ﻿using API.Controllers;
+using BLL.DTOs;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
@@ -13,6 +15,23 @@ namespace TestProject2
     [TestClass]
     public class CompanyControllerTests
     {
+        private Mock<ICompanyService> companyServiceMock;
+        private CompanyController controller;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            companyServiceMock = new Mock<ICompanyService>();
+
+            // Initialize controller with mock dependencies
+            controller = new CompanyController(companyServiceMock.Object);
+
+            // Mock HttpContext for the controller
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            };
+        }
         [TestMethod]
         public void Constructor_Injects_CompanyService()
         {
@@ -48,5 +67,148 @@ namespace TestProject2
             // Assert
             Assert.AreEqual(1, apiControllerAttribute.Length);
         }
+
+        [TestMethod]
+        public async Task GetAllCompanies_OkResult()
+        {
+            // Arrange
+            var expectedCompanies = new List<CompanyDto>(); // Provide a list of sample CompanyDto objects
+
+            // Mock CompanyService.GetAll to return a list of CompanyDto
+            companyServiceMock.Setup(service => service.GetAll())
+                              .ReturnsAsync(expectedCompanies);
+
+            // Set up mock HttpContext with a valid authorization token
+            var token = "dummyToken"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = await controller.GetAll();
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult)); // Check if result is Ok
+        }
+
+        [TestMethod]
+        public async Task RemoveCompany_OkResult()
+        {
+            // Arrange
+            var companyId = 1; // Sample company ID for testing
+
+            // Set up mock HttpContext with a valid authorization token
+            var token = "dummyToken"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = await controller.RemoveCompany(companyId);
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult)); // Check if result is Ok
+        }
+
+        [TestMethod]
+        public async Task AddCompany_OkResult()
+        {
+            // Arrange
+            var company = new CompanyDto(); // Create a sample CompanyDto object
+            var expectedCompanyDto = new CompanyDto(); // Create a sample CompanyDto object
+
+            // Mock CompanyService.AddCompany to return a CompanyDto
+            companyServiceMock.Setup(service => service.AddCompany(company))
+                              .ReturnsAsync(expectedCompanyDto);
+
+            // Set up mock HttpContext with a valid authorization token
+            var token = "dummyToken"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = await controller.AddCompany(company);
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult)); // Check if result is Ok
+        }
+
+        [TestMethod]
+        public async Task UpdateCompany_OkResult()
+        {
+            // Arrange
+            var company = new CompanyDto(); // Create a sample CompanyDto object
+            var expectedCompanyDto = new CompanyDto(); // Create a sample CompanyDto object
+
+            // Mock CompanyService.UpdateCompany to return a CompanyDto
+            companyServiceMock.Setup(service => service.UpdateCompany(company))
+                              .ReturnsAsync(expectedCompanyDto);
+
+            // Set up mock HttpContext with a valid authorization token
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmc1NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIwIiwiZXhwIjoxNzEyMzE1NjY4fQ.FKkvIzmtzHnUUEeFrIqQEzc0chQTZhHnbWdAyWsvG2s"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = await controller.UpdateCompany(company);
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+        }
+
+        [TestMethod]
+        public async Task GetAllUsers_OkResult()
+        {
+            // Arrange
+            var expectedUsers = new List<UserDto>(); // Provide a list of sample UserDto objects
+
+            // Mock CompanyService.GetAllUsers to return a list of UserDto
+            companyServiceMock.Setup(service => service.GetAllUsers(It.IsAny<int>()))
+                              .ReturnsAsync(expectedUsers);
+
+            // Set up mock HttpContext with a valid authorization token
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmc1NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIwIiwiZXhwIjoxNzEyMzE1NjY4fQ.FKkvIzmtzHnUUEeFrIqQEzc0chQTZhHnbWdAyWsvG2s"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = await controller.GetAllUsers();
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult)); // Check if result is Ok
+        }
+
     }
 }
