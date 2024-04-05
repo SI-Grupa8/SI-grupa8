@@ -1,5 +1,5 @@
 export interface DeviceRequest {
-    userID: number;
+    userID?: number;
     reference?: string;
     deviceName?:string;
     xCoordinate?: string;

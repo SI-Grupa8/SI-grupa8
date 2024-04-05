@@ -94,32 +94,24 @@
         }
         .dropdown {
             position: relative;
+            padding: 5px 5px;
             background: url("../../../../assets/images/settings.png") no-repeat; 
             background-size: 25px; 
-            padding-top: 5px;
             background-position: 26px center; 
-            select {
-                padding: 4px;
-                padding-left: 40px;
-                margin: 8px 15px;
-                border: none;
-                border-bottom: 1px solid #1e5631;
-                outline: none;
-                background-color: transparent;
-                transition: border-bottom 0.3s;
-                height: 30px;
-                width: calc(100% - 30px); 
-                option{
-                    padding: 10px; 
-                    background-color: #f0f0f0; /* Background color of options */
-               color: #1e5631;
-               height: 50px;
-
-                }
-            }
-            
         }
         
+        select {
+            padding: 8px 10px;
+            padding-left: 40px;
+            margin: 8px 15px;
+            border: none;
+            border-bottom: 1px solid #1e5631;
+            outline: none;
+            background-color: transparent;
+            transition: border-bottom 0.3s;
+            height: 30px;
+            width: calc(100% - 30px); 
+        }
         
         button {
             background-color: #1e5631;

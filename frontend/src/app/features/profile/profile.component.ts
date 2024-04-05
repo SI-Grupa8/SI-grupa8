@@ -40,7 +40,7 @@ userData: any={};
   twoFaResponse: TwoFaResponse = {}
   message='';
 ngOnInit(): void{
-  if(localStorage.getItem("token")){
+  if(localStorage.getItem("email")){
     this.userService.getUser().subscribe(
       (data) => {
         this.userData = data;
