@@ -45,7 +45,7 @@ namespace DAL.Repositories
 
         public async Task<User> GetUserById(int userID)
         {
-            return await _context.Users.Include(u => u.Role).FirstAsync(x => x.UserID == userID);
+            return await _context.Users.AsNoTracking().Include(u => u.Role).FirstAsync(x => x.UserID == userID);
         }
 
         public async Task<List<User>> GetAllAdminsWithoutCompany()
