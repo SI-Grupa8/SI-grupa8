@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AddNewAdminComponent } from './add-new-admin/add-new-admin.component';
+import { EditCompanyComponent } from './edit-company/edit-company.component';
+import { UserService } from '../../core/services/http/user.service';
 
 
 @Component({
@@ -23,11 +25,12 @@ export class CompaniesComponent {
   companyRequest: CompanyRequest = { 
   };
   searchQuery: string = ''; 
-
-  constructor(public dialog: MatDialog, private companyService: CompanyService ) { }
+  users: any[] = [];
+  constructor(public dialog: MatDialog, private companyService: CompanyService, private userService: UserService ) { }
 
   ngOnInit(): void {
     this.getAll();
+    this.getAllAdminsWithoutCompany();
   }
   openDialog(): void {
     const dialogRef = this.dialog.open(AddNewCompanyComponent, {
@@ -64,14 +67,35 @@ export class CompaniesComponent {
     });
   
     dialogRef.componentInstance.userAdded.subscribe(() => {
-      this.getAll(); // Refresh table after user is added
+      this.getAll(); 
     });
   }
+  getAllAdminsWithoutCompany() : void{
+    this.userService.getAllAdminsWithoutCompany().subscribe(users => {
+      this.users= users;
+      console.log("hhh"+this.users);
+    })
+  }
+  openDialogEdit(company: any):void{
+    const dialogRef = this.dialog.open(EditCompanyComponent, {
+      disableClose: true ,
+      data: {
+        users: this.users
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+    dialogRef.componentInstance.companyEdited.subscribe(() => {
+      this.getAll(); 
+    });
 
+  }
   getAll(): void {
     this.companyService.getCompanies().subscribe(companies => {
       this.companies = companies;
       this.filterCompanies();
     });
   }
+
 }

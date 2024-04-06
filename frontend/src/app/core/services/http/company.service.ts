@@ -27,4 +27,12 @@ export class CompanyService {
     });
     return this.http.get<any[]>(`${this.apiUrl}/Company/get-all-companies`, {headers});
   }
+
+  editCompany(request: CompanyRequest): Observable<any>{
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.put<any>(`${this.apiUrl}/Company/update-company`, request,{headers});
+  }
 }

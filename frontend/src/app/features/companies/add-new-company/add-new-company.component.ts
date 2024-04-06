@@ -22,18 +22,19 @@ export class AddNewCompanyComponent {
   companyRequest: CompanyRequest = {
   };
   userRequest: UserRequest={};
-  users : UserRequest[] = [];
-
+  users : any[] = [];
+  
   constructor(public dialog: MatDialog, public f: FormBuilder,public dialogRef: MatDialogRef<AddNewCompanyComponent>, private companyService: CompanyService, private userService: UserService) {
     this.addCompanyForm = this.f.group({
       companyName: [''],
       adminId: ['']
     });
 
-    this.getAllAdminsWithoutCompany();
     
   }
-
+  ngOnInit(): void {
+    this.getAllAdminsWithoutCompany();
+  }
   closeDialog(): void {
     this.dialogRef.close();
   }
@@ -49,17 +50,7 @@ export class AddNewCompanyComponent {
       this.closeDialog();
     });
   }
-  openDialogAdmin(): void {
-    const dialogRef = this.dialog.open(AddNewCompanyComponent, {
-      disableClose: true
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  
- 
-  }
 
   getAllAdminsWithoutCompany() : void{
     this.userService.getAllAdminsWithoutCompany().subscribe(users => {
