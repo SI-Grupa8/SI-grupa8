@@ -93,8 +93,6 @@ namespace BLL.Services
                 var existingUser = await _userRepository.GetById(userDto.UserID); 
                 if (existingUser != null)
                 {
-                    if (company.Users == null)
-                        company.Users = new List<User>();
                     company.Users.Add(existingUser);
                 }
                 else
