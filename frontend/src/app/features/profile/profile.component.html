@@ -4,11 +4,11 @@
 <div class="section">
     <div class="section-item">
         <p class="section-item-title">Name</p>
-        <p class="section-item-subtitle">Display users name</p>
+        <p class="section-item-subtitle">{{userData.name}}</p>
     </div>
     <div class="section-item">
         <p class="section-item-title">Surname</p>
-        <p class="section-item-subtitle">Display users surname</p>
+        <p class="section-item-subtitle">{{userData.surname}}</p>
     </div>
     <div class="section-item">
         <div class="grid-container">
@@ -44,12 +44,8 @@
                 <p class="section-item-subtitle">Help protect your account (even if someone gets your password) by requiring a verification code and a password to log in.</p>
             </div>
             <div class="grid-item">
-                <!--
-                <label class="switch">
-                    <input  (click)="openEnable2fa()" type="checkbox" (change)="toggleChanged($event)">
-                    <span class="slider round"></span>
-                  </label>-->
-                  <mat-slide-toggle color="primary" (change)="change($event)" [checked]="checked"></mat-slide-toggle>
+                <button (click)="get2fa()" [class.disappear]="twoFaEnabled" class="twofa-button" id="setup-twofa">Setup 2fa</button>
+                <button (click)="openRemove2fa()" [class.disappear]="!twoFaEnabled" class="twofa-button" id="remove-twofa">Remove 2fa</button>
             </div>
         </div>
     </div>

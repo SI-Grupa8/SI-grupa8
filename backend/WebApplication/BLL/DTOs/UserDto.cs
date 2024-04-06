@@ -5,7 +5,8 @@ namespace BLL.DTOs
 {
 	public class UserDto
 	{
-		public string Name { get; set; } = string.Empty;
+        public int UserID { get; set; }
+        public string Name { get; set; } = string.Empty;
 		public string Surname { get; set; } = string.Empty;
 		public string Email { get; set; } = string.Empty;
 		public string PhoneNumber { get; set; } = string.Empty;
@@ -16,7 +17,9 @@ namespace BLL.DTOs
         public DateTime TokenCreated { get; set; }
         public DateTime TokenExpires { get; set; }
 
-        public RoleDto Role { get; set; }
+        public RoleDto? Role { get; set; }
+        public int CompanyID { get; set; }
+        public CompanyDto? Company { get; set; } = null;
 
     }
 }

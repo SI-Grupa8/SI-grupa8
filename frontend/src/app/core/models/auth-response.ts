@@ -3,5 +3,6 @@ export interface AuthResponse {
     token?: string;
     twoFaEnabled?: boolean;
     refresh?: string;
-    expires?: string;
+    expires?: Date;
+    role?:string;
 }

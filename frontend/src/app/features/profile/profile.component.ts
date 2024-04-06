@@ -10,6 +10,7 @@ import { AuthService } from '../../core/services/http/auth.service';
 import { TwoFaRequest } from '../../core/models/two-fa-request';
 import { TwoFaResponse } from '../../core/models/two-fa-response';
 import { EnableTwofaComponent } from './enable-twofa/enable-twofa.component';
+import { UserService } from '../../core/services/http/user.service';
 
 @Component({
   selector: 'app-profile',
@@ -20,103 +21,65 @@ import { EnableTwofaComponent } from './enable-twofa/enable-twofa.component';
 })
 export class ProfileComponent {
 
-  checked: boolean = false;
-  private allow2faDialogOpen: boolean = true;
-toggleChecked: any;
-
-qrCode: string = '';
-
+  twoFaEnabled: boolean = false;
+  qrCode: string = '';
+userData: any={};
   constructor(
     private openEnable2faService: OpenEnable2faService,
     private dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService:  UserService
   ) {
     this.twoFaRequest.email = localStorage.getItem("email");
-    if(localStorage.getItem('checked') == "true"){
-      this.checked = true;
+    if(localStorage.getItem('2fa') == "true"){
+      this.twoFaEnabled = true;
     }
    }
 
   twoFaRequest: TwoFaRequest = {}
   twoFaResponse: TwoFaResponse = {}
   message='';
+ngOnInit(): void{
+  if(localStorage.getItem("email")){
+    this.userService.getUser().subscribe(
+      (data) => {
+        this.userData = data;
+      },
+  )};
+};
   openEnable2fa(): void {
-   
-      //this.openEnable2faService.openEnable2fa();
-      //this.dialog.open(EnableTwofaComponent, { disableClose: true, });
+    //this.get2fa();
       console.log("code:" + this.twoFaResponse.qrCodeImageUrl);
       const dialogRef = this.dialog.open(EnableTwofaComponent, {
         data: {
           imageUrl: this.twoFaResponse.qrCodeImageUrl,
-          key: this.twoFaResponse.manualEntryKey
-  
-        }
-        
+          key: this.twoFaResponse.manualEntryKey,          
+        }        
       });
-      
-      
-    
+      dialogRef.componentInstance.dialogClosed.subscribe((twoFaEnabled: boolean) => {
+        this.twoFaEnabled = twoFaEnabled;
+      });
   }
-
-  //openRemove2fa(): void {
-    //  this.openEnable2faService.openRemove2fa();
-  //}
-/*
-  toggleChanged(event: any) {
-    if (event.target.checked) {
-      this.allow2faDialogOpen = true;
-      //this.openEnable2fa();
-    } else {
-      this.allow2faDialogOpen = false;
-      this.openRemove2fa();
-    }
-  }*/
-
-  change(e: { source: { checked: boolean; }; }) {
-    if (this.checked) {
-      // at first, reset to the previous value
-      // so that the user could not see that the mat-slide-toggle has really changed
-      e.source.checked = true;
-
-      const dialogRef = this.dialog.open(RemoveTwofaComponent);
-      dialogRef.afterClosed().subscribe(response => {
-        console.log( 'response ', response );
-        if (response) {
-           this.checked = !this.checked;
-           console.log("toggle")
-        } else {
-          this.checked=false;
-          console.log("toggle should not change if I click the cancel button")
-        }
-      })
-    } else if (!this.checked) {
-      this.checked = !this.checked;
-      //this.openEnable2faService.openEnable2fa();
-      console.log("aha?")
-  
-      this.enable2fa();
-      //this.openEnable2fa();
-    }
-  }
-
-  enable2fa(): void {
-    console.log(this.twoFaRequest.email)
-    this.allow2faDialogOpen = true;
-
-    this.authService.enable2fa(this.twoFaRequest).subscribe({
+  get2fa() {
+    this.authService.enable2fa().subscribe({
       next: (response) => {
         if(response) {
-          this.allow2faDialogOpen = true;
           this.twoFaResponse = response;
           localStorage.setItem("qrcode", this.twoFaResponse.qrCodeImageUrl as string);
-          console.log("key: " +this.twoFaResponse.manualEntryKey);
-          console.log("image:" + this.twoFaResponse.qrCodeImageUrl);
+          localStorage.setItem("key", this.twoFaResponse.manualEntryKey as string);
           this.openEnable2fa();
         }
         else {
-          console.log("nothing");
+          console.log("Could not open enable 2fa");
         }
       }
     })
   }
+  openRemove2fa(): void {
+    const dialogRef = this.dialog.open(RemoveTwofaComponent, {});
+    dialogRef.componentInstance.dialogClosed.subscribe((twoFaEnabled: boolean) => {
+      this.twoFaEnabled = twoFaEnabled;
+    });
+  }
+
 }

@@ -16,18 +16,18 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BLL.Services
 {
-	public class UserService : IUserService
-	{
-		private readonly IMapper _mapper;
-		private readonly IUserRepository _userRepository;
+    public class UserService : IUserService
+    {
+        private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
 
-		public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
-		{
-			_userRepository = userRepository;
-			_mapper = mapper;
+        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
+        {
+            _userRepository = userRepository;
+            _mapper = mapper;
             _configuration = configuration;
-		}
+        }
 
         public async Task<object> EnableTwoFactorAuthentication(int userID)
         {
@@ -44,7 +44,35 @@ namespace BLL.Services
             };
         }
 
-        public async Task<(CookieOptions cookiesOption, string refreshToken, object data)> UserLogIn(UserLogIn userRequest)
+        public async Task<UserDto> ConfirmTfa(UserLoginTfa request, int userID)
+        {
+            var authenticator = new TwoFactorAuthenticator();
+            var user = await _userRepository.GetById(userID);
+
+            if (user == null) throw new Exception("User not found");
+            bool isValid = authenticator.ValidateTwoFactorPIN(user.TwoFactorKey, request.TwoFactorCodeSix);
+            if (!isValid)
+            {
+                throw new Exception("Invalid 2FA code.");
+            }
+            user.TwoFactorEnabled = true;
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
+            return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task<UserDto> DisableTfa(int userID)
+        {
+            var user = await _userRepository.GetById(userID);
+            if (user == null) throw new Exception("User not found");
+            user.TwoFactorEnabled = false;
+            user.TwoFactorKey = string.Empty;
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
+            return _mapper.Map<UserDto>(user);
+        }
+        /*
+        public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogIn(UserLogIn userRequest)
         {
             var user = new User();
             if (!string.IsNullOrEmpty(userRequest.Email))
@@ -60,7 +88,116 @@ namespace BLL.Services
             {
                 throw new Exception("Wrong password.");
             }
+            var refreshToken = GenerateRefreshToken();//edis
+            var cookieOptions = SetRefreshToken(refreshToken, user);//edis
+            if (user.TwoFactorEnabled == false)
+            {
+                string token = CreateToken(user);
+                //var refreshToken = GenerateRefreshToken();
+                //var cookieOptions = SetRefreshToken(refreshToken, user);
+                RefreshTokenDto refresh = new RefreshTokenDto()
+                {
+                    Token = refreshToken.Token,
+                    Created = refreshToken.Created,
+                    Expires = refreshToken.Expires,
+                };
+                await RefreshUserToken(user.UserID, refresh);
 
+                return (cookieOptions, refreshToken.Token,
+                    new
+                    {
+                        token = token,
+                        twoFaEnabled = user.TwoFactorEnabled,
+                        email = user.Email,
+                        refresh = refresh.Token,
+                        expires = refresh.Expires.ToString()
+                    });
+            }
+            return (cookieOptions, null,
+                new
+                {
+                    twoFaEnabled = user.TwoFactorEnabled,
+                    email = user.Email
+                });
+        }
+        */
+        public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogIn(UserLogIn userRequest)
+        {
+            var user = new User();
+            if (!string.IsNullOrEmpty(userRequest.Email))
+            {
+                user = await _userRepository.FindByEmail(userRequest.Email);
+            }
+            else if (!string.IsNullOrEmpty(userRequest.PhoneNumber))
+            {
+                user = await _userRepository.FindByPhoneNumber(userRequest.PhoneNumber);
+            }
+
+            if (user == null || user.PasswordHash == null)
+            {
+                throw new Exception("User not found or password hash is null.");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(userRequest.Password, Encoding.UTF8.GetString(user.PasswordHash)))
+            {
+                throw new Exception("Wrong password.");
+            }
+
+            var refreshToken = GenerateRefreshToken();
+            var cookieOptions = SetRefreshToken(refreshToken, user);
+
+            if (user.TwoFactorEnabled == false)
+            {
+                string token = CreateToken(user);
+
+
+                RefreshTokenDto refresh = new RefreshTokenDto()
+                {
+                    Token = refreshToken?.Token, // Ensure Token is not null
+                    Created = refreshToken?.Created ?? DateTime.UtcNow,
+                    Expires = refreshToken?.Expires ?? DateTime.UtcNow.AddMinutes(30),
+                };
+
+                await RefreshUserToken(user.UserID, refresh);
+
+                return (cookieOptions, refreshToken?.Token,
+                    new
+                    {
+                        token = token,
+                        twoFaEnabled = user.TwoFactorEnabled,
+                        role = user.Role.RoleName,
+                        email = user.Email,
+                        refresh = refresh.Token,
+                        expires = refresh.Expires.ToString()
+                    });
+            }
+
+            return (cookieOptions, null,
+                new
+                {
+                    twoFaEnabled = user.TwoFactorEnabled,
+                    email = user.Email
+                });
+        }
+
+        public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogInTfa(UserLoginTfa request)
+        {
+
+            var authenticator = new TwoFactorAuthenticator();
+            var user = new User();
+            if (!string.IsNullOrEmpty(request.Email))
+            {
+                user = await _userRepository.FindByEmail(request.Email);
+            }
+            else if (!string.IsNullOrEmpty(request.PhoneNumber))
+            {
+                user = await _userRepository.FindByPhoneNumber(request.PhoneNumber);
+            }
+            bool isValid = authenticator.ValidateTwoFactorPIN(user.TwoFactorKey, request.TwoFactorCodeSix);
+            if (!isValid)
+            {
+                throw new Exception("Invalid 2FA code.");
+            }
             string token = CreateToken(user);
             var refreshToken = GenerateRefreshToken();
             var cookieOptions = SetRefreshToken(refreshToken, user);
@@ -73,21 +210,21 @@ namespace BLL.Services
             await RefreshUserToken(user.UserID, refresh);
 
             return (cookieOptions, refreshToken.Token,
-                new 
-            {
-                token = token,
-                twoFaEnabled = user.TwoFactorEnabled,
-                email = user.Email,
-                refresh = refresh.Token,
-                expires = refresh.Expires.ToString()
-            });
-
+                new
+                {
+                    token = token,
+                    twoFaEnabled = user.TwoFactorEnabled,
+                    role = user.Role.RoleName,
+                    email = user.Email,
+                    refresh = refresh.Token,
+                    expires = refresh.Expires.ToString()
+                });
         }
 
         public async Task<User> GetUserByEmail(string email)
         {
             var user = await _userRepository.FindByEmail(email);
-            return user ;
+            return user;
         }
 
         public async Task<User> GetByToken(string token)
@@ -101,9 +238,11 @@ namespace BLL.Services
             return user;
         }
 
-        public async Task<UserDto> AddUser(UserRegisterDto userRegisterDto)
-		{
+        public async Task<UserDto> AddUser(UserRegisterDto userRegisterDto, int adminId)
+        {
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegisterDto.Password);
+
+            var admin = await _userRepository.GetById(adminId);
 
             User user = new User
             {
@@ -112,30 +251,41 @@ namespace BLL.Services
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
-                
+                CompanyID = admin!.RoleID == 1 ? admin.CompanyID : userRegisterDto.CompanyID,
                 PasswordSalt = [],
-                RoleID = 0
+                RoleID = userRegisterDto.RoleID
             };
             _userRepository.Add(user);
 
             await _userRepository.SaveChangesAsync();
 
-            var userDto =  _mapper.Map<UserDto>(user);
-            return  userDto;
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return userDto;
 
         }
 
-        public async Task<User> UpdateUser(User user)
+        public async Task<UserDto> UpdateUser(UserDto userDto)
         {
-            
-            _userRepository.Update(user);
+            var mappedUser = _mapper.Map<User>(userDto);
+
+            var user = await _userRepository.GetById(userDto.UserID);
+
+            mappedUser.PasswordHash = user!.PasswordHash;
+            mappedUser.PasswordSalt = user.PasswordSalt;
+
+
+            _userRepository.Update(mappedUser);
             await _userRepository.SaveChangesAsync();
-            return user;
+
+            return userDto;
         }
 
-        public async Task<List<User>> GetAll()
+        public async Task<List<UserDto>> GetAll()
         {
-            return await _userRepository.GetAll();
+            var users = await _userRepository.GetAll();
+
+            return _mapper.Map<List<UserDto>>(users);
         }
 
         public async Task<SetupCode> SetupCode(User user)
@@ -144,17 +294,27 @@ namespace BLL.Services
             {
                 string secretKey = GenerateSecretKey();
                 user.TwoFactorKey = secretKey;
-                user.TwoFactorEnabled = true;
                 _userRepository.Update(user);
                 await _userRepository.SaveChangesAsync();
                 _mapper.Map<UserDto>(user);
             }
 
             var authenticator = new TwoFactorAuthenticator();
-            var code=authenticator.GenerateSetupCode("WebApplication", user.Name + user.Surname, ConvertToBytes(user.TwoFactorKey, false), 300);
+            var code = authenticator.GenerateSetupCode("WebApplication", user.Name + user.Surname, ConvertToBytes(user.TwoFactorKey, false), 300);
             return code;
         }
 
+        public string GenerateQRCodeImageUrl(User user, SetupCode setupCode)
+        {
+            string manualEntryKey = setupCode.ManualEntryKey;
+            string fullName = $"{Uri.EscapeDataString(user.Name)}+{Uri.EscapeDataString(user.Surname)}";
+            string qrCodeContent = $"otpauth://totp/WebApplication:{fullName}?secret={manualEntryKey}&issuer=WebApplicationApp";
+
+            var qrCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl={Uri.EscapeDataString(qrCodeContent)}";
+
+            return qrCodeImageUrl;
+        }
+        /*
         public string GenerateQRCodeImageUrl(User user, SetupCode setupCode)
         {
             string manualEntryKey = setupCode.ManualEntryKey;
@@ -164,7 +324,7 @@ namespace BLL.Services
             var qrCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl={qrCodeContent}";
 
             return qrCodeImageUrl;
-        }
+        }*/
 
         private byte[] ConvertToBytes(string secret, bool secretIsBase32) =>
                secretIsBase32 ? Base32Encoding.ToBytes(secret) : Encoding.UTF8.GetBytes(secret);
@@ -242,6 +402,44 @@ namespace BLL.Services
             return jwt;
         }
 
+        public async Task<List<UserDto>> GetAllAdmins()
+        {
+            var users = await _userRepository.GetAllByRole("Admin");
+            return _mapper.Map<List<UserDto>>(users);
+        }
+
+        public async Task RemoveUser(int userId)
+        {
+            var user = await _userRepository.GetById(userId);
+            _userRepository.Remove(user!);
+
+            await _userRepository.SaveChangesAsync();
+        }
+
+        public async Task<List<UserDto>> GetAllByRole(string role)
+        {
+            var users = await _userRepository.GetAllByRole(role);
+            return _mapper.Map<List<UserDto>>(users);
+        }
+
+        public async Task<User> GetUserById(int userId)
+        {
+            return await _userRepository.GetUserById(userId);
+        }
+
+        public async Task<List<int>> ExtractUserIDs(List<UserDto> users)
+        {
+            List<int> userIds = new List<int>();
+
+            foreach (UserDto user in users)
+            {
+                int userId = user.UserID;
+                userIds.Add(userId);
+            }
+
+            return userIds;
+        }
+
         private RefreshTokenDto GenerateRefreshToken()
         {
             var refreshToken = new RefreshTokenDto
@@ -276,6 +474,37 @@ namespace BLL.Services
             var user = await _userRepository.GetById(userID);
 
             return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task<UserDto> AddUserRegister(UserRegisterDto userRegisterDto)
+        {
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegisterDto.Password);
+
+            User user = new User
+            {
+                Name = userRegisterDto.Name,
+                Surname = userRegisterDto.Surname,
+                Email = userRegisterDto.Email,
+                PhoneNumber = userRegisterDto.PhoneNumber,
+                PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
+                PasswordSalt = [],
+                RoleID = userRegisterDto.RoleID,
+            };
+            _userRepository.Add(user);
+
+            await _userRepository.SaveChangesAsync();
+
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return userDto;
+        }
+
+        public async Task<List<UserDto>> GetAdminsWihotuCompany()
+        {
+            var users = await _userRepository.GetAllAdminsWithoutCompany();
+
+            return _mapper.Map<List<UserDto>>(users);
+
         }
     }
 }

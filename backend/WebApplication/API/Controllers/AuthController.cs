@@ -21,6 +21,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Authorization;
 using API.JWTHelpers;
+using System.Linq;
 
 namespace API.Controllers
 {
@@ -46,24 +47,52 @@ namespace API.Controllers
 
             if (userRegisterDto.Email.IsNullOrEmpty() && userRegisterDto.PhoneNumber.IsNullOrEmpty())
                 return BadRequest("Cannot register without at least an email or a phone number!");
-            var userDto = await _userService.AddUser(userRegisterDto);
+            var userDto = await _userService.AddUserRegister(userRegisterDto);
             return Ok(userDto);
         }
 
+
+        /*
         [HttpPost("login")]
         public async Task<ActionResult<object>> Login(UserLogIn request)
         {
-            //Check if input contains at least an email or a phone number
-            if (request.Email.IsNullOrEmpty() && request.PhoneNumber.IsNullOrEmpty())
-                return BadRequest("Cannot login without at least an email or a phone number!");
+            try
+            {
+                // Validate input: Ensure either email or phone number is provided
+                if (string.IsNullOrEmpty(request.Email) && string.IsNullOrEmpty(request.PhoneNumber))
+                    return BadRequest("Cannot login without at least an email or a phone number!");
 
-            var (cookieOptions, refresh, data) = await _userService.UserLogIn(request);
-            Response.Cookies.Append("refreshToken", refresh, cookieOptions);
+                // Authenticate user using provided email/phone and password
+                var (cookieOptions, refresh, data) = await _userService.UserLogIn(request);
 
-            return Ok(data) ;
+                // If user has 2FA enabled, return response indicating 2FA is required
+                if (data)
+                {
+                    return Ok(new { RequiresTwoFactorAuthentication = true });
+                }
 
-        }
+                // If login successful and 2FA not required
+                if (!string.IsNullOrEmpty(refresh))
+                {
+                    // If QR code image URL is generated successfully
+                    if (!string.IsNullOrEmpty(data.QRCodeImageUrl))
+                    {
+                        // Append refresh token to response cookies
+                        Response.Cookies.Append("refreshToken", refresh, cookieOptions);
+                    }
 
+                    // Return login data
+                    return Ok(data);
+                }
+
+                return BadRequest("Invalid login credentials");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately
+                return StatusCode(500, $"An error occurred while logging in: {ex.Message}");
+            }
+        }*/
         /*
         [HttpPost("refresh-token")]
         public async Task<ActionResult<string>> RefreshToken()
@@ -97,76 +126,53 @@ namespace API.Controllers
 
         }
         */
-
-        [HttpPost("login/tfa")]
-        public async Task<ActionResult<string>> LoginTfa(UserLoginTfa request)
+        [HttpPost("login")]
+        public async Task<ActionResult<object>> Login(UserLogIn request)
         {
-            List<User> users = await _userService.GetAll();
-            User user = new User();
-            if (!request.Email.IsNullOrEmpty())
+            //Check if input contains at least an email or a phone number
+            if (request.Email.IsNullOrEmpty() && request.PhoneNumber.IsNullOrEmpty())
+                return BadRequest("Cannot login without at least an email or a phone number!");
+
+            var (cookieOptions, refresh, data) = await _userService.UserLogIn(request);
+
+            if (refresh != null)
             {
-                user = users.FirstOrDefault(u => u.Email == request.Email);
-                if (user == null) { return BadRequest("User not found"); }
-            }
-            //Look for a user by phone number
-            else if (!request.PhoneNumber.IsNullOrEmpty())
-            {
-                user = users.FirstOrDefault(u => u.PhoneNumber == request.PhoneNumber);
-                if (user == null) { return BadRequest("User not found"); }
+                Response.Cookies.Append("refreshToken", refresh, cookieOptions);
             }
 
-            if (user == null) return BadRequest("User not found");
+            return Ok(data);
 
-            if (user.TwoFactorEnabled)
-            {
-                var twoFactorAuthenticator = new TwoFactorAuthenticator();
-                bool isValid = twoFactorAuthenticator.ValidateTwoFactorPIN(user.TwoFactorKey, request.TwoFactorCodeSix);
-                if (!isValid)
-                {
-                    return BadRequest("Invalid 2FA code.");
-                }
-            }
-            string token = CreateToken(user);
-            
-            return Ok(new
-            {
-                token = token
-            }) ;
+        }
+        [HttpPost("login/tfa")]
+        public async Task<ActionResult<object>> LoginTfa(UserLoginTfa request)
+        {
+            var (cookieOptions, refresh, data) = await _userService.UserLogInTfa(request);
+            Response.Cookies.Append("refreshToken", refresh, cookieOptions);
+            return Ok(data);
         }
 
-        [HttpPost("enable-tfa")]
-        [Authorize(Roles="User")]
+        [HttpPost("get-tfa")] // vraca tfa samo
         public async Task<ActionResult<object>> EnableTwoFactorAuthentication()
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
             var userId = JWTHelper.GetUserIDFromClaims(token);
             return Ok(await _userService.EnableTwoFactorAuthentication(userId));
+        }
 
+        [HttpPost("store-tfa")] // ako se poklope enabled u bazu
+        public async Task<ActionResult<UserDto>> StoreTwoFactorAuthentication(UserLoginTfa request)
+        {
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
+            var userId = JWTHelper.GetUserIDFromClaims(token);
+            return Ok(await _userService.ConfirmTfa(request, userId));
         }
 
         [HttpPost("disable-tfa")]
-        //[Authorize]
-        public async Task<ActionResult> DisableTwoFactorAuthentication(UserPhoneOrMail request)
+        public async Task<ActionResult> DisableTwoFactorAuthentication()
         {
-            List<User> users = await _userService.GetAll();
-            User user = new User();
-            if (!request.Email.IsNullOrEmpty())
-            {
-                user = users.FirstOrDefault(u => u.Email == request.Email);
-                if (user == null) { return BadRequest("User not found"); }
-            }
-            //Look for a user by phone number
-            else if (!request.PhoneNumber.IsNullOrEmpty())
-            {
-                user = users.FirstOrDefault(u => u.PhoneNumber == request.PhoneNumber);
-                if (user == null) { return BadRequest("User not found"); }
-            }
-
-            if (user == null) return BadRequest("User not found");
-            user.TwoFactorEnabled = false;
-            user.TwoFactorKey = string.Empty;
-            user = await _userService.UpdateUser(user);
-            return Ok("Two factor authentication successfully removed.");
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
+            var userId = JWTHelper.GetUserIDFromClaims(token);
+            return Ok(await _userService.DisableTfa(userId));
         }
 
         private string CreateToken(User user)

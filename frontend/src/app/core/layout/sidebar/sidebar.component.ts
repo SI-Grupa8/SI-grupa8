@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/http/auth.service';
 
@@ -9,8 +9,14 @@ import { AuthService } from '../../services/http/auth.service';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent {
-  constructor(private authService: AuthService) {}
+export class SidebarComponent implements OnInit {
+  userRole: string | undefined;
+  constructor(public authService: AuthService) {}
+
+  ngOnInit() {
+    // Retrieve user role from AuthService
+    this.userRole = this.authService.getUserRole();
+  }
 
   logout() {
     this.authService.logout();
