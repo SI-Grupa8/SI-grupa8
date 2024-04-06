@@ -7,18 +7,19 @@ import { CompanyRequest } from '../../models/company-request';
   providedIn: 'root'
 })
 export class CompanyService {
-  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
-  //private apiUrl = 'https://localhost:7126/api';
+  //private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
+  private apiUrl = 'https://localhost:7126/api';
 
   constructor(private http: HttpClient) { }
 
-  createCompany(request: CompanyRequest): Observable<any> {
+  createCompany(request: CompanyRequest, adminId : number=0): Observable<any> {
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.post<any>(`${this.apiUrl}/Company/add-company`, request, {headers});
+    return this.http.post<any>(`${this.apiUrl}/Company/add-company?adminId=${adminId}`, request, {headers});
   }
+
   getCompanies():Observable<any[]>{
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({

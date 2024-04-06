@@ -22,8 +22,8 @@
             <th>Surname</th>
             <th>Email</th>
             <th>Phone Number</th>
-            <th>RoleID</th>
-            <th>CompanyID</th>
+            <th>Role</th>
+            <th>Company</th>
             <th class="actcolumn"></th>
           </tr>
         </thead>
@@ -40,8 +40,8 @@
                     <span *ngIf="user.phoneNumber">{{ user.phoneNumber }}</span>
                     <span *ngIf="!user.phoneNumber" style="font-style: italic;">No phone number</span>
                 </td>
-                <td>{{user.roleID}}</td>
-                <td>{{user.companyID}}</td>
+                <td>{{user.role.roleName}}</td>
+                <td>{{user.company.companyName}}</td>
                 <!-- <th class="actcolumn"></th> -->
                 <td style="width: 20px;">
                     <div class="button-container">

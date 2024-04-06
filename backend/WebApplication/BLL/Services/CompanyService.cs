@@ -28,7 +28,17 @@ namespace BLL.Services
 
         public async Task<List<CompanyDto>> GetAll()
         {
-            var companies=await _companyRepository.GetAll();
+            var companies=await _companyRepository.GetAllWithAdmins();
+            companies.ForEach(x =>
+            {
+                x.Users.ForEach(x => x!.Company = null);
+            }
+            );
+
+            companies.ForEach(x =>
+            {
+                x.Users.RemoveAll(x => x.RoleID != 1);
+            });
             return _mapper.Map<List<CompanyDto>>(companies);
         }
 
@@ -48,12 +58,11 @@ namespace BLL.Services
             await _companyRepository.SaveChangesAsync();
         }
 
-        public async Task<CompanyDto> AddCompany(CompanyDto companyDto)
+        public async Task<CompanyDto> AddCompany(CompanyDto companyDto, int? adminId=0)
         {
             var company = new Company
             {
-                CompanyName = companyDto.CompanyName,
-                AdminID = companyDto.AdminID
+                CompanyName = companyDto.CompanyName
             };
 
             _companyRepository.Add(company);
@@ -61,12 +70,16 @@ namespace BLL.Services
 
             var returnedCompany = await GetCompanyByName(company.CompanyName);
 
-            var adminUser = await _userRepository.GetById(companyDto.AdminID);
+            if (adminId != 0)
+            {
+                var adminUser = await _userRepository.GetById((int)adminId!);
 
-            adminUser!.CompanyID = returnedCompany.CompanyID;
-            _userRepository.Update(adminUser);
+                adminUser.CompanyID = returnedCompany.CompanyID;
+                adminUser.RoleID = 1;
+                //_userRepository.Update(adminUser);
 
-            await _userRepository.SaveChangesAsync();
+                await _userRepository.SaveChangesAsync();
+            }
 
             return returnedCompany;
         }
@@ -84,11 +97,15 @@ namespace BLL.Services
 
         public async Task<List<UserDto>> GetAllUsers(int adminId)
         {
-            var company = await _companyRepository.GetByAdminId(adminId);
+            var adminUser = await _userRepository.GetById(adminId);
 
-            var users = _mapper.Map<List<UserDto>>(company.Users.ToList());
+            var users = await _userRepository.GetAllByCompanyId((int)adminUser.CompanyID!);
+            users.ForEach(x =>
+            {
+                x.Company!.Users = null!;
+            });
 
-            return users;
+            return _mapper.Map<List<UserDto>>(users);
 
         }
     }
