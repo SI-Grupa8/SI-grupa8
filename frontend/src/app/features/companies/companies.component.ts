@@ -80,7 +80,8 @@ export class CompaniesComponent {
     const dialogRef = this.dialog.open(EditCompanyComponent, {
       disableClose: true ,
       data: {
-        users: this.users
+        users: this.users,
+        companyID: company.companyID
       }
     });
     dialogRef.afterClosed().subscribe(result => {

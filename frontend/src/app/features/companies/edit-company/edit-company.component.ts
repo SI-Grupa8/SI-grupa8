@@ -8,6 +8,7 @@ import { CommonModule, NgIf } from '@angular/common';
 import { CompanyRequest } from '../../../core/models/company-request';
 import { CompanyService } from '../../../core/services/http/company.service';
 import { UserService } from '../../../core/services/http/user.service';
+import { UserRequest } from '../../../core/models/user-request';
 
 
 @Component({
@@ -24,14 +25,15 @@ export class EditCompanyComponent {
   companyRequest: CompanyRequest = {
   };  
   users : any[] = [];
-
+  cID: number=0;
   constructor(public f: FormBuilder,public dialogRef: MatDialogRef<EditCompanyComponent>,private userService:UserService, private companyService: CompanyService,
      @Inject(MAT_DIALOG_DATA) public data: any) {
     this.editCompanyForm = this.f.group({
       admin: ['']
     });
    this.users=data.users;
-   console.log(data.users);
+ this.cID=data.companyID;
+   console.log(this.cID);
   }
 
   closeDialog(): void {
@@ -40,7 +42,12 @@ export class EditCompanyComponent {
 
  
   edit(event: Event) {
-    this.companyRequest.users = this.editCompanyForm.get('admin')?.value;
+    this.companyRequest.companyID=this.cID;
+    const user: UserRequest = {
+      userID: this.editCompanyForm.get('admin')?.value, 
+    };
+  
+    this.companyRequest.users = [user];
     event.preventDefault();
     this.companyService.editCompany(this.companyRequest).subscribe(() => {
       this.companyEdited.emit();
