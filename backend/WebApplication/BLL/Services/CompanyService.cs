@@ -3,6 +3,7 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services
 {
@@ -90,9 +91,11 @@ namespace BLL.Services
 
             foreach (var userDto in companyDto.Users)
             {
-                var existingUser = await _userRepository.GetById(userDto.UserID); 
+                var existingUser = await _userRepository.GetById(userDto.UserID);
                 if (existingUser != null)
                 {
+                    if (company.Users == null)
+                        company.Users = new List<User>();
                     company.Users.Add(existingUser);
                 }
                 else
@@ -101,11 +104,13 @@ namespace BLL.Services
                 }
             }
 
-            _companyRepository.Update(company);
-            await _companyRepository.SaveChangesAsync();
+            // Call UpdateWithAttachment instead of Update
+            await _companyRepository.UpdateWithAttachment(company);
 
-            return companyDto;
+            // Return the updated companyDto
+            return _mapper.Map<CompanyDto>(company);
         }
+
 
         public async Task<List<UserDto>> GetAllUsers(int adminId)
         {

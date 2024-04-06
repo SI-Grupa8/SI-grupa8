@@ -35,5 +35,15 @@ namespace DAL.Repositories
         {
             return await _context.Companies.FirstAsync(x => x.CompanyName == name);
         }
+
+        public async Task UpdateWithAttachment(Company company)
+        {
+            if (!_context.Companies.Local.Any(c => c.CompanyID == company.CompanyID))
+            {
+                _context.Companies.Attach(company);
+            }
+            _context.Entry(company).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
     }
 }
