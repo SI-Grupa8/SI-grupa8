@@ -19,7 +19,7 @@ namespace BLL.DTOs
 
         public RoleDto? Role { get; set; }
         public int CompanyID { get; set; }
-        public CompanyDto? Company { get; set; }
+        public CompanyDto? Company { get; set; } = null;
 
     }
 }

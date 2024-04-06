@@ -5,15 +5,17 @@ import { CompanyService } from '../../core/services/http/company.service';
 import { AddNewCompanyComponent } from './add-new-company/add-new-company.component';
 import { CommonModule } from '@angular/common';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AddNewAdminComponent } from './add-new-admin/add-new-admin.component';
+import { EditCompanyComponent } from './edit-company/edit-company.component';
+import { UserService } from '../../core/services/http/user.service';
 
 
 @Component({
   selector: 'app-companies',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule], 
   templateUrl: './companies.component.html',
   styleUrl: './companies.component.scss'
 })
@@ -23,11 +25,12 @@ export class CompaniesComponent {
   companyRequest: CompanyRequest = { 
   };
   searchQuery: string = ''; 
-
-  constructor(public dialog: MatDialog, private companyService: CompanyService ) { }
+  users: any[] = [];
+  constructor(public dialog: MatDialog, private companyService: CompanyService, private userService: UserService ) { }
 
   ngOnInit(): void {
     this.getAll();
+    this.getAllAdminsWithoutCompany();
   }
   openDialog(): void {
     const dialogRef = this.dialog.open(AddNewCompanyComponent, {
@@ -53,24 +56,47 @@ export class CompaniesComponent {
   }
   openDialogAdmin(): void {
     const dialogRef = this.dialog.open(AddNewAdminComponent, {
-      disableClose: true
+      disableClose: true,
+      data: {
+        companies: this.companies
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
-   dialogRef.componentInstance.userAdded.subscribe(() => {
-      this.getAll(); // Refresh table after user is added
+  
+    dialogRef.componentInstance.userAdded.subscribe(() => {
+      this.getAll(); 
     });
-    
-
-    
   }
+  getAllAdminsWithoutCompany() : void{
+    this.userService.getAllAdminsWithoutCompany().subscribe(users => {
+      this.users= users;
+      console.log("hhh"+this.users);
+    })
+  }
+  openDialogEdit(company: any):void{
+    const dialogRef = this.dialog.open(EditCompanyComponent, {
+      disableClose: true ,
+      data: {
+        users: this.users,
+        companyID: company.companyID
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+    dialogRef.componentInstance.companyEdited.subscribe(() => {
+      this.getAll(); 
+    });
 
+  }
   getAll(): void {
     this.companyService.getCompanies().subscribe(companies => {
       this.companies = companies;
       this.filterCompanies();
     });
   }
+
 }

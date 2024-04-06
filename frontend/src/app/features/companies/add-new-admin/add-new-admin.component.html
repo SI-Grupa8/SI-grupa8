@@ -8,6 +8,13 @@
         <input formControlName="surname"  name="lastname" type="text" placeholder="Last name" >
         <input formControlName="email"  name="usermail"type="text" placeholder="E-mail or phone number" >
         <input formControlName="password"  name="pass" type="password" placeholder="Password">
+        <div class="dropdown">
+            <select formControlName="companyId" name="companyId" id="companies">
+                <option *ngFor="let company of companies" [value]="company.companyID">
+                    {{company.companyName}}
+                  </option>
+            </select>
+        </div>
         <button  type="submit" >ADD ADMIN</button>
     </div>
 </form> 

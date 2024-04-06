@@ -21,7 +21,6 @@
             <tr>
                 <th>Device name</th>
                 <th>Reference</th>
-                <th>Company</th>
                 <th>X coordinate</th>
                 <th>Y coordinate</th>
                 <th ></th>
@@ -31,7 +30,6 @@
             <tr *ngFor="let device of devices">
                 <td>{{device.deviceName}}</td>
                 <td>{{device.reference}}</td>
-                <td>{{device.user.company.companyName}}</td>
                 <td>{{device.xCoordinate}}</td>
                 <td>{{device.yCoordinate}}</td>
                 <td>

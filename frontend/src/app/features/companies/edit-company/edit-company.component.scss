@@ -36,21 +36,7 @@
             flex-direction: column;
             align-items: stretch;
         }
-        input[name="companyName"] {
-            padding: 8px 10px;
-            padding-left: 40px;
-            background: url("../../../../assets/images/company.png") no-repeat; 
-            background-size: 25px; 
-            background-position: 10px center; 
-            margin: 8px 15px;
-            border: none;
-            border-bottom: 1px solid #1e5631;
-            outline: none;
-            background-color: transparent;
-            transition: border-bottom 0.3s;
-            height: 30px;
-        }
-        input[name="adminID"] {
+        input[name="firstname"] {
             padding: 8px 10px;
             padding-left: 40px;
             background: url("../../../../assets/images/user.png") no-repeat; 
@@ -64,13 +50,42 @@
             transition: border-bottom 0.3s;
             height: 30px;
         }
-       .dropdown{
-        position: relative;
-        padding: 5px 5px;
-        background: url("../../../../assets/images/user.png") no-repeat; 
-        background-size: 25px; 
-        background-position: 26px center; 
-       }
+        input[name="lastname"] {
+            padding: 8px 10px;
+            padding-left: 40px;
+            background: url("../../../../assets/images/user.png") no-repeat; 
+            background-size: 25px; 
+            background-position: 10px center; 
+            margin: 8px 15px;
+            border: none;
+            border-bottom: 1px solid #1e5631;
+            outline: none;
+            background-color: transparent;
+            transition: border-bottom 0.3s;
+            height: 30px;
+        }
+        input[name="usermail"] {
+            padding: 8px 10px;
+            padding-left: 40px;
+            background: url("../../../../assets/images/mail.png") no-repeat; 
+            background-size: 25px; 
+            background-position: 10px center; 
+            margin: 8px 15px;
+            border: none;
+            border-bottom: 1px solid #1e5631;
+            outline: none;
+            background-color: transparent;
+            transition: border-bottom 0.3s;
+            height: 30px;
+        }
+        .dropdown {
+            position: relative;
+            padding: 5px 5px;
+            background: url("../../../../assets/images/settings.png") no-repeat; 
+            background-size: 25px; 
+            background-position: 26px center; 
+        }
+        
         select {
             padding: 8px 10px;
             padding-left: 40px;

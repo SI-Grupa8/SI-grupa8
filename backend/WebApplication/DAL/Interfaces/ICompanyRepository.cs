@@ -9,7 +9,8 @@ namespace DAL.Interfaces
 {
     public interface ICompanyRepository : IRepository<Company>
     {
-        Task<Company> GetByAdminId(int id);
         Task<Company> GetByName(string name);
+        Task<List<Company>> GetAllWithAdmins();
+        Task<Company> GetAllUsersForCompany(int companyId);
     }
 }

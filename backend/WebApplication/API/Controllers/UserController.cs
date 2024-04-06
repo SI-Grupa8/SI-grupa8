@@ -66,6 +66,13 @@ namespace API.Controllers
 		{
 			return Ok(await _userService.GetAllAdmins());
         }
+
+		[HttpGet("get-admins-without-company")]
+		[Authorize(Roles = "SuperAdmin")]
+		public async Task<ActionResult<List<UserDto>>> GetAdminsWithoutCompany()
+		{
+			return Ok(await _userService.GetAdminsWihotuCompany());
+		}
     }
 }
 
