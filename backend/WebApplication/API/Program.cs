@@ -42,6 +42,7 @@ builder.Services.AddScoped(typeof(IDeviceRepository), typeof(DeviceRepository));
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionDatabase"));
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 builder.Services.AddAutoMapper(typeof(MapperProfile));
 

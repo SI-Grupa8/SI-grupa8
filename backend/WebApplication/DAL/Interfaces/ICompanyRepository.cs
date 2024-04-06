@@ -12,6 +12,5 @@ namespace DAL.Interfaces
         Task<Company> GetByName(string name);
         Task<List<Company>> GetAllWithAdmins();
         Task<Company> GetAllUsersForCompany(int companyId);
-        Task UpdateWithAttachment(Company company);
     }
 }

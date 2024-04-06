@@ -91,7 +91,7 @@ namespace BLL.Services
 
             foreach (var userDto in companyDto.Users)
             {
-                var existingUser = await _userRepository.GetById(userDto.UserID);
+                var existingUser = await _userRepository.GetById(userDto.UserID); 
                 if (existingUser != null)
                 {
                     if (company.Users == null)
@@ -104,13 +104,11 @@ namespace BLL.Services
                 }
             }
 
-            // Call UpdateWithAttachment instead of Update
-            await _companyRepository.UpdateWithAttachment(company);
+            _companyRepository.Update(company);
+            await _companyRepository.SaveChangesAsync();
 
-            // Return the updated companyDto
-            return _mapper.Map<CompanyDto>(company);
+            return companyDto;
         }
-
 
         public async Task<List<UserDto>> GetAllUsers(int adminId)
         {
