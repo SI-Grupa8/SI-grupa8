@@ -37,9 +37,9 @@ namespace API.Controllers
 
         [HttpPost("add-company")]
         [Authorize(Roles = "SuperAdmin")]
-        public async Task<ActionResult<CompanyDto>> AddCompany(CompanyDto company)
+        public async Task<ActionResult<CompanyDto>> AddCompany(CompanyDto company, int? adminId = 0)
         {
-            var result = await _companyService.AddCompany(company);
+            var result = await _companyService.AddCompany(company, adminId);
 
             return Ok(result);
         }
@@ -63,7 +63,7 @@ namespace API.Controllers
             return Ok(await _companyService.GetAllUsers(adminId));
         }
 
-       
+        
 
     }
 }

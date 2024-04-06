@@ -17,7 +17,7 @@ namespace BLL.Interfaces
         Task<UserDto> UpdateUser(UserDto userDto);
 
         Task<UserDto> AddUserRegister(UserRegisterDto userRegister);
-
+        Task<List<UserDto>> GetAdminsWihotuCompany();
 
         Task RemoveUser(int userId);
         Task<List<UserDto>> GetAllAdmins();

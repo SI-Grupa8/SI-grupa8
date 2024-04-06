@@ -11,14 +11,16 @@ namespace BLL.Services
         private readonly IMapper _mapper;
         private readonly IDeviceRepository _deviceRepository;
         private readonly ICompanyRepository _companyRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IDeviceLocationService _deviceLocationService;
 
-        public DeviceService(IDeviceRepository deviceRepository, IMapper mapper, ICompanyRepository companyRepository, IDeviceLocationService deviceLocationService)
+        public DeviceService(IDeviceRepository deviceRepository, IMapper mapper, ICompanyRepository companyRepository, IDeviceLocationService deviceLocationService, IUserRepository userRepository)
         {
             _deviceRepository = deviceRepository;
             _mapper = mapper;
             _companyRepository = companyRepository;
             _deviceLocationService = deviceLocationService;
+            _userRepository = userRepository;
         }
 
         public async Task<Device> GetDeviceByID(int id)
@@ -30,7 +32,14 @@ namespace BLL.Services
 
         public async Task<List<DeviceDto>> GetAllForCompany(int adminId)
         {
-            var company = await _companyRepository.GetByAdminId(adminId);
+            var user = await _userRepository.GetById((int)adminId);
+
+            var company = await _companyRepository.GetAllUsersForCompany((int)user!.CompanyID!);
+
+            company.Users.ForEach(x =>
+            {
+                x.Company = null;
+            });
 
             var users = company.Users.Select(x => x!.UserID).ToList();
 
@@ -59,9 +68,9 @@ namespace BLL.Services
         {
             var device = await _deviceRepository.GetWithUser(deviceId);
 
-            var company = await _companyRepository.GetByAdminId(adminId);
+            var admin = await _userRepository.GetById(adminId);
 
-            if(company.CompanyID != device!.User!.CompanyID)
+            if(admin!.CompanyID != device!.User!.CompanyID)
             {
                 throw new Exception("You do not have permissions to remove this device.");
             }
@@ -74,9 +83,9 @@ namespace BLL.Services
         {
             var device = await _deviceRepository.GetWithUser(deviceDto.DeviceID);
 
-            var company = await _companyRepository.GetByAdminId(adminId);
+            var admin = await _userRepository.GetById(adminId);
 
-            if (company.CompanyID != device!.User!.CompanyID)
+            if (admin!.CompanyID != device!.User!.CompanyID)
             {
                 throw new Exception("You do not have permissions to update this device.");
             }

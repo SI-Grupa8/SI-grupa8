@@ -6,12 +6,9 @@
     <div class="container-flex">
         <input formControlName="companyName" name="companyName" type="text" placeholder="Company name" >
         <div class="dropdown">
-            <select  name="adminid" id="admin">
-                <option  [value]="1">
-                    admin1
-                  </option>
-                  <option  [value]="2">
-                    admin2
+            <select formControlName="adminId" name="adminId">
+                <option *ngFor="let user of users" [value]="user.userID">
+                    {{user.email}}
                   </option>
             </select>
         </div>

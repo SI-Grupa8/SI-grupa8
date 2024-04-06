@@ -26,11 +26,11 @@ namespace DAL.Repositories
         {
             var result = await _context.Set<TEntity>().FindAsync(id);
 
-            if (result != null)
+            /*if (result != null)
             {
                 _context.Entry<TEntity>(result).State = EntityState.Detached;
             }
-
+            */
             return result;
         }
 

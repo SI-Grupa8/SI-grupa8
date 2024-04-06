@@ -251,7 +251,7 @@ namespace BLL.Services
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
-                CompanyID = admin!.RoleID == 1 ? admin.CompanyID : null,
+                CompanyID = admin!.RoleID == 1 ? admin.CompanyID : userRegisterDto.CompanyID,
                 PasswordSalt = [],
                 RoleID = userRegisterDto.RoleID
             };
@@ -499,6 +499,13 @@ namespace BLL.Services
             return userDto;
         }
 
+        public async Task<List<UserDto>> GetAdminsWihotuCompany()
+        {
+            var users = await _userRepository.GetAllAdminsWithoutCompany();
+
+            return _mapper.Map<List<UserDto>>(users);
+
+        }
     }
 }
 
