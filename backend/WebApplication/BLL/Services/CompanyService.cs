@@ -94,9 +94,9 @@ namespace BLL.Services
                 var existingUser = await _userRepository.GetById(userDto.UserID); 
                 if (existingUser != null)
                 {
-                    if (company.Users == null)
-                        company.Users = new List<User>();
-                    company.Users.Add(existingUser);
+                    existingUser.CompanyID = companyDto.CompanyID;
+                    existingUser.RoleID = 1;
+
                 }
                 else
                 {
@@ -104,8 +104,7 @@ namespace BLL.Services
                 }
             }
 
-            _companyRepository.Update(company);
-            await _companyRepository.SaveChangesAsync();
+            await _userRepository.SaveChangesAsync();
 
             return companyDto;
         }
