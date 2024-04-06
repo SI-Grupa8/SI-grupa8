@@ -88,8 +88,22 @@ namespace BLL.Services
         {
             var company = _mapper.Map<Company>(companyDto);
 
-            _companyRepository.Update(company);
+            foreach (var userDto in companyDto.Users)
+            {
+                var existingUser = await _userRepository.GetById(userDto.UserID); 
+                if (existingUser != null)
+                {
+                    if (company.Users == null)
+                        company.Users = new List<User>();
+                    company.Users.Add(existingUser);
+                }
+                else
+                {
+                    throw new ArgumentException($"User with ID {userDto.UserID} not found.");
+                }
+            }
 
+            _companyRepository.Update(company);
             await _companyRepository.SaveChangesAsync();
 
             return companyDto;
