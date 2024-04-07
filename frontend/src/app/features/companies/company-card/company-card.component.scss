@@ -1,0 +1,68 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 180px;
+    border: 1px solid lightgrey;
+    background-color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    //margin-top: 100px;
+    //margin-left: 100px;
+    .company-card-header {
+        display: flex;
+        justify-content: space-between;
+        //align-items: center;
+        height: 60px;
+        //background-color: red;
+        .company-logo-container {
+            margin-top: 5px;
+            margin-left: 10px;
+            width: 50px;
+            height: 50px;
+            //border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            img {
+                height: 40px;
+                width: 40px;
+                //border-radius: 50%;
+            }
+        }
+        .company-options {
+            margin-top: 10px;
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+    .company-name-container {
+        display: flex;
+        height: 70px;
+        //background-color: blue;
+        p {
+            margin-top: 5px;
+            margin-left: 10px;
+            font-size: 22px;
+            font-weight: 500;
+        }
+    }
+    .members-count {
+        display: flex;
+        margin-left: 10px;
+        margin-top: 15px;
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+        .members-num {}
+    }
+}
