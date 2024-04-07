@@ -10,5 +10,6 @@ namespace BLL.Interfaces
     public interface IDeviceTypeService
     {
         Task<DeviceTypeDto> GetDeviceTypeByID(int id);
+        Task<List<DeviceTypeDto>> GetAll();
     }
 }
