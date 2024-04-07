@@ -22,6 +22,12 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
+        public async Task<List<DeviceTypeDto>> GetAll()
+        {
+            var deviceTypes = await _deviceTypeRepository.GetAll();
+            return _mapper.Map<List<DeviceTypeDto>>(deviceTypes);
+        }
+
         public async Task<DeviceTypeDto> GetDeviceTypeByID(int id)
         {
             var role = await _deviceTypeRepository.GetById(id);

@@ -18,11 +18,18 @@ namespace API.Controllers
             _deviceTypeService = deviceTypeService;
         }
 
-        [HttpGet]
+        [HttpGet("get-device-type")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<DeviceTypeDto>> GetDeviceTypeByID(int id)
         {
             return await _deviceTypeService.GetDeviceTypeByID(id);
+        }
+
+        [HttpGet("get-all")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<DeviceTypeDto>>> GetAll()
+        {
+            return Ok(await _deviceTypeService.GetAll());
         }
     }
 }
