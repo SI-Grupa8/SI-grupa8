@@ -9,4 +9,8 @@ import { Component } from '@angular/core';
 })
 export class CompanyCardComponent {
 
+  openOptions(event: MouseEvent) {
+    // Prevent click event from bubbling up to parent elements
+    event.stopPropagation();
+  }
 }

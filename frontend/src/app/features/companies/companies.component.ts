@@ -11,6 +11,7 @@ import { AddNewAdminComponent } from './add-new-admin/add-new-admin.component';
 import { EditCompanyComponent } from './edit-company/edit-company.component';
 import { UserService } from '../../core/services/http/user.service';
 import { CompanyCardComponent } from "./company-card/company-card.component";
+import { RouterModule } from '@angular/router';
 
 
 @Component({
@@ -18,7 +19,7 @@ import { CompanyCardComponent } from "./company-card/company-card.component";
     standalone: true,
     templateUrl: './companies.component.html',
     styleUrl: './companies.component.scss',
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, CompanyCardComponent]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, CompanyCardComponent, RouterModule]
 })
 export class CompaniesComponent {
   modalVisible: boolean = false;

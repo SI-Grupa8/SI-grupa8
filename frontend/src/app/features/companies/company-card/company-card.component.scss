@@ -39,13 +39,14 @@
         .company-options {
             margin-top: 10px;
             margin-right: 10px;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: none;
             border: none;
+            border-radius: 3px;
             cursor: pointer;
             svg {
                 fill: gray;
@@ -54,7 +55,7 @@
             }
         }
         .company-options:hover {
-            background-color: lightgray;
+            background-color: rgb(226, 225, 225);
         }
     }
     .company-name-container {
@@ -63,19 +64,27 @@
         //background-color: blue;
         p {
             margin-top: 5px;
-            margin-left: 10px;
+            margin-left: 20px;
             font-size: 22px;
             font-weight: 500;
         }
     }
     .members-count {
         display: flex;
-        margin-left: 10px;
+        align-items: center;
+        gap: 5px;
+        margin-left: 20px;
         margin-top: 15px;
         svg {
             width: 20px;
             height: 20px;
+            border-radius: 50%;
+            fill: darkgray
+            //background-color: green;
         }
-        .members-num {}
+        .members-num {
+            font-size: 13px;
+            color: gray;
+        }
     }
 }
