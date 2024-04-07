@@ -12,6 +12,7 @@ namespace DAL
         public DbSet<Role> Roles { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Device> Devices { get; set; }
+        public DbSet<DeviceType> DeviceTypes { get; set; }
     }
 }
 

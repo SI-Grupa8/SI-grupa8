@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class NewMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,12 +18,24 @@ namespace DAL.Migrations
                 {
                     CompanyID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CompanyName = table.Column<string>(type: "text", nullable: false),
-                    AdminID = table.Column<int>(type: "integer", nullable: false)
+                    CompanyName = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Companies", x => x.CompanyID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeviceTypes",
+                columns: table => new
+                {
+                    DeviceTypeID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DeviceTypeName = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeviceTypes", x => x.DeviceTypeID);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,20 +95,31 @@ namespace DAL.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Reference = table.Column<string>(type: "text", nullable: false),
                     DeviceName = table.Column<string>(type: "text", nullable: false),
-                    UserID = table.Column<int>(type: "integer", nullable: false),
+                    UserID = table.Column<int>(type: "integer", nullable: true),
                     XCoordinate = table.Column<string>(type: "text", nullable: false),
-                    YCoordinate = table.Column<string>(type: "text", nullable: false)
+                    YCoordinate = table.Column<string>(type: "text", nullable: false),
+                    BrandName = table.Column<string>(type: "text", nullable: false),
+                    DeviceTypeID = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Devices", x => x.DeviceID);
                     table.ForeignKey(
+                        name: "FK_Devices_DeviceTypes_DeviceTypeID",
+                        column: x => x.DeviceTypeID,
+                        principalTable: "DeviceTypes",
+                        principalColumn: "DeviceTypeID");
+                    table.ForeignKey(
                         name: "FK_Devices_Users_UserID",
                         column: x => x.UserID,
                         principalTable: "Users",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "UserID");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Devices_DeviceTypeID",
+                table: "Devices",
+                column: "DeviceTypeID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Devices_UserID",
@@ -119,6 +142,9 @@ namespace DAL.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Devices");
+
+            migrationBuilder.DropTable(
+                name: "DeviceTypes");
 
             migrationBuilder.DropTable(
                 name: "Users");
