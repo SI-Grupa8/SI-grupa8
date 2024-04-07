@@ -18,6 +18,6 @@ namespace BLL.DTOs
         public string YCoordinate { get; set; } = string.Empty;
         public string BrandName {  get; set; } = string.Empty; 
         public int? DeviceTypeID { get; set; }
-        public DeviceType? DeviceType { get; set; }
+        public DeviceTypeDto? DeviceType { get; set; }
     }
 }
