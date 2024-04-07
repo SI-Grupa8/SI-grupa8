@@ -8,5 +8,10 @@
                 [zoom]="15"
                 (mapClick)="moveMap($event)"
                 (mapMousemove)="move($event)">
+                <map-marker *ngFor="let device of devices"
+                [position]="parseCoordinates(device)"
+                [title]="device.deviceName"
+                [options]="markerOptions">
+    </map-marker>
     </google-map>
 </div>
