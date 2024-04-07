@@ -1,11 +1,17 @@
 :host {
     display: flex;
     flex-direction: column;
-    width: 300px;
+    align-self: center;
+    justify-self: center;
+    width: 280px;
     height: 180px;
-    border: 1px solid lightgrey;
+    //border: 1px solid lightgrey;
     background-color: white;
     border-radius: 6px;
+    transition: .2s;
+    &:hover {
+        transform: scale(1.02);
+    }
     cursor: pointer;
     //margin-top: 100px;
     //margin-left: 100px;
@@ -38,10 +44,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
             svg {
+                fill: gray;
                 width: 20px;
                 height: 20px;
             }
+        }
+        .company-options:hover {
+            background-color: lightgray;
         }
     }
     .company-name-container {
