@@ -77,7 +77,6 @@ namespace BLL.Services
 
                 adminUser.CompanyID = returnedCompany.CompanyID;
                 adminUser.RoleID = 1;
-                //_userRepository.Update(adminUser);
 
                 await _userRepository.SaveChangesAsync();
             }
