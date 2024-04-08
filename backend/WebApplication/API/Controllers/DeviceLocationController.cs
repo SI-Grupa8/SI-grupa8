@@ -20,6 +20,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         public ActionResult<string> SetDeviceToken(string macAddress)
         {
             return Ok(_deviceLocationService.CreateDeviceToken(macAddress));

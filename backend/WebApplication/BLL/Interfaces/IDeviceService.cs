@@ -12,12 +12,12 @@ namespace BLL.Interfaces
     {
         Task<DeviceDto> GetDeviceByID(int id);
 
-        Task<List<DeviceDto>> GetAllForCompany(int adminId);
+        Task<List<DeviceDto>> GetAllForCompany(int companyId);
 
         Task<object> AddDevice(DeviceDto request);
 
-        Task UpdateDevice(DeviceDto deviceDto, int adminId);
+        Task UpdateDevice(DeviceDto deviceDto, int companyId);
 
-        Task RemoveDevice(int deviceId, int adminId);
+        Task RemoveDevice(int deviceId, int companyId);
     }
 }
