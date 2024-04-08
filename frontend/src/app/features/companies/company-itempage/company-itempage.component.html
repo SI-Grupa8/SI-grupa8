@@ -1,6 +1,6 @@
 <div class="company-header">
     <div class="company-top-header">
-        <button class="back">
+        <button routerLink=".."  class="back">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>
             <p>Back to companies</p>
         </button>
@@ -15,6 +15,58 @@
         </div>
     </div>
 </div>
-<div class="company-nav"></div>
-<div class="members-data"></div>
-
+<div class="company-nav">
+    <a href="">Overview</a>
+    <a href="">Members</a>
+</div>
+<div class="members-tab">
+    <div class="members-nav">
+        <div class="searchbar"></div>
+    <button type="submit" id="add-company" class="add-button" style="margin-bottom: 25px;" >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+        <p>Add User</p>
+    </button>
+    </div>
+    <table class="members-table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>        
+        </thead>
+        <tbody>
+            <tr >
+                <td>1</td>
+                <td>
+                    <div class="member-img"></div>
+                    <p class="member-name">Edis Jasarevic</p>                
+                </td>
+                <td>
+                    <p class="member-mail">e.jasarevic03&#64;gmail.com</p>
+                </td>
+                <td>
+                    <div class="role-tag">Admin</div>           
+                </td>
+                <td>
+                    <button class="edit-member">Edit</button>
+                    
+                </td>
+                <td>
+                    <button class="delete-member">Delete</button>
+                </td>
+                
+            </tr>
+            
+        </tbody>
+    </table>
+    <mat-paginator class="paginator" [length]="100"
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        aria-label="Select page">
+    </mat-paginator>
+    
+    
+</div>

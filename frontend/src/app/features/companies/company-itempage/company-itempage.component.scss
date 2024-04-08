@@ -84,5 +84,274 @@
         height: 40px;
         display: flex;
         background-color: lightgray;
+        display: flex;
+        align-items: center;
+        a {
+            margin-left: 60px;
+            text-decoration: none;
+        }
+    }
+    .members-tab {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        //min-height: 700px;
+        //background-color: lightblue;
+        .members-nav {
+            background-color: white;
+            height: 60px;
+            margin-top: 40px;
+            width: calc(100% - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-left: 100px;
+            .searchbar {
+                display: flex;
+                width: 100px;
+                height: 20px;
+            }
+            #add-company {
+                //margin-left: 20px;
+                //margin-top: 20px;
+                cursor: pointer;
+                margin-top: 20px;
+                display: flex;
+                align-items: center;
+                align-self: center;
+                width: 150px;
+                height: 35px;
+                border: none;
+                border-radius: 5px;
+                color: white;
+                background-color: lightseagreen;
+                svg {
+                    fill: white;
+                    height: 15px;
+                    width: 15px;
+                    margin-left: 10px;
+                }
+                p {
+                    margin-left: 10px;
+                }
+            }
+        }
+        .members-table {
+            //margin-bottom: 50px;
+            width: calc(100% - 200px);
+            margin-left: 100px;
+            margin-top: 20px;
+            min-height: 528px;
+            //margin-bottom: 100px;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            thead {
+    
+                    width: 100%;
+                    height: 48px;
+                    background-color: rgb(210, 235, 207);
+                    font-weight: normal;
+    
+                tr {
+                    width: 970px;
+                    display: flex;
+                    //background-color: red;
+                    height: 48px; 
+                    align-items: center;
+                    font-weight: normal;
+                    
+                    :nth-child(1) {
+                        //background-color: blue;
+                        min-width: 50px;
+                        //background-color: beige;
+                        font-weight: normal;
+                        
+                    }
+                    :nth-child(2) {
+                        margin-left: 20px;
+                        display: flex;
+                        justify-content: start;
+                        min-width: 300px;
+                        //background-color: red;
+                        font-weight: normal;
+    
+                    }
+                    :nth-child(3) {
+                        display: flex;
+                        justify-content: start;
+                        min-width: 370px;
+                        font-weight: normal;
+                        
+                    }
+                    :nth-child(4) {
+                        display: flex;
+                        justify-content: start;
+                        min-width: 200px;
+                        font-weight: normal;
+    
+                    }
+                    :nth-child(5) {
+                        display: flex;
+                        justify-content: start;
+                        min-width: 180px;
+                        //background-color: red;
+                        //margin-left: 100px;
+                        font-weight: normal;
+    
+                    }
+                    
+                    
+                }
+            }
+            tbody {
+                width: 100%;
+                tr:hover {
+                    background-color: rgb(237, 255, 254);
+                    cursor: pointer;
+                }
+            tr {
+                width: 100%;
+                display: flex;
+                //background-color: red;
+                height: 48px; 
+                align-items: center;
+                
+                :nth-child(1) {
+                    min-width: 50px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                :nth-child(2) {
+                    display: flex;
+                    align-items: center;
+                    justify-content: start;
+                    min-width: 300px;
+                    //background-color: lightblue;
+                    margin-left: 20px;
+                    height: 100%;
+                    color: grey;
+                    
+                    .member-img {
+                        //margin-top: 9px;
+                        min-width: 30px;
+                        min-height: 30px;
+                        display: flex;
+                        background-color: lightgrey;
+                        border-radius: 50%;
+                    }
+                    .member-name {
+                        margin-left: 10px;
+                    }
+                }
+                :nth-child(3) {
+                    display: flex;
+                    //height: 100%;
+                    
+                    //background-color: lightcyan;
+                    min-width: 370px;
+                    //font-weight: bold;
+                    
+                    
+                }
+                :nth-child(4) {
+                    //margin-left: -20px;
+                    //background-color: red;
+                    display: flex;
+                    justify-content: start;
+                    min-width: 200px;
+                    //background-color: red;
+                    //height: 100%;
+                    font-size: 13px;
+                    .role-tag {
+                        //margin-right: 10px;
+                        
+                        border: 1px solid rgb(124, 203, 240);
+                        color: rgb(124, 203, 240);
+                        background-color: rgb(241, 255, 255);
+                        width: 100px;
+                        height: 25px;
+                        border-radius: 8px;
+                        display: flex;
+                        //lign-items: center;
+                        //justify-content: center;
+                        font-size: 11px;
+                    }
+                    
+                }
+                :nth-child(5) {
+                    display: flex;
+                    align-items: center;
+                    //justify-content: center;
+                    //justify-content: start;
+                    min-width: 90px;
+                    height: 100%;
+                    //background-color: blue;
+                    //background-color: red;
+                    .edit-member {
+                        width: 70px;
+                        height: 25px;
+                        cursor: pointer;
+                        background-color: rgb(142, 168, 190);
+                        border: none;
+                        border-radius: 5px;
+                        color: white;
+                    }
+                    
+                }
+                :nth-child(6) {
+                    display: flex;
+                    align-items: center;
+                    //justify-content: center;
+                    //justify-content: start;
+                    min-width: 90px;
+                    height: 100%;
+                    //background-color: blue;
+                    .delete-member {
+                        background-color: red;
+                        width: 70px;
+                        height: 25px;
+                        cursor: pointer;
+                        border: none;
+                        border-radius: 5px;
+                        color: white;
+
+                    }
+                }
+                
+                
+                    
+                    /*
+                    .dots {
+                        width: 20px;
+                        height: 8px;
+                        display: none;
+                    }
+                    .crud-menu {
+                        position: fixed;
+                        display: none;
+                        width: 100px;
+                        height: 100px;
+                        background-color: rgb(196, 196, 196);
+                        margin-top: 120px;
+                        margin-left: 30px;
+                    }*/
+                
+            }
+            
+            tr:hover {
+                background-color: rgb(243, 255, 247);
+            }
+        }
+            //margin-bottom: 30px;
+        }
+        .paginator {
+            width: calc(100% - 200px);
+            margin-left: 100px;
+
+            margin-bottom: 100px;
+            background-color: lightgray;
+        }
     }
 }

@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
   @Output() userAdded: EventEmitter<any> = new EventEmitter<any>();
   addAdminForm: FormGroup;
   userRequest: UserRequest = {};
-  companies: any[]; 
+  //companies: any[]; 
 
   constructor(
     public f: FormBuilder,
@@ -37,7 +37,7 @@ import { CommonModule } from '@angular/common';
       companyId:[''],
       roleID: 1
     });
-    this.companies = data.companies;
+    //this.companies = data.companies;
 
   }
 
