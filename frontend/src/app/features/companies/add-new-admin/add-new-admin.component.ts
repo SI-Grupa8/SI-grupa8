@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
   addAdminForm: FormGroup;
   userRequest: UserRequest = {};
   companyId: number = 0;
+  roles: string[] = ['Admin', 'Dispatcher', 'Driver'];
   //companies: any[]; 
 
   constructor(

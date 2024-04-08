@@ -5,6 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { AddNewAdminComponent } from '../add-new-admin/add-new-admin.component';
 import { CompanyResponse } from '../../../core/models/company-response';
+import { DeleteCompanyComponent } from '../delete-company/delete-company.component';
 
 @Component({
   selector: 'app-company-card',
@@ -25,6 +26,19 @@ export class CompanyCardComponent {
 
   openDialogAdmin(): void {
     const dialogRef = this.dialog.open(AddNewAdminComponent, {
+      data: {companyId: this.companyId}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+    /*
+    dialogRef.componentInstance.userAdded.subscribe(() => {
+      this.getAll(); 
+    });*/
+  }
+  openDialogDelete(): void {
+    const dialogRef = this.dialog.open(DeleteCompanyComponent, {
       data: {companyId: this.companyId}
     });
 
