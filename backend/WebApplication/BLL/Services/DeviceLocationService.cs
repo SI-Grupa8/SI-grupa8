@@ -70,7 +70,6 @@ namespace BLL.Services
                 device.XCoordinate = decodedLng;
                 device.YCoordinate = decodedLat;
 
-                _deviceRepository.Update(device);
                 await _deviceRepository.SaveChangesAsync();
             }
             else

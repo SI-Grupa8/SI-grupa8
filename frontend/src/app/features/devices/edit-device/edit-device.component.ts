@@ -40,6 +40,7 @@ export class EditDeviceComponent {
     this.deviceRequest.xCoordinate = this.editDeviceForm.get('xcoord')?.value;
     this.deviceRequest.yCoordinate = this.editDeviceForm.get('ycoord')?.value;
     this.deviceRequest.userID = this.data.device.userID;
+    this.deviceRequest.deviceTypeID = this.data.device.deviceTypeID;
     this.deviceRequest.deviceID = deviceId;
     event.preventDefault();
     this.deviceService.updateDevice(this.deviceRequest, deviceId).subscribe(() => {

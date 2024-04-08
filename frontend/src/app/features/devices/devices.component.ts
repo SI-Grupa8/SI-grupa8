@@ -19,7 +19,7 @@ export class DevicesComponent {
   @Output() deviceDeleted: EventEmitter<any> = new EventEmitter<any>();
   
   modalVisible: boolean = false;
-  devices: any[] = [];
+  devices: DeviceRequest[] = [];
   deviceRequest: DeviceRequest = {
     userID: 0
   };

@@ -23,6 +23,7 @@ namespace DAL.Repositories
             return await _context.Devices
                 .Where(d => usersIds.Contains((int)d.UserID!))
                 .Include(d => d.User)
+                .Include(x => x.DeviceType)
                 .ToListAsync();
         }
 

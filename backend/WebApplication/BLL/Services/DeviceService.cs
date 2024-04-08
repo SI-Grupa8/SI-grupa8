@@ -92,7 +92,7 @@ namespace BLL.Services
 
             var updatedDevice = _mapper.Map<Device>(deviceDto);
 
-            _deviceRepository.Update(updatedDevice);
+            device = updatedDevice;
             await _deviceRepository.SaveChangesAsync();
         }
     }
