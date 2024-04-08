@@ -54,16 +54,19 @@ namespace API.Controllers
         }
 
         [HttpGet("get-company-users")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<UserDto>>> GetAllUsers()
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<List<UserDto>>> GetAllUsers(int companyId)
         {
-            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
-            var adminId = JWTHelper.GetUserIDFromClaims(token);
-
-            return Ok(await _companyService.GetAllUsers(adminId));
+            var companyDto= await _companyService.GetCompanyByID(companyId);
+            return Ok(await _companyService.GetAllUsers(companyDto));
         }
 
-        
+        [HttpGet("get-company-by-id")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<CompanyDto>> GetCompanyById(int companyId)
+        {
+            return Ok(await _companyService.GetCompanyByID(companyId));
+        }
 
     }
 }
