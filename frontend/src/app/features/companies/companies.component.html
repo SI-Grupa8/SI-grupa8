@@ -18,20 +18,9 @@
     </div>
 </div>
 <div class="companies-grid">
-    <app-company-card routerLink="1"></app-company-card>
-    <app-company-card></app-company-card>
-    <app-company-card></app-company-card>
-    <app-company-card></app-company-card>
-    <app-company-card></app-company-card>
-    <app-company-card></app-company-card>
-    <app-company-card></app-company-card>
-    <app-company-card></app-company-card>
-    <app-company-card></app-company-card>
-    <app-company-card></app-company-card>
-    <app-company-card></app-company-card>
-    <app-company-card></app-company-card>
-    <app-company-card></app-company-card>
-    <app-company-card></app-company-card>
+    @for (company of companies; track $index) {
+        <app-company-card [company]="company" [routerLink]="['/companies', company.companyID]"></app-company-card>
+    }
 
 </div>
 <!--<div class="home-header">

@@ -12,6 +12,7 @@ import { EditCompanyComponent } from './edit-company/edit-company.component';
 import { UserService } from '../../core/services/http/user.service';
 import { CompanyCardComponent } from "./company-card/company-card.component";
 import { RouterModule } from '@angular/router';
+import { CompanyResponse } from '../../core/models/company-response';
 
 
 @Component({
@@ -23,7 +24,7 @@ import { RouterModule } from '@angular/router';
 })
 export class CompaniesComponent {
   modalVisible: boolean = false;
-  companies: any[] = [];
+  companies: CompanyResponse[] = [];
   companyRequest: CompanyRequest = { 
   };
   searchQuery: string = ''; 
@@ -97,6 +98,7 @@ export class CompaniesComponent {
   getAll(): void {
     this.companyService.getCompanies().subscribe(companies => {
       this.companies = companies;
+      console.log(this.companies);
       this.filterCompanies();
     });
   }

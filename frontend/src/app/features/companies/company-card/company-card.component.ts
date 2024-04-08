@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { AddNewAdminComponent } from '../add-new-admin/add-new-admin.component';
+import { CompanyResponse } from '../../../core/models/company-response';
 
 @Component({
   selector: 'app-company-card',
@@ -13,6 +14,7 @@ import { AddNewAdminComponent } from '../add-new-admin/add-new-admin.component';
   styleUrl: './company-card.component.scss'
 })
 export class CompanyCardComponent {
+  @Input() company: CompanyResponse = {};
   companyId: number = 1;
 
   openOptions(event: MouseEvent) {
@@ -23,6 +25,7 @@ export class CompanyCardComponent {
 
   openDialogAdmin(): void {
     const dialogRef = this.dialog.open(AddNewAdminComponent, {
+      data: {companyId: this.companyId}
     });
 
     dialogRef.afterClosed().subscribe(result => {

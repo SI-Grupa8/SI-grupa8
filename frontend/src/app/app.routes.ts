@@ -20,6 +20,6 @@ export const routes: Routes = [
     {path: 'users', component: UsersComponent, canActivate: [authGuard]},
     {path: 'companies', canActivate: [authGuard, superadminGuard], children: [
         {path: '', component: CompaniesComponent},
-        {path: '1', component: CompanyItempageComponent}
+        {path: ':id', component: CompanyItempageComponent}
     ]}
 ];
