@@ -1,0 +1,12 @@
+<div class="home-header">
+    <p class="greeting">Device Location Overview</p>
+</div>
+<div class="mapa">
+    <google-map 
+                width="1250px"
+                [center]="{ lat: 43.8563, lng: 18.4131 }"
+                [zoom]="15"
+                (mapClick)="moveMap($event)"
+                (mapMousemove)="move($event)">
+    </google-map>
+</div>
