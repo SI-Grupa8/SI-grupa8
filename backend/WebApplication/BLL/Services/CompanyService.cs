@@ -89,6 +89,11 @@ namespace BLL.Services
         {
             var company = _mapper.Map<Company>(companyDto);
 
+            if (companyDto.Users == null)
+            {
+                companyDto.Users = new List<UserDto>(); 
+            }
+
             foreach (var userDto in companyDto.Users)
             {
                 var existingUser = await _userRepository.GetById(userDto.UserID); 
