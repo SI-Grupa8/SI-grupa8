@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CompanyRequest } from '../../models/company-request';
+import { CompanyResponse } from '../../models/company-response';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class CompanyService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.get<any[]>(`${this.apiUrl}/Company/get-all-companies`, {headers});
+    return this.http.get<CompanyResponse[]>(`${this.apiUrl}/Company/get-all-companies`, {headers});
   }
 
   editCompany(request: CompanyRequest): Observable<any>{

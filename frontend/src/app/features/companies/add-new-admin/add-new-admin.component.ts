@@ -19,7 +19,8 @@ import { CommonModule } from '@angular/common';
   @Output() userAdded: EventEmitter<any> = new EventEmitter<any>();
   addAdminForm: FormGroup;
   userRequest: UserRequest = {};
-  companies: any[]; 
+  companyId: number = 0;
+  //companies: any[]; 
 
   constructor(
     public f: FormBuilder,
@@ -37,7 +38,7 @@ import { CommonModule } from '@angular/common';
       companyId:[''],
       roleID: 1
     });
-    this.companies = data.companies;
+    this.companyId = data.companyId;
 
   }
 
@@ -50,7 +51,7 @@ import { CommonModule } from '@angular/common';
     this.userRequest.name = this.addAdminForm.get('name')?.value;
     this.userRequest.surname = this.addAdminForm.get('surname')?.value;
     this.userRequest.password = this.addAdminForm.get('password')?.value;
-    this.userRequest.companyID=this.addAdminForm.get('companyId')?.value;
+    this.userRequest.companyID=this.companyId;
     this.userRequest.roleID=1;
     event.preventDefault();
     this.userService.addUser(this.userRequest).subscribe(() => {
