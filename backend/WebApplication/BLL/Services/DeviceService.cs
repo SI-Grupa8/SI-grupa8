@@ -3,6 +3,7 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BLL.Services
 {
@@ -23,11 +24,11 @@ namespace BLL.Services
             _userRepository = userRepository;
         }
 
-        public async Task<Device> GetDeviceByID(int id)
+        public async Task<DeviceDto> GetDeviceByID(int id)
         {
             var device = await _deviceRepository.GetById(id);
 
-            return device!;
+            return _mapper.Map<DeviceDto>(device); 
         }
 
         public async Task<List<DeviceDto>> GetAllForCompany(int adminId)
