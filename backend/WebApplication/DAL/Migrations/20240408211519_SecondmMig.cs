@@ -5,25 +5,18 @@
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class updateDb : Migration
+    public partial class SecondmMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "AdminID",
-                table: "Companies");
+
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "AdminID",
-                table: "Companies",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0);
+
         }
     }
 }

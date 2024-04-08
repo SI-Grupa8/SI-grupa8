@@ -19,5 +19,6 @@ namespace BLL.Interfaces
         Task UpdateDevice(DeviceDto deviceDto, int adminId);
 
         Task RemoveDevice(int deviceId, int adminId);
+        List<DeviceDto> GetDevicesByType(List<DeviceDto> deviceList, string type);
     }
 }

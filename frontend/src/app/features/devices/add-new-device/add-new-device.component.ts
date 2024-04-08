@@ -8,6 +8,7 @@ import { CodeInputModule } from 'angular-code-input';
 import { UserRequest } from '../../../core/models/user-request';
 import { CompanyService } from '../../../core/services/http/company.service';
 import { UserService } from '../../../core/services/http/user.service';
+import { DeviceType } from '../../../core/models/device-type';
 
 @Component({
   selector: 'app-add-new-device',
@@ -24,6 +25,7 @@ export class AddNewDeviceComponent {
   };
 
   users : UserRequest[] = []
+  deviceTypes : DeviceType[] = []
 
   constructor(public f: FormBuilder,public dialogRef: MatDialogRef<AddNewDeviceComponent>, private deviceService: DeviceService, private userService : UserService) {
     this.addDeviceForm = this.f.group({
@@ -32,9 +34,11 @@ export class AddNewDeviceComponent {
       ref: [''],
       xcoord: [''], 
       ycoord: [''],
-      userId: ['']
+      userId: [''],
+      deviceTypeId: ['']
     });
     this.getAllUsers();
+    this.getAllDeviceTypes();
   }
 
   closeDialog(): void {
@@ -48,6 +52,7 @@ export class AddNewDeviceComponent {
       this.deviceRequest.xCoordinate = this.addDeviceForm.get('xcoord')?.value;
       this.deviceRequest.yCoordinate = this.addDeviceForm.get('ycoord')?.value;
       this.deviceRequest.userID = this.addDeviceForm.get('userId')?.value;
+      this.deviceRequest.deviceTypeID = this.addDeviceForm.get('deviceTypeId')?.value;
       event.preventDefault();
     this.deviceService.createDevice(this.deviceRequest).subscribe(()=>{
       this.deviceAdded.emit();
@@ -59,6 +64,12 @@ export class AddNewDeviceComponent {
   getAllUsers(){
     this.userService.getCompanyUsers().subscribe(x => {
       this.users = x;
+    })
+  }
+
+  getAllDeviceTypes(){
+    this.deviceService.getDeviceTypes().subscribe(x => {
+      this.deviceTypes = x;
     })
   }
 

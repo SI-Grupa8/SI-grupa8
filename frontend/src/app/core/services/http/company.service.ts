@@ -7,8 +7,8 @@ import { CompanyRequest } from '../../models/company-request';
   providedIn: 'root'
 })
 export class CompanyService {
-  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
-  //private apiUrl = 'https://localhost:7126/api';
+  //private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
+  private apiUrl = 'https://localhost:7126/api';
 
   constructor(private http: HttpClient) { }
 

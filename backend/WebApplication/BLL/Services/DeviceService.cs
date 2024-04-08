@@ -92,8 +92,13 @@ namespace BLL.Services
 
             var updatedDevice = _mapper.Map<Device>(deviceDto);
 
-            _deviceRepository.Update(updatedDevice);
+            device = updatedDevice;
             await _deviceRepository.SaveChangesAsync();
+        }
+
+        public List<DeviceDto> GetDevicesByType(List<DeviceDto> deviceList, string type)
+        {
+            return deviceList.FindAll(device => device.DeviceType.DeviceTypeName == type);
         }
     }
 }
