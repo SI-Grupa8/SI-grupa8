@@ -8,10 +8,11 @@ namespace DAL
 	{
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
-        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            optionsBuilder.UseNpgsql("host=localhost;database=VehicleTrackingSystem;username=postgres;password=volimbaze");
-        }*/
+            base.OnModelCreating(modelBuilder);
+            new DbSeeder(modelBuilder).Seed();
+        }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
