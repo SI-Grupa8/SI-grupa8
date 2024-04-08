@@ -54,8 +54,7 @@ namespace API.Controllers
         }
 
         [HttpGet("get-company-users")]
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<List<UserDto>>> GetAllUsers(int companyId)
         {
             var companyDto= await _companyService.GetCompanyByID(companyId);
@@ -63,8 +62,7 @@ namespace API.Controllers
         }
 
         [HttpGet("get-company-by-id")]
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<CompanyDto>> GetCompanyById(int companyId)
         {
             return Ok(await _companyService.GetCompanyByID(companyId));

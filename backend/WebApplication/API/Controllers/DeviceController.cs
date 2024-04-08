@@ -19,16 +19,14 @@ namespace API.Controllers
 		}
 
         [HttpGet("get-company-devices")]
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<List<DeviceDto>>> GetAllForCompany(int companyId)
         {
             return Ok(await _deviceService.GetAllForCompany(companyId));
         }
 
         [HttpDelete("remove-device/{deviceId}")]
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult> RemoveDevice(int deviceId, int companyId)
         {
             await _deviceService.RemoveDevice(deviceId, companyId);
@@ -37,8 +35,7 @@ namespace API.Controllers
         }
 
         [HttpPost("add-device")]
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<object>> AddDevice(DeviceDto request)
         {
             var data = await _deviceService.AddDevice(request);
@@ -47,8 +44,7 @@ namespace API.Controllers
         }
 
         [HttpPut("update-device/{deviceId}")]
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<DeviceDto>> UpdateDevice(DeviceDto request, int companyId)
         {
             await _deviceService.UpdateDevice(request, companyId);
