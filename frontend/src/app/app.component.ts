@@ -10,13 +10,14 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from './core/services/http/auth.service';
 import { DevicesComponent } from './features/devices/devices.component';
 import { UsersComponent } from './features/users/users.component';
+
 @Component({
     selector: 'app-root',
     standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
 
-    imports: [SidebarComponent, RouterOutlet, HomeComponent, HeaderComponent, LoginComponent,ReactiveFormsModule,CommonModule, DevicesComponent, UsersComponent,
+    imports: [SidebarComponent, RouterOutlet, HomeComponent, HeaderComponent, LoginComponent,ReactiveFormsModule,CommonModule, DevicesComponent, UsersComponent
     ]
 
 })

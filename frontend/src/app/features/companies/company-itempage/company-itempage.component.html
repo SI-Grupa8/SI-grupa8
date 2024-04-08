@@ -9,7 +9,7 @@
         <div class="company-basic-info">
             <img src="" alt="">
             <div class="company-basic-info-text">
-                <p class="company-title">Prevent Company</p>
+                <p class="company-title">{{company.companyName}}</p>
                 <p class="company-subtitle">Logistics</p>
             </div>
         </div>
@@ -38,14 +38,15 @@
             </tr>        
         </thead>
         <tbody>
+            @for (member of members; track $index) {
             <tr >
                 <td>1</td>
                 <td>
                     <div class="member-img"></div>
-                    <p class="member-name">Edis Jasarevic</p>                
+                    <p class="member-name">{{member.name}}</p>                
                 </td>
                 <td>
-                    <p class="member-mail">e.jasarevic03&#64;gmail.com</p>
+                    <p class="member-mail">{{member.email}}</p>
                 </td>
                 <td>
                     <div class="role-tag">Admin</div>           
@@ -59,7 +60,7 @@
                 </td>
                 
             </tr>
-            
+        }
         </tbody>
     </table>
     <mat-paginator class="paginator" [length]="100"

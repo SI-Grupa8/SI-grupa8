@@ -3,6 +3,8 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { CompanyResponse } from '../../../core/models/company-response';
+import { CompanyService } from '../../../core/services/http/company.service';
+import { UserRequest } from '../../../core/models/user-request';
 
 @Component({
   selector: 'app-company-itempage',
@@ -13,16 +15,29 @@ import { CompanyResponse } from '../../../core/models/company-response';
 })
 export class CompanyItempageComponent implements OnInit {
   id: number = 0;
-  @Input() company: CompanyResponse = {}
-  constructor(private route: ActivatedRoute) { }
+  company: CompanyResponse = {}
+  members: UserRequest[] | undefined = [] 
+  constructor(private route: ActivatedRoute, private companyService: CompanyService) { }
 ngOnInit(): void {
   
   const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam !== null) {
       this.id = +idParam;
   }
+  console.log("id:" +this.id);
+  this.getCompany();
+  console.log("Company: " + this.company);
+      console.log("Members:" + this.members);
   
 }
+  getCompany(): void {
+    this.companyService.getCompanyById(this.id).subscribe(company => {
+      console.log(company);
+      this.company = company;
+      this.members = company.users;
+      //this.filterCompanies();
+    });
+  }
 
 
 }
