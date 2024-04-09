@@ -1,4 +1,4 @@
-import { Component, Output } from '@angular/core';
+import { Component, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CompanyRequest } from '../../core/models/company-request';
 import { CompanyService } from '../../core/services/http/company.service';
@@ -23,6 +23,9 @@ import { CompanyResponse } from '../../core/models/company-response';
     imports: [CommonModule, FormsModule, ReactiveFormsModule, CompanyCardComponent, RouterModule]
 })
 export class CompaniesComponent {
+  
+  //@ViewChild('child', { static: true }) childComponent: CompanyCardComponent;
+  
   modalVisible: boolean = false;
   companies: CompanyResponse[] = [];
   companyRequest: CompanyRequest = { 

@@ -43,4 +43,11 @@ export class CompanyService {
     });
     return this.http.get<CompanyResponse>(`${this.apiUrl}/Company/get-company-by-id/${id}`,{headers});
   }
+  deleteCompany(id: number): Observable<any> {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.delete(`${this.apiUrl}/Company/remove-company/${id}`,{headers});
+  }
 }

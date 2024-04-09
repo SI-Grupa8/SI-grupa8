@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { CompanyService } from '../../../core/services/http/company.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-delete-company',
@@ -12,16 +12,20 @@ import { MatDialog } from '@angular/material/dialog';
 export class DeleteCompanyComponent {
   //twoFaEnabled: boolean = true;
   //twoFaRequest: TwoFaRequest = {}//, item.getStorage na false
-
-  @Output() dialogClosed = new EventEmitter<boolean>();
+  companyId: number =0;
+  @Output() companyDeleted = new EventEmitter<boolean>();
 
   constructor(
-    private companyService: CompanyService, private dialog: MatDialog
+    private companyService: CompanyService, private dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data: any
     ) {
+      this.companyId=data.companyId;
     }
 
+    
   closeDialog(): void {
     this.dialog.closeAll();
+    //this.dialogClosed.emit();
     //this.dialogClosed.emit(this.twoFaEnabled);
   }
   /*
@@ -35,6 +39,12 @@ export class DeleteCompanyComponent {
   }*/
   nothing() {
     //localStorage.setItem('2fa', 'true');
+    this.closeDialog();
+  }
+  deleteCompany() {
+    this.companyService.deleteCompany(this.companyId).subscribe(response => {
+      this.companyDeleted.emit();
+    })
     this.closeDialog();
   }
 }

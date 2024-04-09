@@ -10,6 +10,11 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from './core/services/http/auth.service';
 import { DevicesComponent } from './features/devices/devices.component';
 import { UsersComponent } from './features/users/users.component';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-root',

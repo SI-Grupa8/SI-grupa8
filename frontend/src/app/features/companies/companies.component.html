@@ -19,7 +19,7 @@
 </div>
 <div class="companies-grid">
     @for (company of companies; track $index) {
-        <app-company-card [company]="company" [routerLink]="['/companies', company.companyID]"></app-company-card>
+        <app-company-card (deletedCompany)="getAll()" [company]="company" [routerLink]="['/companies', company.companyID]"></app-company-card>
     }
 
 </div>
