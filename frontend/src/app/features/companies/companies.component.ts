@@ -23,6 +23,8 @@ import { CompanyResponse } from '../../core/models/company-response';
     imports: [CommonModule, FormsModule, ReactiveFormsModule, CompanyCardComponent, RouterModule]
 })
 export class CompaniesComponent {
+
+  
   
   //@ViewChild('child', { static: true }) childComponent: CompanyCardComponent;
   

@@ -18,9 +18,16 @@
     </div>
 </div>
 <div class="company-nav">
-    <a href="">Overview</a>
-    <a href="">Members</a>
+    <ul class="nav nav-tabs">
+        <li class="nav-item"  *ngFor="let tab of tabsArray;let sr = index" (click)="setTab(sr)">
+          <a class="nav-link " [ngClass]="activatedTab == sr ? 'active': ''" >{{tab}}</a>
+        </li>
+      </ul>
 </div>
+@if (activatedTab == 0) {
+    <div class="overview-tab"></div>
+}
+@else if (activatedTab == 1) {
 <div class="members-tab">
     <div class="members-nav">
         <div class="searchbar"></div>
@@ -73,3 +80,4 @@
     
     
 </div>
+}

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, input } from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import {MatPaginatorModule} from '@angular/material/paginator';
@@ -7,15 +7,27 @@ import { CompanyService } from '../../../core/services/http/company.service';
 import { UserRequest } from '../../../core/models/user-request';
 import { MatDialog } from '@angular/material/dialog';
 import { AddNewAdminComponent } from '../add-new-admin/add-new-admin.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-company-itempage',
   standalone: true,
-  imports: [MatTabsModule, RouterModule, MatPaginatorModule],
+  imports: [MatTabsModule, RouterModule, MatPaginatorModule, CommonModule],
   templateUrl: './company-itempage.component.html',
   styleUrl: './company-itempage.component.scss'
 })
 export class CompanyItempageComponent implements OnInit {
+
+  @Input() tabsArray: string[] = ['Overview', 'Members'];
+  @Output() onTabChange = new EventEmitter<number>();
+  activatedTab: number = 0;
+
+  setTab(index:number) {
+    this.activatedTab = index;
+    debugger;
+    this.onTabChange.emit(this.activatedTab);
+  }
+  
   id: number = 0;
   company: CompanyResponse = {}
   members: UserRequest[] | undefined = [] 
