@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddNewAdminComponent } from '../add-new-admin/add-new-admin.component';
 import { CompanyResponse } from '../../../core/models/company-response';
 import { DeleteCompanyComponent } from '../delete-company/delete-company.component';
-import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-company-card',
@@ -19,9 +19,6 @@ export class CompanyCardComponent implements OnInit {
 
   @Output() deletedCompany: EventEmitter<any> = new EventEmitter<any>();
 
-  durationInSeconds = 5;
-  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-  verticalPosition: MatSnackBarVerticalPosition = 'top';
   
   @Input() company: CompanyResponse = {};
   companyId: number | undefined = 1;
@@ -37,7 +34,6 @@ export class CompanyCardComponent implements OnInit {
     event.stopPropagation();
   }
   constructor(public dialog: MatDialog,
-    private deletedMessage: MatSnackBar
   ){
     //console.log(this.company.companyName);
     //this.companyId = this.company.companyID;
@@ -64,7 +60,6 @@ export class CompanyCardComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       this.deletedCompany.emit();
-      this.openDeletedMessage();
     });
     dialogRef.componentInstance.companyDeleted.subscribe(() => {
       this.deletedCompany.emit();
@@ -75,11 +70,5 @@ export class CompanyCardComponent implements OnInit {
       this.getAll(); 
     });*/
   }
-  openDeletedMessage() {
-    this.deletedMessage.open('Company deleted!', 'Close', {
-      duration: this.durationInSeconds * 1000,
-      horizontalPosition: this.horizontalPosition,
-      verticalPosition: this.verticalPosition,
-    });
-  }
+  
 }

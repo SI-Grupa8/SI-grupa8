@@ -37,6 +37,7 @@ ngOnInit(): void {
       console.log(company);
       this.company = company;
       this.members = company.users;
+      console.log(this.members);
       //this.filterCompanies();
     });
   }

@@ -36,14 +36,22 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
     }
-    #remove-2fa {
+    .delete{
         background-color: rgb(245, 67, 67);
         border: none;
         color: white;
     }
-    #cancel {
+    .delete:hover {
+        background-color: rgb(254, 114, 114);
+    }
+    .close {
         background-color: white;
         border: 1px solid lightgrey;
+    }
+    .close:hover {
+        background-color: rgb(237, 229, 229);
+        //color: white;
     }
 }

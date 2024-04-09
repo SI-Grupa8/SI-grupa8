@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { CompanyService } from '../../../core/services/http/company.service';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-delete-company',
@@ -15,9 +16,14 @@ export class DeleteCompanyComponent {
   companyId: number =0;
   @Output() companyDeleted = new EventEmitter<boolean>();
 
+  durationInSeconds = 5;
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+
   constructor(
     private companyService: CompanyService, private dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private deletedMessage: MatSnackBar
     ) {
       this.companyId=data.companyId;
     }
@@ -44,7 +50,16 @@ export class DeleteCompanyComponent {
   deleteCompany() {
     this.companyService.deleteCompany(this.companyId).subscribe(response => {
       this.companyDeleted.emit();
+  
     })
+    this.openDeletedMessage();
     this.closeDialog();
+  }
+  openDeletedMessage() {
+    this.deletedMessage.open('Company deleted!', 'Close', {
+      duration: this.durationInSeconds * 1000,
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+    });
   }
 }

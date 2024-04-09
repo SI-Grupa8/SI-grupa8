@@ -61,11 +61,19 @@
                 display: flex;
                 height: 80px;
                 align-items: center;
-                img {
+                .img-container {
                     width: 70px;
                     height: 70px;
                     border-radius: 50%;
-                    border: 1px solid black;
+                    border: 1px solid rgb(163, 191, 174);
+                    display: flex;
+                    align-items: center;
+                    background-color: white;
+                    justify-content: center;
+                    img {
+                        width: 50px;
+                        height: 50px;
+                    }
                 }
                 .company-basic-info-text {
                     display: flex;
