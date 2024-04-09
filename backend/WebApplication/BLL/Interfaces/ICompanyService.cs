@@ -16,6 +16,6 @@ namespace BLL.Interfaces
         Task RemoveCompany(int companyId);
         Task<CompanyDto> AddCompany(CompanyDto companyDto, int? adminId = 0);
         Task<CompanyDto> UpdateCompany(CompanyDto companyDto);
-        Task<List<UserDto>> GetAllUsers(CompanyDto companyDto);
+        Task<List<UserDto>> GetAllUsers(int companyId);
     }
 }

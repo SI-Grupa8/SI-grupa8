@@ -114,9 +114,17 @@ namespace BLL.Services
             return companyDto;
         }
 
-        public async Task<List<UserDto>> GetAllUsers(CompanyDto companyDto)
+        public async Task<List<UserDto>> GetAllUsers(int companyId)
         {
-            var users = companyDto.Users;
+            var company = await _companyRepository.GetAllUsersForCompany(companyId);
+
+            var users = company.Users.ToList();
+
+            users.ForEach(x =>
+            {
+                x.Company = null;
+            });
+
             return _mapper.Map<List<UserDto>>(users);
         }
     }

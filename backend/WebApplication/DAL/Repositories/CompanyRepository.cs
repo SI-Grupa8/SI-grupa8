@@ -22,6 +22,7 @@ namespace DAL.Repositories
         {
             return await _context.Companies
                 .Include(x => x.Users)
+                .ThenInclude(x => x!.Role)
                 .FirstAsync(x => x.CompanyID == companyId);
         }
 
