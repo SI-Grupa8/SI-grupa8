@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CompanyRequest } from '../../models/company-request';
 import { CompanyResponse } from '../../models/company-response';
+import { UserRequest } from '../../models/user-request';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,13 @@ export class CompanyService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.get<CompanyResponse>(`${this.apiUrl}/Company/get-company-by-id/${id}`,{headers});
+  }
+  getCompanyUsers(id: number):Observable<any> {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<UserRequest>(`${this.apiUrl}/Company/get-company-users/${id}`,{headers});
   }
   deleteCompany(id: number): Observable<any> {
     const token = localStorage.getItem("token");

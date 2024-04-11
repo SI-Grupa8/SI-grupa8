@@ -24,7 +24,6 @@ export class CompanyItempageComponent implements OnInit {
 
   setTab(index:number) {
     this.activatedTab = index;
-    debugger;
     this.onTabChange.emit(this.activatedTab);
   }
   
@@ -40,8 +39,9 @@ ngOnInit(): void {
   }
   console.log("id:" +this.id);
   this.getCompany();
+  this.getCompanyUsers();
   console.log("Company: " + this.company);
-      console.log("Members:" + this.members);
+  console.log("Members:" + this.members);
   
 }
   getCompany(): void {
@@ -50,6 +50,15 @@ ngOnInit(): void {
       this.company = company;
       this.members = company.users;
       console.log(this.members);
+      //this.filterCompanies();
+    });
+  }
+  getCompanyUsers(): void {
+    this.companyService.getCompanyUsers(this.id).subscribe(response => {
+      //console.log(company);
+      //this.company = company;
+      this.members = response;
+      //console.log(this.members);
       //this.filterCompanies();
     });
   }
