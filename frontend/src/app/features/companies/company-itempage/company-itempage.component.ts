@@ -8,13 +8,17 @@ import { UserRequest } from '../../../core/models/user-request';
 import { MatDialog } from '@angular/material/dialog';
 import { AddNewAdminComponent } from '../add-new-admin/add-new-admin.component';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../../core/services/http/user.service';
+import { EditUserComponent } from '../../users/edit-user/edit-user.component';
+import { DeleteUserComponent } from '../../users/delete-user/delete-user.component';
+import { FullNamePipe } from "../../../core/pipes/full-name.pipe";
 
 @Component({
-  selector: 'app-company-itempage',
-  standalone: true,
-  imports: [MatTabsModule, RouterModule, MatPaginatorModule, CommonModule],
-  templateUrl: './company-itempage.component.html',
-  styleUrl: './company-itempage.component.scss'
+    selector: 'app-company-itempage',
+    standalone: true,
+    templateUrl: './company-itempage.component.html',
+    styleUrl: './company-itempage.component.scss',
+    imports: [MatTabsModule, RouterModule, MatPaginatorModule, CommonModule, FullNamePipe]
 })
 export class CompanyItempageComponent implements OnInit {
 
@@ -28,9 +32,13 @@ export class CompanyItempageComponent implements OnInit {
   }
   
   id: number = 0;
+
+  updatingUser: UserRequest = {};
   company: CompanyResponse = {}
   members: UserRequest[] | undefined = [] 
-  constructor(private route: ActivatedRoute, private dialog: MatDialog, private companyService: CompanyService) { }
+  constructor(private route: ActivatedRoute, private dialog: MatDialog, private companyService: CompanyService,
+    private userService: UserService
+  ) { }
 ngOnInit(): void {
   
   const idParam = this.route.snapshot.paramMap.get('id');
@@ -78,6 +86,44 @@ ngOnInit(): void {
     dialogRef.componentInstance.userAdded.subscribe(() => {
       this.getAll(); 
     });*/
+  }
+  openUpdateUser(user: UserRequest): void {
+    
+    const dialogRef = this.dialog.open(EditUserComponent, {
+      disableClose: true,
+      data: {
+        user: user
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+    dialogRef.componentInstance.userEdited.subscribe(() => {
+      this.getCompanyUsers(); // Refresh table after user is edited
+    });
+  }
+
+  openDeleteMember(user:any, event: Event): void {
+    console.log(user)
+    const userId = user.userID;
+    event.preventDefault();
+
+    //const confirmDelete = window.confirm('Are you sure you want to delete this user?');
+    const dialogRef = this.dialog.open(DeleteUserComponent, {
+      disableClose: true,
+      data: {
+        userId: user.userID
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+    dialogRef.componentInstance.userDeleted.subscribe(() => {
+      this.getCompanyUsers(); 
+    });
+    
   }
 
 }

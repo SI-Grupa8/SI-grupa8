@@ -52,7 +52,7 @@
                 <td>1</td>
                 <td>
                     <div class="member-img"></div>
-                    <p class="member-name">{{member.name}}</p>                
+                    <p class="member-name">{{ member | fullName }}</p>                
                 </td>
                 <td>
                     <p class="member-mail">{{member.email}}</p>
@@ -68,11 +68,11 @@
                       }" class="role-tag">{{member.role?.roleName}}</div>           
                 </td>
                 <td>
-                    <button class="edit-member">Edit</button>
+                    <button (click)="openUpdateUser(member)" class="edit-member">Edit</button>
                     
                 </td>
                 <td>
-                    <button class="delete-member">Delete</button>
+                    <button (click)="openDeleteMember(member, $event)" class="delete-member">Delete</button>
                 </td>
                 
             </tr>
