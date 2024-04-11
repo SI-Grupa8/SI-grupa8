@@ -98,7 +98,6 @@ export class LoginComponent {
             this.router.navigate(['profile']);
             this.authService.getCurrentUser().subscribe((res  : any)=> {
               this.authService.user.next(res);
-              console.log("STA JE OVO REKLA SAM ", res);
             })
           }
           else {

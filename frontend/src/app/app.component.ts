@@ -15,6 +15,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { DeviceFilterComponent } from './features/map/device-filter/device-filter.component';
 
 @Component({
     selector: 'app-root',

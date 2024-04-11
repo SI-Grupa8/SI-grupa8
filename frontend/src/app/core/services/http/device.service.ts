@@ -7,8 +7,8 @@ import { DeviceRequest } from '../../models/device-request';
   providedIn: 'root'
 })
 export class DeviceService {
-  //private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
-  private apiUrl = 'https://localhost:7126/api';
+  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
+  //private apiUrl = 'https://localhost:7126/api';
 
   constructor(private http: HttpClient) { }
 
@@ -49,6 +49,20 @@ export class DeviceService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.get<any[]>(`${this.apiUrl}/DeviceType/get-all`, {headers});
+  }
+
+  getFilteredDevices(filters : number[]) {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    const params = new URLSearchParams();
+    filters.forEach(x => {
+      params.append("deviceTypeIDs", x.toString())
+    })
+
+    return this.http.get<any[]>(`${this.apiUrl}/Device/get-company-devices-v1?${params.toString()}`, {headers});
   }
 
 }

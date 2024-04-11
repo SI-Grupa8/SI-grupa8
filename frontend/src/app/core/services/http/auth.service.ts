@@ -22,8 +22,9 @@ export class AuthService {
 
   user : BehaviorSubject<UserRequest | null> = new BehaviorSubject<UserRequest | null>(null)
 
-  //private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/Auth';
-  private apiUrl = 'https://localhost:7126/api/Auth';
+  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/Auth';
+  private apiUserUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/User'
+  //private apiUrl = 'https://localhost:7126/api/Auth';
 
   private apiShorterUrl = 'https://localhost:7126/Api';
 
@@ -60,7 +61,7 @@ export class AuthService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get<UserRequest>('https://localhost:7126/api/User/get-current-user', { headers });
+    return this.http.get<UserRequest>(`${this.apiUserUrl}/get-current-user`, { headers });
   }
 
   loginTfa(authTfaRequest: AuthTfaRequest) {

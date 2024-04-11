@@ -32,7 +32,7 @@ export class UsersComponent {
   constructor(public dialog: MatDialog, private userService: UserService, private authService : AuthService) {}
 
   ngOnInit(): void {
-    this.authService.user.subscribe((res : any) => {
+    this.authService.getCurrentUser().subscribe((res : any) => {
       this.companyId = res.companyID;
       this.getAll(res.companyID);
     })

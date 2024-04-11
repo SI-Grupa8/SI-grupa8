@@ -31,10 +31,10 @@ export class DevicesComponent {
     private deviceService: DeviceService, private authService : AuthService) { }
 
   ngOnInit(): void {
-    this.authService.user.subscribe((res : any) => {
+    this.authService.getCurrentUser().subscribe((res : any) => {
       this.companyId = res.companyID;
+      this.getAll(res.companyID);
     })
-    this.getAll();
   }
   openDialog(): void {
     const dialogRef = this.dialog.open(AddNewDeviceComponent, {
@@ -45,7 +45,7 @@ export class DevicesComponent {
       console.log('The dialog was closed');
     });
     dialogRef.componentInstance.deviceAdded.subscribe(() => {
-      this.getAll(); // Refresh table after user is added
+      this.getAll(this.companyId); // Refresh table after user is added
     });
   }
 
@@ -59,7 +59,7 @@ export class DevicesComponent {
       console.log('The dialog was closed');
     });
     dialogRef.componentInstance.deviceEdited.subscribe(() => {
-      this.getAll(); // Refresh table after user is added
+      this.getAll(this.companyId); // Refresh table after user is added
     });
 
   }
@@ -75,7 +75,7 @@ export class DevicesComponent {
       this.deviceService.deleteDevice(deviceId).subscribe(() => {
         this.deviceDeleted.emit();
         console.log('Device deleted successfully');
-        this.getAll();
+        this.getAll(this.companyId);
       });
     }
 
@@ -91,8 +91,8 @@ export class DevicesComponent {
     });
   }
 
-  getAll(): void {
-    this.deviceService.getCompanyDevices(this.companyId).subscribe(devices => {
+  getAll(companyId : number): void {
+    this.deviceService.getCompanyDevices(companyId).subscribe(devices => {
       this.devices = devices;
       this.filterDevices();
     });

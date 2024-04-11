@@ -1,0 +1,32 @@
+.filter-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .filter-label {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  
+  .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .checkbox-item {
+    margin-right: 20px;
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
+  .checkbox-item label {
+    cursor: pointer;
+  }
+  
+  .checkbox-item label:hover {
+    text-decoration: underline;
+  }
+  
