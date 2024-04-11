@@ -97,6 +97,23 @@ namespace DAL.Migrations
                     b.HasKey("DeviceTypeID");
 
                     b.ToTable("DeviceTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            DeviceTypeID = 1,
+                            DeviceTypeName = "Mobile"
+                        },
+                        new
+                        {
+                            DeviceTypeID = 2,
+                            DeviceTypeName = "GPS"
+                        },
+                        new
+                        {
+                            DeviceTypeID = 3,
+                            DeviceTypeName = "Car"
+                        });
                 });
 
             modelBuilder.Entity("DAL.Entities.Role", b =>
@@ -114,6 +131,33 @@ namespace DAL.Migrations
                     b.HasKey("RoleID");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleID = 1,
+                            RoleName = "Admin"
+                        },
+                        new
+                        {
+                            RoleID = 2,
+                            RoleName = "SuperAdmin"
+                        },
+                        new
+                        {
+                            RoleID = 3,
+                            RoleName = "Dispatcher"
+                        },
+                        new
+                        {
+                            RoleID = 4,
+                            RoleName = "FleetManager"
+                        },
+                        new
+                        {
+                            RoleID = 5,
+                            RoleName = "User"
+                        });
                 });
 
             modelBuilder.Entity("DAL.Entities.User", b =>

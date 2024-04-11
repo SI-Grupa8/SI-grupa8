@@ -33,7 +33,7 @@ namespace API.Controllers
 		}
 
 		[HttpDelete("remove-user/{userId}")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin, SuperAdmin")]
 		public async Task<ActionResult> RemoveUser(int userId)
 		{
 			await _userService.RemoveUser(userId);

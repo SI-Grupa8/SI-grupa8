@@ -9,7 +9,7 @@ import { TwoFaResponse } from '../../models/two-fa-response';
 import { AuthTfaRequest } from '../../models/auth-tfa-request';
 import { AuthTfaResponse } from '../../models/auth-tfa-response';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { interval, takeWhile, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +18,8 @@ export class AuthService {
 
   userRole: string | undefined= '';
 
-  //Íprivate apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsitÍes.net/api/Auth';
-  private apiUrl = 'https://localhost:7126/api/Auth';
+  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/Auth';
+  //private apiUrl = 'https://localhost:7126/api/Auth';
 
   private apiShorterUrl = 'https://localhost:7126/Api';
 
@@ -138,8 +138,16 @@ export class AuthService {
     this.userRole = undefined;
   }
   
-  isCookiePresent(cookieName: string): boolean {
+  isCookiePresent(): boolean {
     return document.cookie.includes(`refresh`);
+  }
+  startTokenExpiryCheck() {
+    interval(60000) // Check every minute
+      .pipe(takeWhile(() => true)) // Continue indefinitely
+      .subscribe(() => {
+        if(!this.isCookiePresent())
+          this.logout();
+      });
   }
   
 }
