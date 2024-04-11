@@ -42,4 +42,13 @@ export class DeviceService {
     });
     return this.http.get<any[]>(`${this.apiUrl}/Device/get-company-devices`, {headers});
   }
+
+  getDeviceTypes() : Observable<any[]> {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any[]>(`${this.apiUrl}/DeviceType/get-all`, {headers});
+  }
+
 }

@@ -1,0 +1,92 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    justify-self: center;
+    width: 280px;
+    height: 180px;
+    //border: 1px solid lightgrey;
+    background-color: white;
+    border-radius: 6px;
+    transition: .2s;
+    &:hover {
+        transform: scale(1.02);
+    }
+    cursor: pointer;
+    //margin-top: 100px;
+    //margin-left: 100px;
+    .company-card-header {
+        display: flex;
+        justify-content: space-between;
+        //align-items: center;
+        height: 60px;
+        //background-color: red;
+        .company-logo-container {
+            margin-top: 5px;
+            margin-left: 10px;
+            width: 50px;
+            height: 50px;
+            //border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            img {
+                height: 40px;
+                width: 40px;
+                //border-radius: 50%;
+            }
+        }
+        .company-options {
+            
+            margin-top: 10px;
+            margin-right: 10px;
+            max-width: 22px;
+            height: 22px;
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            svg {
+                fill: gray;
+                width: 20px;
+                height: 20px;
+            }
+        }
+        .company-options:hover {
+            background-color: rgb(226, 225, 225);
+        }
+    }
+    .company-name-container {
+        display: flex;
+        height: 70px;
+        //background-color: blue;
+        p {
+            margin-top: 5px;
+            margin-left: 20px;
+            font-size: 22px;
+            font-weight: 500;
+        }
+    }
+    .members-count {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-left: 20px;
+        margin-top: 15px;
+        svg {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            fill: darkgray
+            //background-color: green;
+        }
+        .members-num {
+            font-size: 13px;
+            color: gray;
+        }
+    }
+}

@@ -20,11 +20,11 @@ namespace BLL.Services
             _userRepository = userRepository;
         }
 
-        public async Task<Company> GetCompanyByID(int id)
+        public async Task<CompanyDto> GetCompanyByID(int id)
         {
             var company = await _companyRepository.GetById(id);
 
-            return company!;
+            return _mapper.Map<CompanyDto>(company);
         }
 
         public async Task<List<CompanyDto>> GetAll()
@@ -77,7 +77,6 @@ namespace BLL.Services
 
                 adminUser.CompanyID = returnedCompany.CompanyID;
                 adminUser.RoleID = 1;
-                //_userRepository.Update(adminUser);
 
                 await _userRepository.SaveChangesAsync();
             }
@@ -88,6 +87,11 @@ namespace BLL.Services
         public async Task<CompanyDto> UpdateCompany(CompanyDto companyDto)
         {
             var company = _mapper.Map<Company>(companyDto);
+
+            if (companyDto.Users == null)
+            {
+                companyDto.Users = new List<UserDto>(); 
+            }
 
             foreach (var userDto in companyDto.Users)
             {
@@ -109,18 +113,18 @@ namespace BLL.Services
             return companyDto;
         }
 
-        public async Task<List<UserDto>> GetAllUsers(int adminId)
+        public async Task<List<UserDto>> GetAllUsers(int companyId)
         {
-            var adminUser = await _userRepository.GetById(adminId);
+            var company = await _companyRepository.GetAllUsersForCompany(companyId);
 
-            var users = await _userRepository.GetAllByCompanyId((int)adminUser.CompanyID!);
+            var users = company.Users.ToList();
+
             users.ForEach(x =>
             {
-                x.Company!.Users = null!;
+                x.Company = null;
             });
 
             return _mapper.Map<List<UserDto>>(users);
-
         }
     }
 }

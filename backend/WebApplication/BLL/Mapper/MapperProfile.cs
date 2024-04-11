@@ -11,6 +11,7 @@ namespace BLL.Mapper
             CreateMap<DAL.Entities.Role, DTOs.RoleDto>().ReverseMap();
             CreateMap<DAL.Entities.Company, DTOs.CompanyDto>().ReverseMap();
             CreateMap<DAL.Entities.Device, DTOs.DeviceDto>().ReverseMap();
+			CreateMap<DAL.Entities.DeviceType, DTOs.DeviceTypeDto>().ReverseMap();
         }
 	}
 }

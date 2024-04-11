@@ -2,6 +2,84 @@
     width: calc(100% - 200px);
     margin-top: 60px;
     margin-left: 200px;
+    min-height: 100%;
+    background-color: #f0f1f3;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    .companies-header {
+        width: calc(100% - 140px);
+        margin-left: 70px;
+        height: 60px;
+        //background-color: white;
+        //border: 1px solid lightgray;
+        margin-top: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        .title {
+            font-size: 26px;
+            font-weight:500;
+        }
+        .navbar {
+            display: flex;
+            //width: 600px;
+            height: 100%;
+            
+            align-items: center;
+            justify-content: right;
+            gap: 10px;
+            
+            #add-company {
+                //margin-left: 20px;
+                //margin-top: 20px;
+                cursor: pointer;
+                margin-top: 20px;
+                display: flex;
+                align-items: center;
+                align-self: center;
+                width: 150px;
+                height: 35px;
+                border: none;
+                border-radius: 5px;
+                color: white;
+                background-color: lightseagreen;
+                svg {
+                    fill: white;
+                    height: 15px;
+                    width: 15px;
+                    margin-left: 10px;
+                }
+                p {
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
+    .companies-grid {
+        margin-top: 20px;
+        width: calc(100% - 100px);
+        margin-left: 50px;
+        //width: calc(100% - 200px);
+        //margin-top: 60px;
+        //margin-left: 200px;
+        //min-height: 100vh;
+        //background-color: red;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 280px);
+        row-gap: 20px;
+        column-gap: 20px;
+        padding: 0 20px;
+        //min-height: 700px;
+        margin-bottom: 100px;
+    }
+}
+
+/*:host {
+    width: calc(100% - 200px);
+    margin-top: 60px;
+    margin-left: 200px;
     min-height: 100vh;
     background-color: #f0f1f3;
     display: flex;
@@ -143,3 +221,4 @@
       }
   
 }
+*/

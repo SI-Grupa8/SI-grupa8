@@ -9,6 +9,7 @@ namespace DAL.Interfaces
         void Update(TEntity entity);
         void Remove(TEntity entity);
         Task SaveChangesAsync();
+        void DetachEntity(TEntity entity);
     }
 }
 

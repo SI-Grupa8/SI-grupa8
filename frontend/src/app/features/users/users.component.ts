@@ -47,7 +47,7 @@ export class UsersComponent {
 
   }
 
-  editDialog(user: any): void {
+  editDialog(user: UserRequest): void {
     const dialogRef = this.dialog.open(EditUserComponent, {
       disableClose: true ,
       data: { user: user }

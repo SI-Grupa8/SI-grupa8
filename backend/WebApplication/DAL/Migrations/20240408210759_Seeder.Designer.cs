@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240406011434_updateDb")]
-    partial class updateDb
+    [Migration("20240408210759_Seeder")]
+    partial class Seeder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,9 +50,16 @@ namespace DAL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DeviceID"));
 
+                    b.Property<string>("BrandName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("DeviceName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int?>("DeviceTypeID")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Reference")
                         .IsRequired()
@@ -71,9 +78,45 @@ namespace DAL.Migrations
 
                     b.HasKey("DeviceID");
 
+                    b.HasIndex("DeviceTypeID");
+
                     b.HasIndex("UserID");
 
                     b.ToTable("Devices");
+                });
+
+            modelBuilder.Entity("DAL.Entities.DeviceType", b =>
+                {
+                    b.Property<int>("DeviceTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DeviceTypeID"));
+
+                    b.Property<string>("DeviceTypeName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("DeviceTypeID");
+
+                    b.ToTable("DeviceTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            DeviceTypeID = 1,
+                            DeviceTypeName = "Mobile"
+                        },
+                        new
+                        {
+                            DeviceTypeID = 2,
+                            DeviceTypeName = "GPS"
+                        },
+                        new
+                        {
+                            DeviceTypeID = 3,
+                            DeviceTypeName = "Car"
+                        });
                 });
 
             modelBuilder.Entity("DAL.Entities.Role", b =>
@@ -91,6 +134,33 @@ namespace DAL.Migrations
                     b.HasKey("RoleID");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleID = 1,
+                            RoleName = "Admin"
+                        },
+                        new
+                        {
+                            RoleID = 2,
+                            RoleName = "SuperAdmin"
+                        },
+                        new
+                        {
+                            RoleID = 3,
+                            RoleName = "Dispatcher"
+                        },
+                        new
+                        {
+                            RoleID = 4,
+                            RoleName = "FleetManager"
+                        },
+                        new
+                        {
+                            RoleID = 5,
+                            RoleName = "User"
+                        });
                 });
 
             modelBuilder.Entity("DAL.Entities.User", b =>
@@ -160,9 +230,15 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entities.Device", b =>
                 {
+                    b.HasOne("DAL.Entities.DeviceType", "DeviceType")
+                        .WithMany()
+                        .HasForeignKey("DeviceTypeID");
+
                     b.HasOne("DAL.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserID");
+
+                    b.Navigation("DeviceType");
 
                     b.Navigation("User");
                 });
