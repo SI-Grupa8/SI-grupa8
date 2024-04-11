@@ -53,7 +53,7 @@ namespace API.Controllers
             return request;
         }
 
-        [HttpGet("get-company-devices-v1")]
+        [HttpGet("get-company-devices-v1/{deviceTypeID}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<DeviceDto>>> FilterDevices([FromQuery] int? deviceTypeID=0)
         {
