@@ -64,12 +64,11 @@ namespace API.Controllers
 
         [HttpGet("get-company-devices-v1")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IList<DeviceDto>>> FilterDevices([FromQuery] string type)
+        public async Task<ActionResult<List<DeviceDto>>> FilterDevices([FromQuery] int? deviceTypeID=0)
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
             var adminId = JWTHelper.GetUserIDFromClaims(token);
-            var devicesFromCompany = await _deviceService.GetAllForCompany(adminId);
-            return _deviceService.GetDevicesByType(devicesFromCompany, type);
+            return await _deviceService.GetDevicesByType(adminId, deviceTypeID);
         }
     }
 }
