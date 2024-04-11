@@ -32,6 +32,19 @@ namespace DAL.Repositories
             return await _context.Devices.FirstAsync(x => x.Reference == macAddress);
         }
 
+        public async Task<List<Device>> GetFilteredDevicesByUserIds(List<int> userIds, int? deviceTypeID = 0)
+        {
+            var data = _context.Devices.Where(x => userIds.Contains((int)x.UserID!)).AsQueryable();
+
+            if (deviceTypeID != 0)
+            {
+                data = data.Where(x => x.DeviceTypeID == deviceTypeID);
+            }
+
+            return await data.ToListAsync();
+
+        }
+
         public async Task<Device> GetWithUser(int deviceId)
         {
             var result =  await _context.Devices
