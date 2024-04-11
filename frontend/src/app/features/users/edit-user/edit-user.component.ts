@@ -20,12 +20,15 @@ export class EditUserComponent {
   userRequest: UserRequest = {
   };
 
-  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<EditUserComponent>, private userService: UserService, @Inject(MAT_DIALOG_DATA) public data: { user: any }) {
+  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<EditUserComponent>, private userService: UserService, @Inject(MAT_DIALOG_DATA) public data: { user: UserRequest, companyId: number}) {
     this.editUserForm = this.f.group({
-      name: [data.user.name],
-      surname: [data.user.surname],
-      email: [data.user.email]
+      name: [data.user?.name || ' '],
+      surname: [data.user?.surname || ''],
+      email: [data.user?.email || ''],
+      password: [data.user?.password || '']
     });
+    this.userRequest = data.user
+    //this.userRequest.companyID = data.companyId;
   }
 
   closeDialog(): void {
@@ -34,6 +37,7 @@ export class EditUserComponent {
 
 
   edit(event: Event) {
+    
     this.userRequest.email = this.editUserForm.get('email')?.value;
     this.userRequest.name = this.editUserForm.get('name')?.value;
     this.userRequest.surname = this.editUserForm.get('surname')?.value;
@@ -44,6 +48,8 @@ export class EditUserComponent {
     event.preventDefault();
     this.userService.updateUser(this.userRequest).subscribe(() => {
       this.userEdited.emit();
+      console.log("Edited:");
+      console.log(this.userRequest);
       console.log('User edited successfully');
       this.closeDialog();
     });
