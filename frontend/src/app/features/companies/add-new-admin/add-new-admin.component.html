@@ -4,10 +4,10 @@
 <h3>Add new account</h3>
 <form   [formGroup]="this.addAdminForm" (ngSubmit)="add($event)">
     <div class="container-flex">
-        <input formControlName="name"   name="firstname" type="text" placeholder="First name" >
-        <input formControlName="surname"  name="lastname" type="text" placeholder="Last name" >
-        <input formControlName="email"  name="usermail"type="text" placeholder="E-mail or phone number" >
-        <input formControlName="password"  name="pass" type="password" placeholder="Password">
+        <input formControlName="name" id="firstname"   name="firstname" type="text" placeholder="First name" >
+        <input formControlName="surname" id="lastname"  name="lastname" type="text" placeholder="Last name" >
+        <input formControlName="email" id="email"  name="usermail"type="text" placeholder="E-mail or phone number" >
+        <input formControlName="password" id="password"  name="pass" type="password" placeholder="Password">
         <div class="dropdown">
             <select formControlName="role" name="roles" id="roles">
                 <option selected *ngFor="let role of roles" [value]="role">

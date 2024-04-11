@@ -58,7 +58,14 @@
                     <p class="member-mail">{{member.email}}</p>
                 </td>
                 <td>
-                    <div class="role-tag">{{member.role?.roleName}}</div>           
+                    <div [ngClass]="{
+                        'role-tag': true,
+                        'admin': member.role?.roleName === 'Admin',
+                        'dispatcher': member.role?.roleName === 'Dispatcher',
+                        'fleet-manager': member.role?.roleName === 'FleetManager',
+                        'user': member.role?.roleName === 'User',
+                    
+                      }" class="role-tag">{{member.role?.roleName}}</div>           
                 </td>
                 <td>
                     <button class="edit-member">Edit</button>
