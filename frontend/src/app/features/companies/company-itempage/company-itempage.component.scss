@@ -163,6 +163,7 @@
             }
         }
         .members-table {
+            border-collapse: collapse;
             //margin-bottom: 50px;
             width: calc(100% - 200px);
             margin-left: 100px;
@@ -171,19 +172,23 @@
             //margin-bottom: 100px;
             display: flex;
             flex-direction: column;
-            background-color: white;
+            //background-color: white;
             thead {
     
                     width: 100%;
-                    height: 48px;
-                    background-color: rgb(210, 235, 207);
+                    height: 60px;
+                    
                     font-weight: normal;
     
                 tr {
-                    width: 970px;
+                //border: 0.5px solid #bdbdbd;
+                    border-radius: 8px 8px 0 0;
+                background-color: rgb(210, 235, 207);
+                    //border: 0.5px solid #6d6d6d;
+                    width: 100%;
                     display: flex;
                     //background-color: red;
-                    height: 48px; 
+                    height: 60px; 
                     align-items: center;
                     font-weight: normal;
                     
@@ -237,9 +242,11 @@
                     cursor: pointer;
                 }
             tr {
-                width: 100%;
+                border: 0.5px solid #bdbdbd;
+
+                width: calc(100% - 2px);
                 display: flex;
-                //background-color: red;
+                background-color: rgb(255, 255, 255);
                 height: 48px; 
                 align-items: center;
                 
@@ -391,9 +398,9 @@
         .paginator {
             width: calc(100% - 200px);
             margin-left: 100px;
-
+            border-radius: 0 0 8px 8px;
             margin-bottom: 100px;
-            background-color: lightgray;
+            background-color: rgb(241, 255, 250);
         }
     }
 

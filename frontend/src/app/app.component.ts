@@ -33,9 +33,10 @@ export class AppComponent implements OnDestroy {
    private subscription: Subscription;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private authService: AuthService) {
     this.subscription = interval(500000).subscribe(() => {
-      if (!this.authService.isCookiePresent('refresh')) {
+      if (!this.authService.isCookiePresent()) {
         // If the cookie is missing, log out the user
         this.authService.logout();
+        router.navigateByUrl('login');
       }
     });
 
