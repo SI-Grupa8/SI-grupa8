@@ -7,6 +7,7 @@ import { FormControl,Validators,ReactiveFormsModule, FormsModule } from '@angula
 import { CodeInputModule } from 'angular-code-input';
 import { NgIf } from '@angular/common';
 import { CommonModule } from '@angular/common';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -27,7 +28,8 @@ import { CommonModule } from '@angular/common';
     public f: FormBuilder,
     public dialogRef: MatDialogRef<AddNewAdminComponent>,
     private userService: UserService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private addedUserMessage: MatSnackBar
   ) {
 
 
@@ -45,6 +47,7 @@ import { CommonModule } from '@angular/common';
 
   closeDialog(): void {
     this.dialogRef.close();
+    //this.openAddedUserMessage();
   }
 
   add(event: Event) {
@@ -59,6 +62,18 @@ import { CommonModule } from '@angular/common';
       this.userAdded.emit();
       console.log('Admin added successfully');
       this.closeDialog();
+      this.openAddedUserMessage();
+    });
+  }
+
+  durationInSeconds = 5;
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  openAddedUserMessage() {
+    this.addedUserMessage.open('User added!', 'Close', {
+      duration: this.durationInSeconds * 1000,
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
     });
   }
 }

@@ -70,6 +70,10 @@ ngOnInit(): void {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+    dialogRef.componentInstance.userAdded.subscribe(Response => {
+      this.getCompanyUsers();
+      console.log("Spojen emmiter!");
+    })
     /*
     dialogRef.componentInstance.userAdded.subscribe(() => {
       this.getAll(); 
