@@ -2,6 +2,7 @@ import { Component, OnInit  } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { DeviceService } from '../../core/services/http/device.service';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../core/services/http/auth.service';
 
 @Component({
   selector: 'app-map',
@@ -13,13 +14,18 @@ import { CommonModule } from '@angular/common';
 export class MapComponent implements OnInit{
   devices: any[] = [];
   markerOptions: any={};
+  companyId: any = 0;
 
-  constructor(private deviceService: DeviceService) {}
+  constructor(private deviceService: DeviceService, private authService : AuthService) {}
 
   ngOnInit(): void {
-    this.deviceService.getCompanyDevices().subscribe(devices => {
-      this.devices = devices;
+    this.authService.user.subscribe((res: any) => {
+      this.companyId = res.companyID
+      this.deviceService.getCompanyDevices(this.companyId).subscribe(devices => {
+        this.devices = devices;
+      });
     });
+
     
     this.markerOptions = {
       icon: {

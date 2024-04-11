@@ -6,6 +6,7 @@ import { DeviceRequest } from '../../core/models/device-request';
 import { CommonModule } from '@angular/common';
 import { EditDeviceComponent } from './edit-device/edit-device.component';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../core/services/http/auth.service';
 
 
 @Component({
@@ -23,12 +24,16 @@ export class DevicesComponent {
   deviceRequest: DeviceRequest = {
     userID: 0
   };
+  companyId : number = 0;
   searchQuery: string = ''; 
 
   constructor(public dialog: MatDialog,
-    private deviceService: DeviceService) { }
+    private deviceService: DeviceService, private authService : AuthService) { }
 
   ngOnInit(): void {
+    this.authService.user.subscribe((res : any) => {
+      this.companyId = res.companyID;
+    })
     this.getAll();
   }
   openDialog(): void {
@@ -77,7 +82,7 @@ export class DevicesComponent {
   }
   
   filterDevices(): void {
-    this.deviceService.getCompanyDevices().subscribe(devices => {
+    this.deviceService.getCompanyDevices(this.companyId).subscribe(devices => {
       this.devices = devices.filter(device => 
         device.deviceName.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
         device.reference.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
@@ -87,7 +92,7 @@ export class DevicesComponent {
   }
 
   getAll(): void {
-    this.deviceService.getCompanyDevices().subscribe(devices => {
+    this.deviceService.getCompanyDevices(this.companyId).subscribe(devices => {
       this.devices = devices;
       this.filterDevices();
     });

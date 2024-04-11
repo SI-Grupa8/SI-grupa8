@@ -7,8 +7,8 @@ import { DeviceRequest } from '../../models/device-request';
   providedIn: 'root'
 })
 export class DeviceService {
-  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
-  //private apiUrl = 'https://localhost:7126/api';
+  //private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
+  private apiUrl = 'https://localhost:7126/api';
 
   constructor(private http: HttpClient) { }
 
@@ -35,12 +35,12 @@ export class DeviceService {
     return this.http.delete<any>(`${this.apiUrl}/Device/remove-device/${deviceId}`, {headers});
 
   }
-  getCompanyDevices():Observable<any[]>{
+  getCompanyDevices(companyId : number):Observable<any[]>{
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.get<any[]>(`${this.apiUrl}/Device/get-company-devices`, {headers});
+    return this.http.get<any[]>(`${this.apiUrl}/Device/get-company-devices?companyId=${companyId}`, {headers});
   }
 
   getDeviceTypes() : Observable<any[]> {

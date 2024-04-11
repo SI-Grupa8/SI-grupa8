@@ -33,11 +33,11 @@ namespace BLL.Services
 
         public async Task<List<DeviceDto>> GetAllForCompany(int companyId)
         {
-            var company = await _companyRepository.GetById(companyId);
+            var company = await _companyRepository.GetAllUsersForCompany(companyId);
 
-            company.Users.ForEach(x =>
+            company!.Users.ForEach(x =>
             {
-                x.Company = null;
+                x!.Company = null;
             });
 
             var users = company.Users.Select(x => x!.UserID).ToList();

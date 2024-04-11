@@ -9,8 +9,8 @@ import { UserRequest } from '../../models/user-request';
   providedIn: 'root'
 })
 export class CompanyService {
-  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
-  //private apiUrl = 'https://localhost:7126/api';
+  //private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
+  private apiUrl = 'https://localhost:7126/api';
 
   constructor(private http: HttpClient) { }
 
@@ -49,7 +49,7 @@ export class CompanyService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.get<UserRequest>(`${this.apiUrl}/Company/get-company-users/${id}`,{headers});
+    return this.http.get<UserRequest>(`${this.apiUrl}/Company/get-company-users?companyId=${id}`,{headers});
   }
   deleteCompany(id: number): Observable<any> {
     const token = localStorage.getItem("token");

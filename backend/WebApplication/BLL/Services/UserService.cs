@@ -276,8 +276,8 @@ namespace BLL.Services
 
             _userRepository.DetachEntity(user);
 
-            user = mappedUser;
-            //_userRepository.Update(mappedUser);
+            //user = mappedUser;
+            _userRepository.Update(mappedUser);
             await _userRepository.SaveChangesAsync();
 
             return userDto;
