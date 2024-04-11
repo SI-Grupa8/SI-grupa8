@@ -21,7 +21,7 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
   addAdminForm: FormGroup;
   userRequest: UserRequest = {};
   companyId: number = 0;
-  roles: string[] = ['Admin', 'Dispatcher', 'Driver'];
+  roles: string[] = ['Admin', 'Dispatcher', 'FleetManager', 'User'];
   //companies: any[]; 
 
   constructor(
@@ -39,7 +39,7 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
       email: [''],
       password: [''],
       companyId:[''],
-      roleID: 1
+      role: new FormControl(this.roles),
     });
     this.companyId = data.companyId;
 
@@ -56,7 +56,34 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
     this.userRequest.surname = this.addAdminForm.get('surname')?.value;
     this.userRequest.password = this.addAdminForm.get('password')?.value;
     this.userRequest.companyID=this.companyId;
-    this.userRequest.roleID=1;
+    
+
+    const selectedRole = this.addAdminForm.get('role')?.value;
+    console.log("Iz forme je:"+ selectedRole);
+
+    // Map the selected role to the corresponding role ID
+    switch(selectedRole) {
+        case 'Admin':
+            this.userRequest.roleID = 1; // Assuming 'Admin' corresponds to role ID 1
+            break;
+        //case 'SuperAdmin':
+          //  this.userRequest.roleID = 2; // Assuming 'SuperAdmin' corresponds to role ID 2
+            //break;
+        case 'Dispatcher':
+            this.userRequest.roleID = 3; // Assuming 'Dispatcher' corresponds to role ID 3
+            break;
+        case 'FleetManager':
+            this.userRequest.roleID = 4; // Assuming 'Driver' corresponds to role ID 4
+            break;
+        case 'User':
+            this.userRequest.roleID = 5; // Assuming 'Driver' corresponds to role ID 4
+            break;
+        default:
+            this.userRequest.roleID = 0; // Default to role ID 1 if no matching role found
+            break;
+    }
+
+    //this.userRequest.roleID=1;
     event.preventDefault();
     this.userService.addUser(this.userRequest).subscribe(() => {
       this.userAdded.emit();

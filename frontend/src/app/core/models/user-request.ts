@@ -1,3 +1,5 @@
+import { Role } from "./Role";
+
 export interface UserRequest {
     userID?: number;
     name?:string;
@@ -11,5 +13,6 @@ export interface UserRequest {
     refreshToken?: string;
     tokenCreated?: Date;
     tokenExpires?: Date;
-    companyID?: number
+    companyID?: number,
+    role?: Role;
 }

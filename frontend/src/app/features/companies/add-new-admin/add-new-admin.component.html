@@ -9,7 +9,7 @@
         <input formControlName="email"  name="usermail"type="text" placeholder="E-mail or phone number" >
         <input formControlName="password"  name="pass" type="password" placeholder="Password">
         <div class="dropdown">
-            <select formControlName="roles" name="roles" id="roles">
+            <select formControlName="role" name="roles" id="roles">
                 <option selected *ngFor="let role of roles" [value]="role">
                     {{role}}
                   </option>
