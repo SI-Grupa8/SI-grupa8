@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MapComponent } from './map.component';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 describe('MapComponent', () => {
   let component: MapComponent;
@@ -8,7 +9,7 @@ describe('MapComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MapComponent]
+      imports: [MapComponent, GoogleMapsModule]
     })
     .compileComponents();
     
@@ -21,3 +22,4 @@ describe('MapComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
