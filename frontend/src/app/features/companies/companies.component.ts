@@ -1,27 +1,35 @@
-import { Component, Output } from '@angular/core';
+import { Component, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CompanyRequest } from '../../core/models/company-request';
 import { CompanyService } from '../../core/services/http/company.service';
 import { AddNewCompanyComponent } from './add-new-company/add-new-company.component';
 import { CommonModule } from '@angular/common';
-
+import { NoopScrollStrategy } from '@angular/cdk/overlay';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AddNewAdminComponent } from './add-new-admin/add-new-admin.component';
 import { EditCompanyComponent } from './edit-company/edit-company.component';
 import { UserService } from '../../core/services/http/user.service';
+import { CompanyCardComponent } from "./company-card/company-card.component";
+import { RouterModule } from '@angular/router';
+import { CompanyResponse } from '../../core/models/company-response';
 
 
 @Component({
-  selector: 'app-companies',
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule], 
-  templateUrl: './companies.component.html',
-  styleUrl: './companies.component.scss'
+    selector: 'app-companies',
+    standalone: true,
+    templateUrl: './companies.component.html',
+    styleUrl: './companies.component.scss',
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, CompanyCardComponent, RouterModule]
 })
 export class CompaniesComponent {
+
+  
+  
+  //@ViewChild('child', { static: true }) childComponent: CompanyCardComponent;
+  
   modalVisible: boolean = false;
-  companies: any[] = [];
+  companies: CompanyResponse[] = [];
   companyRequest: CompanyRequest = { 
   };
   searchQuery: string = ''; 
@@ -34,6 +42,7 @@ export class CompaniesComponent {
   }
   openDialog(): void {
     const dialogRef = this.dialog.open(AddNewCompanyComponent, {
+      scrollStrategy: new NoopScrollStrategy(),
       disableClose: true
     });
   
@@ -57,6 +66,7 @@ export class CompaniesComponent {
   openDialogAdmin(): void {
     const dialogRef = this.dialog.open(AddNewAdminComponent, {
       disableClose: true,
+      scrollStrategy: new NoopScrollStrategy(),
       data: {
         companies: this.companies
       }
@@ -81,7 +91,8 @@ export class CompaniesComponent {
       disableClose: true ,
       data: {
         users: this.users,
-        companyID: company.companyID
+        companyID: company.companyID,
+        scrollStrategy: new NoopScrollStrategy()
       }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -95,8 +106,11 @@ export class CompaniesComponent {
   getAll(): void {
     this.companyService.getCompanies().subscribe(companies => {
       this.companies = companies;
+      console.log(this.companies);
       this.filterCompanies();
     });
   }
+
+  
 
 }

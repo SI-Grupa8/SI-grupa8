@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UserRequest } from '../../models/user-request';
 
 @Injectable({
@@ -9,7 +9,9 @@ import { UserRequest } from '../../models/user-request';
 export class UserService {
   private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
   //private apiUrl = 'https://localhost:7126/api';
+
   constructor(private http: HttpClient) { }
+
 
   addUser(request: UserRequest): Observable<any> {
     const token = localStorage.getItem("token");
@@ -35,12 +37,12 @@ export class UserService {
     return this.http.delete<any>(`${this.apiUrl}/User/remove-user/${userId}`, {headers});
 
   }
-  getCompanyUsers():Observable<any[]>{
+  getCompanyUsers(companyId : number):Observable<any[]>{
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return  this.http.get<any[]>(`${this.apiUrl}/Company/get-company-users` , { headers });
+    return  this.http.get<any[]>(`${this.apiUrl}/Company/get-company-users/${companyId}` , { headers });
   }
   getUser():Observable<any>{
     const token = localStorage.getItem("token");

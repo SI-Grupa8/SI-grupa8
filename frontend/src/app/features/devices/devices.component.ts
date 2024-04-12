@@ -6,6 +6,8 @@ import { DeviceRequest } from '../../core/models/device-request';
 import { CommonModule } from '@angular/common';
 import { EditDeviceComponent } from './edit-device/edit-device.component';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../core/services/http/auth.service';
+import { NoopScrollStrategy } from '@angular/cdk/overlay';
 
 
 @Component({
@@ -19,33 +21,39 @@ export class DevicesComponent {
   @Output() deviceDeleted: EventEmitter<any> = new EventEmitter<any>();
   
   modalVisible: boolean = false;
-  devices: any[] = [];
+  devices: DeviceRequest[] = [];
   deviceRequest: DeviceRequest = {
     userID: 0
   };
+  companyId : number = 0;
   searchQuery: string = ''; 
 
   constructor(public dialog: MatDialog,
-    private deviceService: DeviceService) { }
+    private deviceService: DeviceService, private authService : AuthService) { }
 
   ngOnInit(): void {
-    this.getAll();
+    this.authService.getCurrentUser().subscribe((res : any) => {
+      this.companyId = res.companyID;
+      this.getAll(res.companyID);
+    })
   }
   openDialog(): void {
     const dialogRef = this.dialog.open(AddNewDeviceComponent, {
-      disableClose: true
+      disableClose: true,
+      scrollStrategy: new NoopScrollStrategy()
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
     dialogRef.componentInstance.deviceAdded.subscribe(() => {
-      this.getAll(); // Refresh table after user is added
+      this.getAll(this.companyId); // Refresh table after user is added
     });
   }
 
   editDialog(device: any): void {
     const dialogRef = this.dialog.open(EditDeviceComponent, {
+      scrollStrategy: new NoopScrollStrategy(),
       disableClose: true ,
       data: { device: device }
     });
@@ -54,7 +62,7 @@ export class DevicesComponent {
       console.log('The dialog was closed');
     });
     dialogRef.componentInstance.deviceEdited.subscribe(() => {
-      this.getAll(); // Refresh table after user is added
+      this.getAll(this.companyId); // Refresh table after user is added
     });
 
   }
@@ -70,14 +78,14 @@ export class DevicesComponent {
       this.deviceService.deleteDevice(deviceId).subscribe(() => {
         this.deviceDeleted.emit();
         console.log('Device deleted successfully');
-        this.getAll();
+        this.getAll(this.companyId);
       });
     }
 
   }
   
   filterDevices(): void {
-    this.deviceService.getCompanyDevices().subscribe(devices => {
+    this.deviceService.getCompanyDevices(this.companyId).subscribe(devices => {
       this.devices = devices.filter(device => 
         device.deviceName.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
         device.reference.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
@@ -86,8 +94,8 @@ export class DevicesComponent {
     });
   }
 
-  getAll(): void {
-    this.deviceService.getCompanyDevices().subscribe(devices => {
+  getAll(companyId : number): void {
+    this.deviceService.getCompanyDevices(companyId).subscribe(devices => {
       this.devices = devices;
       this.filterDevices();
     });

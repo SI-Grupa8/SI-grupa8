@@ -7,6 +7,15 @@
         <input formControlName="name"   name="firstname" type="text" placeholder="First name" >
         <input formControlName="surname"  name="lastname" type="text" placeholder="Last name" >
         <input formControlName="email"  name="usermail"type="text" placeholder="E-mail or phone number" >
+        <input formControlName="password"  name="password"type="text" placeholder="Password" >
+        <div class="dropdown">
+            <select formControlName="role" name="role" id="role">
+                <option selected *ngFor="let role of roles" [value]="role">
+                    {{role}}
+                  </option>
+            </select>
+        </div>
+        
         <button  type="submit" >EDIT USER</button>
     </div>
 </form> 

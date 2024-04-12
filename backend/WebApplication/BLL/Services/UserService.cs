@@ -56,7 +56,7 @@ namespace BLL.Services
                 throw new Exception("Invalid 2FA code.");
             }
             user.TwoFactorEnabled = true;
-            _userRepository.Update(user);
+            //_userRepository.Update(user);
             await _userRepository.SaveChangesAsync();
             return _mapper.Map<UserDto>(user);
         }
@@ -67,7 +67,7 @@ namespace BLL.Services
             if (user == null) throw new Exception("User not found");
             user.TwoFactorEnabled = false;
             user.TwoFactorKey = string.Empty;
-            _userRepository.Update(user);
+            //_userRepository.Update(user);
             await _userRepository.SaveChangesAsync();
             return _mapper.Map<UserDto>(user);
         }
@@ -274,7 +274,9 @@ namespace BLL.Services
             mappedUser.PasswordHash = user!.PasswordHash;
             mappedUser.PasswordSalt = user.PasswordSalt;
 
-
+            _userRepository.DetachEntity(user);
+            mappedUser.Role = null;
+            //user = mappedUser;
             _userRepository.Update(mappedUser);
             await _userRepository.SaveChangesAsync();
 

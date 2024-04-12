@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using API.JWTHelpers;
 using BLL.DTOs;
 using BLL.Interfaces;
@@ -18,30 +19,24 @@ namespace API.Controllers
             _deviceService = deviceService;
 		}
 
-        [HttpGet("get-company-devices")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<DeviceDto>>> GetAllForCompany()
+        [HttpGet("get-company-devices/{companyId}")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<List<DeviceDto>>> GetAllForCompany(int companyId)
         {
-            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
-            var adminId = JWTHelper.GetUserIDFromClaims(token);
-
-            return Ok(await _deviceService.GetAllForCompany(adminId));
+            return Ok(await _deviceService.GetAllForCompany(companyId));
         }
 
         [HttpDelete("remove-device/{deviceId}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> RemoveDevice(int deviceId)
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult> RemoveDevice(int deviceId, int companyId)
         {
-            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
-            var adminId = JWTHelper.GetUserIDFromClaims(token);
-
-            await _deviceService.RemoveDevice(deviceId, adminId);
+            await _deviceService.RemoveDevice(deviceId, companyId);
 
             return Ok(new { message = "Device removed." });
         }
 
         [HttpPost("add-device")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<object>> AddDevice(DeviceDto request)
         {
             var data = await _deviceService.AddDevice(request);
@@ -49,18 +44,23 @@ namespace API.Controllers
             return Ok(data);
         }
 
-        [HttpPut("update-device/{deviceId}")]
-        [Authorize(Roles = "Admin")]
+        [HttpPut("update-device")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<DeviceDto>> UpdateDevice(DeviceDto request)
         {
-            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
-            var adminId = JWTHelper.GetUserIDFromClaims(token);
-
-            await _deviceService.UpdateDevice(request, adminId);
+            await _deviceService.UpdateDevice(request);
 
             return request;
         }
 
+        [HttpGet("get-company-devices-v1")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<DeviceDto>>> FilterDevices([FromQuery] List<int>? deviceTypeIDs=null)
+        {
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
+            var adminId = JWTHelper.GetUserIDFromClaims(token);
+            return await _deviceService.GetDevicesByType(adminId, deviceTypeIDs);
+        }
     }
 }
 

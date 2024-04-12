@@ -8,10 +8,13 @@ import { CodeInputModule } from 'angular-code-input';
 import { CommonModule, NgIf } from '@angular/common';
 import { UserRequest } from '../../../core/models/user-request';
 import { UserService } from '../../../core/services/http/user.service';
+
+
 @Component({
   selector: 'app-add-new-company',
   standalone: true,
-  imports: [FormsModule,NgIf, ReactiveFormsModule, CodeInputModule, CommonModule],
+  imports: [FormsModule,NgIf, ReactiveFormsModule, CodeInputModule, CommonModule
+  ],
   templateUrl: './add-new-company.component.html',
   styleUrl: './add-new-company.component.scss'
 })
@@ -23,6 +26,10 @@ export class AddNewCompanyComponent {
   };
   userRequest: UserRequest={};
   users : any[] = [];
+
+
+
+
   
   constructor(public dialog: MatDialog, public f: FormBuilder,public dialogRef: MatDialogRef<AddNewCompanyComponent>, private companyService: CompanyService, private userService: UserService) {
     this.addCompanyForm = this.f.group({

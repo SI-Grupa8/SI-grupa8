@@ -3,6 +3,7 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BLL.Services
 {
@@ -23,22 +24,20 @@ namespace BLL.Services
             _userRepository = userRepository;
         }
 
-        public async Task<Device> GetDeviceByID(int id)
+        public async Task<DeviceDto> GetDeviceByID(int id)
         {
             var device = await _deviceRepository.GetById(id);
 
-            return device!;
+            return _mapper.Map<DeviceDto>(device); 
         }
 
-        public async Task<List<DeviceDto>> GetAllForCompany(int adminId)
+        public async Task<List<DeviceDto>> GetAllForCompany(int companyId)
         {
-            var user = await _userRepository.GetById((int)adminId);
+            var company = await _companyRepository.GetAllUsersForCompany(companyId);
 
-            var company = await _companyRepository.GetAllUsersForCompany((int)user!.CompanyID!);
-
-            company.Users.ForEach(x =>
+            company!.Users.ForEach(x =>
             {
-                x.Company = null;
+                x!.Company = null;
             });
 
             var users = company.Users.Select(x => x!.UserID).ToList();
@@ -64,13 +63,11 @@ namespace BLL.Services
             };
         }
 
-        public async Task RemoveDevice(int deviceId, int adminId)
+        public async Task RemoveDevice(int deviceId, int companyId)
         {
             var device = await _deviceRepository.GetWithUser(deviceId);
 
-            var admin = await _userRepository.GetById(adminId);
-
-            if(admin!.CompanyID != device!.User!.CompanyID)
+            if(companyId != device!.User!.CompanyID)
             {
                 throw new Exception("You do not have permissions to remove this device.");
             }
@@ -79,21 +76,25 @@ namespace BLL.Services
             await _deviceRepository.SaveChangesAsync();
         }
 
-        public async Task UpdateDevice(DeviceDto deviceDto, int adminId)
+        public async Task UpdateDevice(DeviceDto deviceDto)
         {
-            var device = await _deviceRepository.GetWithUser(deviceDto.DeviceID);
-
-            var admin = await _userRepository.GetById(adminId);
-
-            if (admin!.CompanyID != device!.User!.CompanyID)
-            {
-                throw new Exception("You do not have permissions to update this device.");
-            }
-
             var updatedDevice = _mapper.Map<Device>(deviceDto);
-
             _deviceRepository.Update(updatedDevice);
             await _deviceRepository.SaveChangesAsync();
+        }
+
+        public async Task<List<DeviceDto>> GetDevicesByType(int adminId, List<int>? deviceTypeIDs = null)
+        {
+            var user = await _userRepository.GetById(adminId);
+            var companyUsers = await _companyRepository.GetAllUsersForCompany((int)user!.CompanyID!);
+
+            companyUsers.Users.ForEach(x => x!.Company = null);
+
+            var users = companyUsers.Users.Select(x => x!.UserID).ToList();
+
+            var devices = await _deviceRepository.GetFilteredDevicesByUserIds(users, deviceTypeIDs);
+
+            return _mapper.Map<List<DeviceDto>>(devices);
         }
     }
 }

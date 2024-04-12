@@ -7,6 +7,8 @@ import { AddNewUserComponent } from './add-new-user/add-new-user.component';
 import { UserRequest } from '../../core/models/user-request';
 import { UserService } from '../../core/services/http/user.service';
 import { EditUserComponent } from './edit-user/edit-user.component';
+import { AuthService } from '../../core/services/http/auth.service';
+import { NoopScrollStrategy } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-users',
@@ -23,41 +25,47 @@ export class UsersComponent {
   users: any[] = [];
   adminId: number = 2;
   searchQuery: string = ''; 
+  companyId : number = 0;
 
   userRequest: UserRequest = {
   }
 
-  constructor(public dialog: MatDialog, private userService: UserService) {}
+  constructor(public dialog: MatDialog, private userService: UserService, private authService : AuthService) {}
 
   ngOnInit(): void {
-    this.getAll();
+    this.authService.getCurrentUser().subscribe((res : any) => {
+      this.companyId = res.companyID;
+      this.getAll(res.companyID);
+    })
   }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(AddNewUserComponent, {
-      disableClose: true 
+      disableClose: true ,
+      scrollStrategy: new NoopScrollStrategy()
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
     dialogRef.componentInstance.userAdded.subscribe(() => {
-      this.getAll(); // Refresh table after user is added
+      this.getAll(this.companyId); // Refresh table after user is added
     });
 
   }
 
-  editDialog(user: any): void {
+  editDialog(user: UserRequest): void {
     const dialogRef = this.dialog.open(EditUserComponent, {
       disableClose: true ,
-      data: { user: user }
+      data: { user: user },
+      scrollStrategy: new NoopScrollStrategy()
     });
     console.log(user)
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
     dialogRef.componentInstance.userEdited.subscribe(() => {
-      this.getAll(); // Refresh table after user is added
+      this.getAll(this.companyId); // Refresh table after user is added
     });
 
   }
@@ -72,7 +80,7 @@ export class UsersComponent {
       this.userService.deleteUser(userId).subscribe(() => {
         this.userDeleted.emit();
         console.log('User deleted successfully');
-        this.getAll();
+        this.getAll(this.companyId);
       });
     }
 
@@ -80,7 +88,7 @@ export class UsersComponent {
 
   
   filterUsers(): void {
-    this.userService.getCompanyUsers().subscribe(users => {
+    this.userService.getCompanyUsers(this.companyId).subscribe(users => {
       this.users = users.filter(user => 
         user.name.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
         user.surname.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
@@ -90,8 +98,8 @@ export class UsersComponent {
     });
   }
   
-    getAll(): void {
-      this.userService.getCompanyUsers().subscribe(users => {
+    getAll(companyId : number): void {
+      this.userService.getCompanyUsers(companyId).subscribe(users => {
         this.users = users;
         this.filterUsers();
       });
