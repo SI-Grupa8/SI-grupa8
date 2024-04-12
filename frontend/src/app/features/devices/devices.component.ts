@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { EditDeviceComponent } from './edit-device/edit-device.component';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/http/auth.service';
+import { NoopScrollStrategy } from '@angular/cdk/overlay';
 
 
 @Component({
@@ -38,7 +39,8 @@ export class DevicesComponent {
   }
   openDialog(): void {
     const dialogRef = this.dialog.open(AddNewDeviceComponent, {
-      disableClose: true
+      disableClose: true,
+      scrollStrategy: new NoopScrollStrategy()
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -51,6 +53,7 @@ export class DevicesComponent {
 
   editDialog(device: any): void {
     const dialogRef = this.dialog.open(EditDeviceComponent, {
+      scrollStrategy: new NoopScrollStrategy(),
       disableClose: true ,
       data: { device: device }
     });
