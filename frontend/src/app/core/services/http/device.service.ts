@@ -40,7 +40,7 @@ export class DeviceService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.get<any[]>(`${this.apiUrl}/Device/get-company-devices?companyId=${companyId}`, {headers});
+    return this.http.get<any[]>(`${this.apiUrl}/Device/get-company-devices/${companyId}`, {headers});
   }
 
   getDeviceTypes() : Observable<any[]> {

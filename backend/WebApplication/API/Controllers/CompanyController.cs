@@ -53,7 +53,7 @@ namespace API.Controllers
             return companyDto;
         }
 
-        [HttpGet("get-company-users")]
+        [HttpGet("get-company-users/{companyId}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<List<UserDto>>> GetAllUsers(int companyId)
         {
