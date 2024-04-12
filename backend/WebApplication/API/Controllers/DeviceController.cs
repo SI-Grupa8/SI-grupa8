@@ -44,11 +44,11 @@ namespace API.Controllers
             return Ok(data);
         }
 
-        [HttpPut("update-device/{companyId}")]
+        [HttpPut("update-device")]
         [Authorize(Roles = "Admin,SuperAdmin")]
-        public async Task<ActionResult<DeviceDto>> UpdateDevice(DeviceDto request, int companyId)
+        public async Task<ActionResult<DeviceDto>> UpdateDevice(DeviceDto request)
         {
-            await _deviceService.UpdateDevice(request, companyId);
+            await _deviceService.UpdateDevice(request);
 
             return request;
         }
