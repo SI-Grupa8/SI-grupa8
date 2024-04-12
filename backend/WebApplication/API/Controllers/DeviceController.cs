@@ -44,7 +44,7 @@ namespace API.Controllers
             return Ok(data);
         }
 
-        [HttpPut("update-device/{deviceId}")]
+        [HttpPut("update-device/{companyId}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<DeviceDto>> UpdateDevice(DeviceDto request, int companyId)
         {
