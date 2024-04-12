@@ -76,18 +76,10 @@ namespace BLL.Services
             await _deviceRepository.SaveChangesAsync();
         }
 
-        public async Task UpdateDevice(DeviceDto deviceDto, int companyId)
+        public async Task UpdateDevice(DeviceDto deviceDto)
         {
-            var device = await _deviceRepository.GetWithUser(deviceDto.DeviceID);
-
-            if (companyId != device!.User!.CompanyID)
-            {
-                throw new Exception("You do not have permissions to update this device.");
-            }
-
             var updatedDevice = _mapper.Map<Device>(deviceDto);
-
-            device = updatedDevice;
+            _deviceRepository.Update(updatedDevice);
             await _deviceRepository.SaveChangesAsync();
         }
 
