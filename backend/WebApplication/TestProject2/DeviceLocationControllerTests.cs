@@ -87,6 +87,5 @@ namespace TestProject2
             Assert.IsNotNull(result); // Check if result is not null
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult)); // Check if result is Ok
         }
-
     }
 }

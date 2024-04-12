@@ -92,7 +92,7 @@ namespace TestProject2
             };
 
             // Act
-            var result = await controller.GetAllForCompany();
+            var result = await controller.GetAllForCompany(1);
 
             // Assert
             Assert.IsNotNull(result); // Check if result is not null
@@ -118,7 +118,7 @@ namespace TestProject2
             };
 
             // Act
-            var result = await controller.RemoveDevice(deviceId);
+            var result = await controller.RemoveDevice(deviceId, 1);
 
             // Assert
             Assert.IsNotNull(result); // Check if result is not null
@@ -153,6 +153,51 @@ namespace TestProject2
             // Assert
             Assert.IsNotNull(result); // Check if result is not null
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult)); // Check if result is Ok
+        }
+
+        [TestMethod]
+        public async Task UpdateDevice_Returns_DeviceDto()
+        {
+            // Arrange
+            var request = new DeviceDto { Reference = "11:22", DeviceName = "ime" }; // Create a sample DeviceDto object
+            var companyId = 1; // Sample company ID for testing
+            var expectedResult = new ActionResult<DeviceDto>(request); // Define expected result
+
+            deviceServiceMock.Setup(service => service.UpdateDevice(request, companyId)).Returns(Task.CompletedTask);
+
+            // Act
+            var result = await controller.UpdateDevice(request, companyId);
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result, typeof(ActionResult<DeviceDto>)); // Check if result is of correct type
+            Assert.AreEqual(expectedResult.Value, result.Value); // Check if returned value matches expected value
+        }
+
+        [TestMethod]
+        public async Task FilterDevices_Returns_ListOfDeviceDto()
+        {
+            // Arrange
+            var deviceTypeIDs = new List<int> { 1, 2, 3 }; // Sample device type IDs for testing
+            var expectedResult = new List<DeviceDto>(); // Provide expected data here
+
+            deviceServiceMock.Setup(service => service.GetDevicesByType(It.IsAny<int>(), deviceTypeIDs)).ReturnsAsync(expectedResult);
+
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmc1NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIwIiwiZXhwIjoxNzEyMzE1NjY4fQ.FKkvIzmtzHnUUEeFrIqQEzc0chQTZhHnbWdAyWsvG2s"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+            // Act
+            var result = await controller.FilterDevices(deviceTypeIDs);
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.AreEqual(expectedResult, result.Value); // Check if returned value matches expected value
         }
     }
 }

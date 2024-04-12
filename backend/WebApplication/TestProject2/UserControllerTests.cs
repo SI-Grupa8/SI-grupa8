@@ -208,5 +208,33 @@ namespace TestProject2
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult)); // Check if result is Ok
         }
 
+        [TestMethod]
+        public async Task GetAdminsWithoutCompany_OkResult()
+        {
+            // Arrange
+            var expectedAdmins = new List<UserDto>(); // Provide a list of sample UserDto objects
+
+            // Mock UserService.GetAllAdmins to return a list of UserDto
+            userServiceMock.Setup(service => service.GetAdminsWihotuCompany())
+                           .ReturnsAsync(expectedAdmins);
+
+            // Set up mock HttpContext with a valid authorization token
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmc1NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIwIiwiZXhwIjoxNzEyMzE1NjY4fQ.FKkvIzmtzHnUUEeFrIqQEzc0chQTZhHnbWdAyWsvG2s"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = await controller.GetAdminsWithoutCompany();
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result, typeof(ActionResult<List<UserDto>>)); // Check if result is Ok
+        }
     }
 }

@@ -130,7 +130,7 @@ namespace TestProject2
             var expectedCompanyDto = new CompanyDto(); // Create a sample CompanyDto object
 
             // Mock CompanyService.AddCompany to return a CompanyDto
-            companyServiceMock.Setup(service => service.AddCompany(company))
+            companyServiceMock.Setup(service => service.AddCompany(company, 1))
                               .ReturnsAsync(expectedCompanyDto);
 
             // Set up mock HttpContext with a valid authorization token
@@ -203,12 +203,39 @@ namespace TestProject2
             };
 
             // Act
-            var result = await controller.GetAllUsers();
+            var result = await controller.GetAllUsers(1);
 
             // Assert
             Assert.IsNotNull(result); // Check if result is not null
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult)); // Check if result is Ok
         }
 
+        [TestMethod]
+        public async Task GetCompanyById_OkResult()
+        {
+            var expected = new CompanyDto();
+
+            // Mock CompanyService.GetAllUsers to return a list of UserDto
+            companyServiceMock.Setup(service => service.GetCompanyByID(1))
+                              .ReturnsAsync(expected);
+
+            // Set up mock HttpContext with a valid authorization token
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmc1NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIwIiwiZXhwIjoxNzEyMzE1NjY4fQ.FKkvIzmtzHnUUEeFrIqQEzc0chQTZhHnbWdAyWsvG2s"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = await controller.GetCompanyById(1);
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult)); // Check if result is Ok
+        }
     }
 }
