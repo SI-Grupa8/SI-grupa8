@@ -2,24 +2,33 @@ import { Component, OnInit  } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { DeviceService } from '../../core/services/http/device.service';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../core/services/http/auth.service';
+import { DeviceFilterComponent } from './device-filter/device-filter.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [ GoogleMapsModule, CommonModule],
+  imports: [ GoogleMapsModule, CommonModule, DeviceFilterComponent, FormsModule],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
 })
 export class MapComponent implements OnInit{
   devices: any[] = [];
   markerOptions: any={};
+  companyId: any = 0;
+  selectedDeviceTypeId : number[] = [];
 
-  constructor(private deviceService: DeviceService) {}
+  constructor(private deviceService: DeviceService, private authService : AuthService) {}
 
   ngOnInit(): void {
-    this.deviceService.getCompanyDevices().subscribe(devices => {
-      this.devices = devices;
+    this.authService.getCurrentUser().subscribe((res: any) => {
+      this.companyId = res.companyID
+      this.deviceService.getCompanyDevices(this.companyId).subscribe(devices => {
+        this.devices = devices;
+      });
     });
+
     
     this.markerOptions = {
       icon: {
@@ -51,4 +60,15 @@ export class MapComponent implements OnInit{
 move(event: google.maps.MapMouseEvent) {
   if (event.latLng != null) this.display = event.latLng.toJSON();
 }
+
+onDeviceTypeSelected(event: any): void {
+  this.selectedDeviceTypeId = event;
+  this.deviceService.getFilteredDevices(this.selectedDeviceTypeId).subscribe(x =>{
+    console.log(x);
+    this.devices = x;
+  })
+}
+
+
+
 }

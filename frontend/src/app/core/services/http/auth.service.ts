@@ -9,7 +9,8 @@ import { TwoFaResponse } from '../../models/two-fa-response';
 import { AuthTfaRequest } from '../../models/auth-tfa-request';
 import { AuthTfaResponse } from '../../models/auth-tfa-response';
 import { Router } from '@angular/router';
-import { interval, takeWhile, tap } from 'rxjs';
+import { BehaviorSubject, interval, takeWhile, tap } from 'rxjs';
+import { UserRequest } from '../../models/user-request';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,11 @@ export class AuthService {
 
   userRole: string | undefined= '';
 
+
+  user : BehaviorSubject<UserRequest | null> = new BehaviorSubject<UserRequest | null>(null)
+
   private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/Auth';
+  private apiUserUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/User'
   //private apiUrl = 'https://localhost:7126/api/Auth';
 
   private apiShorterUrl = 'https://localhost:7126/Api';
@@ -49,6 +54,16 @@ export class AuthService {
       console.log("Role:" + this.userRole);
     })*/
   }
+
+  getCurrentUser() : any{
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get<UserRequest>(`${this.apiUserUrl}/get-current-user`, { headers });
+  }
+
   loginTfa(authTfaRequest: AuthTfaRequest) {
     return this.http.post<AuthTfaResponse>
     (`${this.apiUrl}/login/tfa`, authTfaRequest).pipe(

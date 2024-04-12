@@ -96,6 +96,9 @@ export class LoginComponent {
             console.log(this.authResponse.token);
             this.authService.setUserRole(response.role);
             this.router.navigate(['profile']);
+            this.authService.getCurrentUser().subscribe((res  : any)=> {
+              this.authService.user.next(res);
+            })
           }
           else {
             this.showLoginForm = false;
