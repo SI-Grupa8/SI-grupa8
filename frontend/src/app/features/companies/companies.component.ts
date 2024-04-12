@@ -4,7 +4,7 @@ import { CompanyRequest } from '../../core/models/company-request';
 import { CompanyService } from '../../core/services/http/company.service';
 import { AddNewCompanyComponent } from './add-new-company/add-new-company.component';
 import { CommonModule } from '@angular/common';
-
+import { NoopScrollStrategy } from '@angular/cdk/overlay';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AddNewAdminComponent } from './add-new-admin/add-new-admin.component';
@@ -42,6 +42,7 @@ export class CompaniesComponent {
   }
   openDialog(): void {
     const dialogRef = this.dialog.open(AddNewCompanyComponent, {
+      scrollStrategy: new NoopScrollStrategy(),
       disableClose: true
     });
   
@@ -65,6 +66,7 @@ export class CompaniesComponent {
   openDialogAdmin(): void {
     const dialogRef = this.dialog.open(AddNewAdminComponent, {
       disableClose: true,
+      scrollStrategy: new NoopScrollStrategy(),
       data: {
         companies: this.companies
       }
@@ -89,7 +91,8 @@ export class CompaniesComponent {
       disableClose: true ,
       data: {
         users: this.users,
-        companyID: company.companyID
+        companyID: company.companyID,
+        scrollStrategy: new NoopScrollStrategy()
       }
     });
     dialogRef.afterClosed().subscribe(result => {
