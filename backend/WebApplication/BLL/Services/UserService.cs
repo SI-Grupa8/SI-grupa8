@@ -275,7 +275,7 @@ namespace BLL.Services
             mappedUser.PasswordSalt = user.PasswordSalt;
 
             _userRepository.DetachEntity(user);
-
+            mappedUser.Role = null;
             //user = mappedUser;
             _userRepository.Update(mappedUser);
             await _userRepository.SaveChangesAsync();
