@@ -61,7 +61,7 @@ export class AuthService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get<any>(`${this.apiUrl}/get-current-user`, { headers });
+    return this.http.get<any>(`${this.apiUserUrl}/get-current-user`, { headers });
   }
 
   loginTfa(authTfaRequest: AuthTfaRequest) {
