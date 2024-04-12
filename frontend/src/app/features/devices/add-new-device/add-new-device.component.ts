@@ -9,6 +9,7 @@ import { UserRequest } from '../../../core/models/user-request';
 import { CompanyService } from '../../../core/services/http/company.service';
 import { UserService } from '../../../core/services/http/user.service';
 import { DeviceType } from '../../../core/models/device-type';
+import { AuthService } from '../../../core/services/http/auth.service';
 
 @Component({
   selector: 'app-add-new-device',
@@ -27,7 +28,9 @@ export class AddNewDeviceComponent {
   users : UserRequest[] = []
   deviceTypes : DeviceType[] = []
 
-  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<AddNewDeviceComponent>, private deviceService: DeviceService, private userService : UserService) {
+  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<AddNewDeviceComponent>, private deviceService: DeviceService, private userService : UserService,
+    private authService : AuthService
+  ) {
     this.addDeviceForm = this.f.group({
       deviceName: [''],
       user: [''],
@@ -37,9 +40,13 @@ export class AddNewDeviceComponent {
       userId: [''],
       deviceTypeId: ['']
     });
-    this.getAllUsers();
+    this.authService.getCurrentUser().subscribe((res: any) => {
+      this.getAllUsers(res.companyID);
+    })
     this.getAllDeviceTypes();
   }
+
+
 
   closeDialog(): void {
     this.dialogRef.close();
@@ -61,8 +68,8 @@ export class AddNewDeviceComponent {
     });
   }
 
-  getAllUsers(){
-    this.userService.getCompanyUsers().subscribe(x => {
+  getAllUsers(companyID : number){
+    this.userService.getCompanyUsers(companyID).subscribe(x => {
       this.users = x;
     })
   }

@@ -1,6 +1,9 @@
 <div class="home-header">
     <p class="greeting">Device Location Overview</p>
 </div>
+<div class="filter">
+    <app-device-filter (deviceTypeSelectedId)="onDeviceTypeSelected($event)"></app-device-filter>
+</div>
 <div class="mapa">
     <google-map 
                 width="1250px"

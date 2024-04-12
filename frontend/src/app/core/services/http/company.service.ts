@@ -49,7 +49,7 @@ export class CompanyService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.get<UserRequest>(`${this.apiUrl}/Company/get-company-users/${id}`,{headers});
+    return this.http.get<UserRequest>(`${this.apiUrl}/Company/get-company-users?companyId=${id}`,{headers});
   }
   deleteCompany(id: number): Observable<any> {
     const token = localStorage.getItem("token");

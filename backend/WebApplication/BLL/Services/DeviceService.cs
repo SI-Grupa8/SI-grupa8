@@ -33,11 +33,11 @@ namespace BLL.Services
 
         public async Task<List<DeviceDto>> GetAllForCompany(int companyId)
         {
-            var company = await _companyRepository.GetById(companyId);
+            var company = await _companyRepository.GetAllUsersForCompany(companyId);
 
-            company.Users.ForEach(x =>
+            company!.Users.ForEach(x =>
             {
-                x.Company = null;
+                x!.Company = null;
             });
 
             var users = company.Users.Select(x => x!.UserID).ToList();
@@ -89,6 +89,20 @@ namespace BLL.Services
 
             device = updatedDevice;
             await _deviceRepository.SaveChangesAsync();
+        }
+
+        public async Task<List<DeviceDto>> GetDevicesByType(int adminId, List<int>? deviceTypeIDs = null)
+        {
+            var user = await _userRepository.GetById(adminId);
+            var companyUsers = await _companyRepository.GetAllUsersForCompany((int)user!.CompanyID!);
+
+            companyUsers.Users.ForEach(x => x!.Company = null);
+
+            var users = companyUsers.Users.Select(x => x!.UserID).ToList();
+
+            var devices = await _deviceRepository.GetFilteredDevicesByUserIds(users, deviceTypeIDs);
+
+            return _mapper.Map<List<DeviceDto>>(devices);
         }
     }
 }

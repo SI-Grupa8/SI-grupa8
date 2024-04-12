@@ -17,7 +17,10 @@ namespace BLL.Interfaces
         Task<object> AddDevice(DeviceDto request);
 
         Task UpdateDevice(DeviceDto deviceDto, int companyId);
+      
+        Task<List<DeviceDto>> GetDevicesByType(int adminId, List<int>? deviceTypeIDs = null);
 
         Task RemoveDevice(int deviceId, int companyId);
+
     }
 }

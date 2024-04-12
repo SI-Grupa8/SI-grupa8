@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using API.JWTHelpers;
 using BLL.DTOs;
 using BLL.Interfaces;
@@ -52,6 +53,14 @@ namespace API.Controllers
             return request;
         }
 
+        [HttpGet("get-company-devices-v1")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<DeviceDto>>> FilterDevices([FromQuery] List<int>? deviceTypeIDs=null)
+        {
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
+            var adminId = JWTHelper.GetUserIDFromClaims(token);
+            return await _deviceService.GetDevicesByType(adminId, deviceTypeIDs);
+        }
     }
 }
 
