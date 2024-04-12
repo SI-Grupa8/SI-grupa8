@@ -9,7 +9,7 @@ import { TwoFaResponse } from '../../models/two-fa-response';
 import { AuthTfaRequest } from '../../models/auth-tfa-request';
 import { AuthTfaResponse } from '../../models/auth-tfa-response';
 import { Router } from '@angular/router';
-import { BehaviorSubject, interval, takeWhile, tap } from 'rxjs';
+import { BehaviorSubject, Observable, interval, takeWhile, tap } from 'rxjs';
 import { UserRequest } from '../../models/user-request';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class AuthService {
   private apiUserUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/User'
   //private apiUrl = 'https://localhost:7126/api/Auth';
 
-  private apiShorterUrl = 'https://localhost:7126/Api';
+  //private apiShorterUrl = 'https://localhost:7126/Api';
 
   constructor(private http: HttpClient, private router: Router) { 
     this.userRole = localStorage.getItem('role') as string;
@@ -55,13 +55,13 @@ export class AuthService {
     })*/
   }
 
-  getCurrentUser() : any{
+  getCurrentUser():Observable<any>{
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get<UserRequest>(`${this.apiUserUrl}/get-current-user`, { headers });
+    return this.http.get<any>(`${this.apiUserUrl}/get-current-user`, { headers });
   }
 
   loginTfa(authTfaRequest: AuthTfaRequest) {

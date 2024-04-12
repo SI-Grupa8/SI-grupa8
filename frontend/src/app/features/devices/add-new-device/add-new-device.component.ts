@@ -40,7 +40,7 @@ export class AddNewDeviceComponent {
       userId: [''],
       deviceTypeId: ['']
     });
-    this.authService.getCurrentUser().subscribe((res: any) => {
+    this.userService.getUser().subscribe((res: any) => {
       this.getAllUsers(res.companyID);
     })
     this.getAllDeviceTypes();

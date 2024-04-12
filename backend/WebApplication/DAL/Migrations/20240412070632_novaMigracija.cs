@@ -4,10 +4,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMig : Migration
+    public partial class novaMigracija : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -114,6 +116,28 @@ namespace DAL.Migrations
                         column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID");
+                });
+
+            migrationBuilder.InsertData(
+                table: "DeviceTypes",
+                columns: new[] { "DeviceTypeID", "DeviceTypeName" },
+                values: new object[,]
+                {
+                    { 1, "Mobile" },
+                    { 2, "GPS" },
+                    { 3, "Car" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "RoleID", "RoleName" },
+                values: new object[,]
+                {
+                    { 1, "Admin" },
+                    { 2, "SuperAdmin" },
+                    { 3, "Dispatcher" },
+                    { 4, "FleetManager" },
+                    { 5, "User" }
                 });
 
             migrationBuilder.CreateIndex(
