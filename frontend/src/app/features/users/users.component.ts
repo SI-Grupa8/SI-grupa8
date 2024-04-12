@@ -8,6 +8,7 @@ import { UserRequest } from '../../core/models/user-request';
 import { UserService } from '../../core/services/http/user.service';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { AuthService } from '../../core/services/http/auth.service';
+import { NoopScrollStrategy } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-users',
@@ -40,7 +41,8 @@ export class UsersComponent {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(AddNewUserComponent, {
-      disableClose: true 
+      disableClose: true ,
+      scrollStrategy: new NoopScrollStrategy()
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -55,7 +57,8 @@ export class UsersComponent {
   editDialog(user: UserRequest): void {
     const dialogRef = this.dialog.open(EditUserComponent, {
       disableClose: true ,
-      data: { user: user }
+      data: { user: user },
+      scrollStrategy: new NoopScrollStrategy()
     });
     console.log(user)
     dialogRef.afterClosed().subscribe(result => {
