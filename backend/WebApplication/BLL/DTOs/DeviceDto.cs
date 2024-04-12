@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,9 +12,12 @@ namespace BLL.DTOs
         public int DeviceID { get; set; }
         public required string Reference { get; set; }
         public required string DeviceName { get; set; }
-        public int UserID { get; set; }
+        public int? UserID { get; set; }
         public UserDto? User { get; set; }
         public string XCoordinate { get; set; } = string.Empty;
         public string YCoordinate { get; set; } = string.Empty;
+        public string BrandName {  get; set; } = string.Empty; 
+        public int? DeviceTypeID { get; set; }
+        public DeviceTypeDto? DeviceType { get; set; }
     }
 }

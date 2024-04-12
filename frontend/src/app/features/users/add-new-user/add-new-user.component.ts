@@ -23,6 +23,7 @@ export class AddNewUserComponent {
     this.addUserForm = this.f.group({
       name: [''],
       surname: [''],
+      role:[''],
       email: [''],
       password: ['']
     });
@@ -37,6 +38,7 @@ export class AddNewUserComponent {
     this.userRequest.name = this.addUserForm.get('name')?.value;
     this.userRequest.surname = this.addUserForm.get('surname')?.value;
     this.userRequest.password = this.addUserForm.get('password')?.value;
+    this.userRequest.roleID=this.addUserForm.get('role')?.value;
 
     event.preventDefault();
     this.userService.addUser(this.userRequest).subscribe(() => {

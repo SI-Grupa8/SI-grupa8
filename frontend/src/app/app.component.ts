@@ -10,6 +10,12 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from './core/services/http/auth.service';
 import { DevicesComponent } from './features/devices/devices.component';
 import { UsersComponent } from './features/users/users.component';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+import { DeviceFilterComponent } from './features/map/device-filter/device-filter.component';
 
 @Component({
     selector: 'app-root',
@@ -17,7 +23,8 @@ import { UsersComponent } from './features/users/users.component';
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
 
-    imports: [SidebarComponent, RouterOutlet, HomeComponent, HeaderComponent, LoginComponent,ReactiveFormsModule,CommonModule, DevicesComponent, UsersComponent]
+    imports: [SidebarComponent, RouterOutlet, HomeComponent, HeaderComponent, LoginComponent,ReactiveFormsModule,CommonModule, DevicesComponent, UsersComponent
+    ]
 
 })
 export class AppComponent implements OnDestroy {
@@ -27,9 +34,10 @@ export class AppComponent implements OnDestroy {
    private subscription: Subscription;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private authService: AuthService) {
     this.subscription = interval(500000).subscribe(() => {
-      if (!this.authService.isCookiePresent('refresh')) {
+      if (!this.authService.isCookiePresent()) {
         // If the cookie is missing, log out the user
         this.authService.logout();
+        router.navigateByUrl('login');
       }
     });
 

@@ -56,7 +56,7 @@ namespace BLL.Services
                 throw new Exception("Invalid 2FA code.");
             }
             user.TwoFactorEnabled = true;
-            _userRepository.Update(user);
+            //_userRepository.Update(user);
             await _userRepository.SaveChangesAsync();
             return _mapper.Map<UserDto>(user);
         }
@@ -67,7 +67,7 @@ namespace BLL.Services
             if (user == null) throw new Exception("User not found");
             user.TwoFactorEnabled = false;
             user.TwoFactorKey = string.Empty;
-            _userRepository.Update(user);
+            //_userRepository.Update(user);
             await _userRepository.SaveChangesAsync();
             return _mapper.Map<UserDto>(user);
         }
@@ -251,7 +251,7 @@ namespace BLL.Services
                 Email = userRegisterDto.Email,
                 PhoneNumber = userRegisterDto.PhoneNumber,
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
-                CompanyID = admin!.CompanyID,
+                CompanyID = admin!.RoleID == 1 ? admin.CompanyID : userRegisterDto.CompanyID,
                 PasswordSalt = [],
                 RoleID = userRegisterDto.RoleID
             };
@@ -274,7 +274,9 @@ namespace BLL.Services
             mappedUser.PasswordHash = user!.PasswordHash;
             mappedUser.PasswordSalt = user.PasswordSalt;
 
+            _userRepository.DetachEntity(user);
 
+            //user = mappedUser;
             _userRepository.Update(mappedUser);
             await _userRepository.SaveChangesAsync();
 
@@ -487,7 +489,6 @@ namespace BLL.Services
                 PasswordHash = Encoding.UTF8.GetBytes(passwordHash),
                 PasswordSalt = [],
                 RoleID = userRegisterDto.RoleID,
-                CompanyID = userRegisterDto.CompanyID,
             };
             _userRepository.Add(user);
 
@@ -498,6 +499,13 @@ namespace BLL.Services
             return userDto;
         }
 
+        public async Task<List<UserDto>> GetAdminsWihotuCompany()
+        {
+            var users = await _userRepository.GetAllAdminsWithoutCompany();
+
+            return _mapper.Map<List<UserDto>>(users);
+
+        }
     }
 }
 

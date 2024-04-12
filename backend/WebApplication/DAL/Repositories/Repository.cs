@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-	public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 	{
 		private readonly AppDbContext _context;
 
@@ -17,6 +17,11 @@ namespace DAL.Repositories
             _context.Set<TEntity>().Add(entity);
         }
 
+        public void DetachEntity(TEntity entity)
+        {
+            _context.Entry<TEntity>(entity).State = EntityState.Detached;
+        }
+
         public async Task<List<TEntity>> GetAll()
         {
             return await _context.Set<TEntity>().ToListAsync();
@@ -25,12 +30,6 @@ namespace DAL.Repositories
         public async Task<TEntity?> GetById(int id)
         {
             var result = await _context.Set<TEntity>().FindAsync(id);
-
-            if (result != null)
-            {
-                _context.Entry<TEntity>(result).State = EntityState.Detached;
-            }
-
             return result;
         }
 

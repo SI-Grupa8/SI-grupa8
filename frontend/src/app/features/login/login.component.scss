@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-html {
+:host {
     position: absolute;
     top: 0;
     left: 0;
@@ -10,95 +10,168 @@ html {
     background-repeat: no-repeat;
     width: 100%;
     height: 100%;
-}
-
-.background {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(30, 86, 49, 0.6); 
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    .logo-container {
-        width: 180px;
-        height: 40px;
+    .background {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(30, 86, 49, 0.6); 
         display: flex;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: -25px;
-        svg {
-            margin-left: 10px;
-            width: 30px;
-            height: 30px;
-            fill: rgb(30, 86, 49);
-        }
-        p {
-            margin-left: 10px;
-            fill: rgb(30, 86, 49);
-            font-size: 20px;
+        justify-content: center; 
+        align-items: center; 
+        .logo-container {
+            width: 180px;
+            height: 40px;
+            display: flex;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: -25px;
+            svg {
+                margin-left: 10px;
+                width: 30px;
+                height: 30px;
+                fill: rgb(30, 86, 49);
+            }
+            p {
+                margin-left: 10px;
+                fill: rgb(30, 86, 49);
+                font-size: 20px;
+            }
         }
     }
-}
-    .forma {
-        width: 310px;
-        height: 250px;
-        background-color: rgba(255, 255, 255, 0.5);
-        padding: 90px 80px 50px 80px;
-        border-radius: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        form {
-            a{
-                color: #5c7fda;
-                text-decoration: none;
-                margin-top: 10px;
-              }
-              
-              a:hover {
-                text-decoration: underline;
-              }
-            display: flex;
-            flex-direction: column;
-            input[name="usermail"] {
-                padding: 8px 10px;
-                padding-left: 40px;
-                background: url("../../../assets/images/user.png") no-repeat; 
-                background-size: 25px; 
-                background-position: 10px center; 
-                margin: 8px 0;
-                border: none;
-                border-bottom: 1px solid #1e5631;
-                 outline: none;
-                background-color: transparent;
-                transition: border-bottom 0.3s;
-                height: 30px;
-                &:focus {
-                    background-color: rgba(255, 255, 255, 0.7);
+        .forma {
+            width: 310px;
+            height: 250px;
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 90px 80px 50px 80px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            form {
+                a{
+                    color: #5c7fda;
+                    text-decoration: none;
+                    margin-top: 10px;
+                  }
+                  
+                  a:hover {
+                    text-decoration: underline;
+                  }
+                display: flex;
+                flex-direction: column;
+                input[name="usermail"] {
+                    padding: 8px 10px;
+                    padding-left: 40px;
+                    background: url("../../../assets/images/user.png") no-repeat; 
+                    background-size: 25px; 
+                    background-position: 10px center; 
+                    margin: 8px 0;
+                    border: none;
+                    border-bottom: 1px solid #1e5631;
+                     outline: none;
+                    background-color: transparent;
+                    transition: border-bottom 0.3s;
+                    height: 30px;
+                    &:focus {
+                        background-color: rgba(255, 255, 255, 0.7);
+                    }
+                }
+                input[name="pass"] {
+                    padding: 8px 10px;
+                    padding-left: 40px;
+                    background: url("../../../assets/images/padlock.png") no-repeat; 
+                    background-size: 25px; 
+                    background-position: 10px center; 
+                    margin: 8px 0;
+                    border: none;
+                    border-bottom: 1px solid #1e5631;
+                     outline: none;
+                    background-color: transparent;
+                    transition: border-bottom 0.3s;
+                    height: 30px;
+                
+                    &:focus {
+                        background-color: rgba(255, 255, 255, 0.7);
+                    }
+                }
+                button {
+                    background-color: #1e5631;
+                    color: #fdf1d3;
+                    padding: 12px 20px;
+                    margin: 8px 0;
+                    cursor: pointer;
+                    border: none;
+                    border-radius: 20px;
+                    outline: none;
+                    transition: background-color 0.3s;
+                    
+                }
+                button:hover {
+                    background-color: #2a944d;
+                }
+                
+            }
+        }
+    
+        .twoauth{
+            width: 310px;
+            height: 250px;
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 90px 80px 50px 80px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            font-size: 14px;
+            form{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                height: 180px;
+                
+                input[name="pincode"] {
+                    padding: 8px 10px;
+                    padding-left: 40px;
+                    background: url("../../../assets/images/authenticity.png") no-repeat; 
+                    background-size: 25px; 
+                    background-position: 10px center; 
+                    margin: 8px 0;
+                    border: none;
+                    border-bottom: 1px solid #1e5631;
+                     outline: none;
+                    background-color: transparent;
+                    transition: border-bottom 0.3s;
+                    height: 30px;
+                    &:focus {
+                        background-color: rgba(255, 255, 255, 0.7);
+                    }
+                }
+                .digit-group {
+                    padding: 8px 10px;
+                    padding-left: 40px;
+                    background: url("../../../assets/images/authenticity.png") no-repeat; 
+                    background-size: 25px; 
+                    background-position: 10px center; 
+                    margin: 8px 0;
+                
+                input {
+                    width: 30px;
+                    height: 30px;
+                    margin-right: 3px;
+                    margin-left: 3px;
+                    text-align: center;
+                    border: none;
+                    border-bottom: 1px solid #1e5631;
+                     outline: none;
+                    background-color: transparent;
+                    transition: border-bottom 0.3s;
+                    &:focus {
+                        background-color: rgba(255, 255, 255, 0.7);
+                    }
                 }
             }
-            input[name="pass"] {
-                padding: 8px 10px;
-                padding-left: 40px;
-                background: url("../../../assets/images/padlock.png") no-repeat; 
-                background-size: 25px; 
-                background-position: 10px center; 
-                margin: 8px 0;
-                border: none;
-                border-bottom: 1px solid #1e5631;
-                 outline: none;
-                background-color: transparent;
-                transition: border-bottom 0.3s;
-                height: 30px;
-            
-                &:focus {
-                    background-color: rgba(255, 255, 255, 0.7);
-                }
-            }
-            button {
+            .verify {
                 background-color: #1e5631;
                 color: #fdf1d3;
                 padding: 12px 20px;
@@ -108,89 +181,15 @@ html {
                 border-radius: 20px;
                 outline: none;
                 transition: background-color 0.3s;
-                
+                :hover {
+                    background-color: #145123;
+                }
             }
-            button:hover {
-                background-color: #2a944d;
-            }
-            
         }
-    }
-
-    .twoauth{
-        width: 310px;
-        height: 250px;
-        background-color: rgba(255, 255, 255, 0.5);
-        padding: 90px 80px 50px 80px;
-        border-radius: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        font-size: 14px;
-        form{
+        }
+    
+        .error {
+            color: red;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 180px;
-            
-            input[name="pincode"] {
-                padding: 8px 10px;
-                padding-left: 40px;
-                background: url("../../../assets/images/authenticity.png") no-repeat; 
-                background-size: 25px; 
-                background-position: 10px center; 
-                margin: 8px 0;
-                border: none;
-                border-bottom: 1px solid #1e5631;
-                 outline: none;
-                background-color: transparent;
-                transition: border-bottom 0.3s;
-                height: 30px;
-                &:focus {
-                    background-color: rgba(255, 255, 255, 0.7);
-                }
-            }
-            .digit-group {
-                padding: 8px 10px;
-                padding-left: 40px;
-                background: url("../../../assets/images/authenticity.png") no-repeat; 
-                background-size: 25px; 
-                background-position: 10px center; 
-                margin: 8px 0;
-            
-            input {
-                width: 30px;
-                height: 30px;
-                margin-right: 3px;
-                margin-left: 3px;
-                text-align: center;
-                border: none;
-                border-bottom: 1px solid #1e5631;
-                 outline: none;
-                background-color: transparent;
-                transition: border-bottom 0.3s;
-                &:focus {
-                    background-color: rgba(255, 255, 255, 0.7);
-                }
-            }
         }
-        .verify {
-            background-color: #1e5631;
-            color: #fdf1d3;
-            padding: 12px 20px;
-            margin: 8px 0;
-            cursor: pointer;
-            border: none;
-            border-radius: 20px;
-            outline: none;
-            transition: background-color 0.3s;
-            :hover {
-                background-color: #145123;
-            }
-        }
-    }
-    }
-
-    .error {
-        color: red;
-        display: flex;
-    }
+}

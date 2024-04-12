@@ -9,7 +9,20 @@
         <input formControlName="ref" name="ref" type="text" placeholder="Reference" >
         <input formControlName="xcoord" name="xcoord" type="text" placeholder="X coordinate">
         <input formControlName="ycoord" name="ycoord" type="text" placeholder="Y coordinate">
-
+        <div class="dropdown">
+            <select formControlName="userId" name="userId">
+                <option *ngFor="let user of users" [value]="user.userID">
+                    {{user.email}}
+                  </option>
+            </select>
+        </div>
+        <div class="dropdown">
+            <select formControlName="deviceTypeId" name="deviceTypeId">
+                <option *ngFor="let deviceType of deviceTypes" [value]="deviceType.deviceTypeID">
+                    {{ deviceType.deviceTypeName }}
+                </option>
+            </select>
+        </div>
         <button type="submit">ADD DEVICE</button>
     </div>
 </form> 

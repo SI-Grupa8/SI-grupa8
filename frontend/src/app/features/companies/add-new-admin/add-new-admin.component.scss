@@ -1,0 +1,130 @@
+:host {
+    width: 450px;
+    height: 450px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    background-color:whitesmoke;
+    .close {
+        align-self: flex-end;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 5px;
+        margin-top: 5px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+    h3 {
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+    form {
+        margin-left: 50px;
+        margin-right: 50px;
+        margin-top: 20px;
+        .container-flex {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        input[name="firstname"] {
+            padding: 8px 10px;
+            padding-left: 40px;
+            background: url("../../../../assets/images/user.png") no-repeat; 
+            background-size: 25px; 
+            background-position: 10px center; 
+            margin: 8px 15px;
+            border: none;
+            border-bottom: 1px solid #1e5631;
+            outline: none;
+            background-color: transparent;
+            transition: border-bottom 0.3s;
+            height: 30px;
+        }
+        input[name="lastname"] {
+            padding: 8px 10px;
+            padding-left: 40px;
+            background: url("../../../../assets/images/user.png") no-repeat; 
+            background-size: 25px; 
+            background-position: 10px center; 
+            margin: 8px 15px;
+            border: none;
+            border-bottom: 1px solid #1e5631;
+            outline: none;
+            background-color: transparent;
+            transition: border-bottom 0.3s;
+            height: 30px;
+        }
+        input[name="usermail"] {
+            padding: 8px 10px;
+            padding-left: 40px;
+            background: url("../../../../assets/images/mail.png") no-repeat; 
+            background-size: 25px; 
+            background-position: 10px center; 
+            margin: 8px 15px;
+            border: none;
+            border-bottom: 1px solid #1e5631;
+            outline: none;
+            background-color: transparent;
+            transition: border-bottom 0.3s;
+            height: 30px;
+        }
+        input[name="pass"] {
+            padding: 8px 10px;
+            padding-left: 40px;
+            background: url("../../../../assets/images/padlock.png") no-repeat; 
+            background-size: 25px; 
+            background-position: 10px center; 
+            margin: 8px 15px;
+            border: none;
+            border-bottom: 1px solid #1e5631;
+            outline: none;
+            background-color: transparent;
+            transition: border-bottom 0.3s;
+            height: 30px;
+        }
+        .dropdown {
+            position: relative;
+            padding: 5px 5px;
+            background: url("../../../../assets/images/settings.png") no-repeat; 
+            background-size: 25px; 
+            background-position: 26px center; 
+        }
+        
+        select {
+            padding: 8px 10px;
+            padding-left: 40px;
+            margin: 8px 15px;
+            border: none;
+            border-bottom: 1px solid #1e5631;
+            outline: none;
+            background-color: transparent;
+            transition: border-bottom 0.3s;
+            height: 30px;
+            width: calc(100% - 30px); 
+        }
+        
+        button {
+            background-color: #1e5631;
+            color: #fdf1d3;
+            padding: 12px 20px;
+            margin: 8px 10px;
+            margin-top: 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+    } 
+}

@@ -10,6 +10,7 @@ namespace BLL.DTOs
     {
         public int CompanyID { get; set; }
         public string CompanyName { get; set; } = string.Empty;
-        public int AdminID { get; set; }
+
+        public List<UserDto>? Users { get; set; } = null;
     }
 }

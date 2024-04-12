@@ -21,8 +21,9 @@ namespace DAL.Repositories
         public async Task<List<Device>> GetAllByCompanyUsersIds(List<int> usersIds)
         {
             return await _context.Devices
-                .Where(d => usersIds.Contains(d.UserID))
+                .Where(d => usersIds.Contains((int)d.UserID!))
                 .Include(d => d.User)
+                .Include(x => x.DeviceType)
                 .ToListAsync();
         }
 
@@ -31,11 +32,31 @@ namespace DAL.Repositories
             return await _context.Devices.FirstAsync(x => x.Reference == macAddress);
         }
 
+        public async Task<List<Device>> GetFilteredDevicesByUserIds(List<int> userIds, List<int>? deviceTypeIDs = null)
+        {
+            var data = _context.Devices.Where(x => userIds.Contains((int)x.UserID!)).AsQueryable();
+
+            if (deviceTypeIDs != null)
+            {
+                data = data.Where(x => deviceTypeIDs.Contains((int)x!.DeviceTypeID!));
+            }
+
+            return await data.ToListAsync();
+
+        }
+
         public async Task<Device> GetWithUser(int deviceId)
         {
-            return await _context.Devices
+            var result =  await _context.Devices
                 .Include(x => x.User)
                 .FirstAsync(x => x.DeviceID == deviceId);
+
+            if (result != null)
+            {
+                _context.Entry(result).State = EntityState.Detached;
+            }
+
+            return result!;
         }
 
     }

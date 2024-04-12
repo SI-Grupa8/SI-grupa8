@@ -8,13 +8,13 @@
         <input formControlName="surname"  name="lastname" type="text" placeholder="Last name" >
         <input formControlName="email"  name="usermail"type="text" placeholder="E-mail or phone number" >
         <input formControlName="password"  name="pass" type="password" placeholder="Password">
-        <!--<div class="dropdown">
-            <select name="role" id="role">
-                <option value="Admin">Admin</option>
-                <option value="Fleet Manager">Fleet Manager</option>
-                <option value="Dispatcher">Dispatcher</option>
+        <div class="dropdown">
+            <select formControlName="role" name="role" id="role">
+                <option value="4">Dispatcher</option>
+                <option value="3">Fleet Manager</option>
+                <option value="5">User</option>
             </select>
-        </div>-->
+        </div>
         <button  type="submit" >ADD USER</button>
     </div>
 </form> 

@@ -18,12 +18,19 @@ namespace DAL.Repositories
             _context = context;
         }
 
-        public async Task<Company> GetByAdminId(int id)
+        public async Task<Company> GetAllUsersForCompany(int companyId)
         {
             return await _context.Companies
                 .Include(x => x.Users)
-                .FirstAsync(x => x.AdminID == id);
+                .ThenInclude(x => x!.Role)
+                .FirstAsync(x => x.CompanyID == companyId);
         }
+
+        public async Task<List<Company>> GetAllWithAdmins()
+        {
+            return await _context.Companies.Include(x => x.Users).ToListAsync();
+        }
+
 
         public async Task<Company> GetByName(string name)
         {
