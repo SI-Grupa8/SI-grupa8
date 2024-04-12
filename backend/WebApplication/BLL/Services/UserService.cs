@@ -71,56 +71,7 @@ namespace BLL.Services
             await _userRepository.SaveChangesAsync();
             return _mapper.Map<UserDto>(user);
         }
-        /*
-        public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogIn(UserLogIn userRequest)
-        {
-            var user = new User();
-            if (!string.IsNullOrEmpty(userRequest.Email))
-            {
-                user = await _userRepository.FindByEmail(userRequest.Email);
-            }
-            else if (!string.IsNullOrEmpty(userRequest.PhoneNumber))
-            {
-                user = await _userRepository.FindByPhoneNumber(userRequest.PhoneNumber);
-            }
-
-            if (!BCrypt.Net.BCrypt.Verify(userRequest.Password, Encoding.UTF8.GetString(user.PasswordHash)))
-            {
-                throw new Exception("Wrong password.");
-            }
-            var refreshToken = GenerateRefreshToken();//edis
-            var cookieOptions = SetRefreshToken(refreshToken, user);//edis
-            if (user.TwoFactorEnabled == false)
-            {
-                string token = CreateToken(user);
-                //var refreshToken = GenerateRefreshToken();
-                //var cookieOptions = SetRefreshToken(refreshToken, user);
-                RefreshTokenDto refresh = new RefreshTokenDto()
-                {
-                    Token = refreshToken.Token,
-                    Created = refreshToken.Created,
-                    Expires = refreshToken.Expires,
-                };
-                await RefreshUserToken(user.UserID, refresh);
-
-                return (cookieOptions, refreshToken.Token,
-                    new
-                    {
-                        token = token,
-                        twoFaEnabled = user.TwoFactorEnabled,
-                        email = user.Email,
-                        refresh = refresh.Token,
-                        expires = refresh.Expires.ToString()
-                    });
-            }
-            return (cookieOptions, null,
-                new
-                {
-                    twoFaEnabled = user.TwoFactorEnabled,
-                    email = user.Email
-                });
-        }
-        */
+       
         public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogIn(UserLogIn userRequest)
         {
             var user = new User();
@@ -316,17 +267,6 @@ namespace BLL.Services
 
             return qrCodeImageUrl;
         }
-        /*
-        public string GenerateQRCodeImageUrl(User user, SetupCode setupCode)
-        {
-            string manualEntryKey = setupCode.ManualEntryKey;
-            string fullName = Uri.EscapeDataString(user.Name + user.Surname);
-            string qrCodeContent = $"otpauth://totp/WebApplication:{fullName}?secret={manualEntryKey}&issuer=WebApplicationApp";
-
-            var qrCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl={qrCodeContent}";
-
-            return qrCodeImageUrl;
-        }*/
 
         private byte[] ConvertToBytes(string secret, bool secretIsBase32) =>
                secretIsBase32 ? Base32Encoding.ToBytes(secret) : Encoding.UTF8.GetBytes(secret);
@@ -367,22 +307,6 @@ namespace BLL.Services
                 // Handle the case where the user with the specified ID does not exist
                 // This could be logging an error, throwing an exception, or any other appropriate action
             }
-            /*var oldUser = await _userRepository.GetById(userID);
-            User user = new User
-            {
-                Email = oldUser.Email,
-                PhoneNumber = oldUser.PhoneNumber,
-                PasswordHash = oldUser.PasswordHash,
-                PasswordSalt = oldUser.PasswordSalt,
-                RoleID = oldUser.RoleID,
-                RefreshToken = refreshTokenDto.RefreshToken,
-                TokenCreated = refreshTokenDto.TokenCreated.ToUniversalTime(),
-                //TokenExpires = refreshTokenDto.TokenExpires.ToUniversalTime()
-                TokenExpires = DateTime.Now.AddSeconds(20).ToUniversalTime()
-            };
-            _userRepository.Update(user);
-            await _userRepository.SaveChangesAsync();
-            var userDto = _mapper.Map<UserDto>(user);*/
         }
 
         private string CreateToken(User user)
