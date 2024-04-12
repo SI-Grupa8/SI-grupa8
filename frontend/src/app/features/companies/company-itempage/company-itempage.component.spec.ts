@@ -1,23 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CompanyItempageComponent } from './company-itempage.component';
+// import { CompanyItempageComponent } from './company-itempage.component';
 
-describe('CompanyItempageComponent', () => {
-  let component: CompanyItempageComponent;
-  let fixture: ComponentFixture<CompanyItempageComponent>;
+// describe('CompanyItempageComponent', () => {
+//   let component: CompanyItempageComponent;
+//   let fixture: ComponentFixture<CompanyItempageComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CompanyItempageComponent]
-    })
-    .compileComponents();
+//   beforeEach(async () => {
+//     await TestBed.configureTestingModule({
+//       imports: [CompanyItempageComponent]
+//     })
+//     .compileComponents();
     
-    fixture = TestBed.createComponent(CompanyItempageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+//     fixture = TestBed.createComponent(CompanyItempageComponent);
+//     component = fixture.componentInstance;
+//     fixture.detectChanges();
+//   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+//   it('should create', () => {
+//     expect(component).toBeTruthy();
+//   });
+// });

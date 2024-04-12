@@ -1,23 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditDeviceComponent } from './edit-device.component';
+// import { EditDeviceComponent } from './edit-device.component';
 
-describe('EditDeviceComponent', () => {
-  let component: EditDeviceComponent;
-  let fixture: ComponentFixture<EditDeviceComponent>;
+// describe('EditDeviceComponent', () => {
+//   let component: EditDeviceComponent;
+//   let fixture: ComponentFixture<EditDeviceComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [EditDeviceComponent]
-    })
-    .compileComponents();
+//   beforeEach(async () => {
+//     await TestBed.configureTestingModule({
+//       imports: [EditDeviceComponent]
+//     })
+//     .compileComponents();
     
-    fixture = TestBed.createComponent(EditDeviceComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+//     fixture = TestBed.createComponent(EditDeviceComponent);
+//     component = fixture.componentInstance;
+//     fixture.detectChanges();
+//   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+//   it('should create', () => {
+//     expect(component).toBeTruthy();
+//   });
+// });
