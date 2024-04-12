@@ -24,7 +24,7 @@ export class CompanyItempageComponent implements OnInit {
 
   @Input() tabsArray: string[] = ['Overview', 'Members'];
   @Output() onTabChange = new EventEmitter<number>();
-  activatedTab: number = 0;
+  activatedTab: number = 1;
 
   setTab(index:number) {
     this.activatedTab = index;

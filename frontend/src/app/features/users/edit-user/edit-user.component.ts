@@ -5,12 +5,12 @@ import { UserService } from '../../../core/services/http/user.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormControl,Validators,ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CodeInputModule } from 'angular-code-input';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-edit-user',
   standalone: true,
-  imports: [FormsModule,NgIf, ReactiveFormsModule, CodeInputModule ],
+  imports: [FormsModule,NgIf, ReactiveFormsModule, CodeInputModule , CommonModule],
   templateUrl: './edit-user.component.html',
   styleUrl: './edit-user.component.scss'
 })
@@ -55,6 +55,7 @@ export class EditUserComponent {
     switch(selectedRole) {
         case 'Admin':
             this.userRequest.roleID = 1; // Assuming 'Admin' corresponds to role ID 1
+
             break;
         //case 'SuperAdmin':
           //  this.userRequest.roleID = 2; // Assuming 'SuperAdmin' corresponds to role ID 2

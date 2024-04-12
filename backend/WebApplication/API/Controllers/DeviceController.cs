@@ -19,7 +19,7 @@ namespace API.Controllers
             _deviceService = deviceService;
 		}
 
-        [HttpGet("get-company-devices")]
+        [HttpGet("get-company-devices/{companyId}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<List<DeviceDto>>> GetAllForCompany(int companyId)
         {

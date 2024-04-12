@@ -58,14 +58,33 @@
                     <p class="member-mail">{{member.email}}</p>
                 </td>
                 <td>
+                    <!--
+                        this catastrophe of code must be removed LATERRR
+                    -->
                     <div [ngClass]="{
                         'role-tag': true,
-                        'admin': member.role?.roleName === 'Admin',
-                        'dispatcher': member.role?.roleName === 'Dispatcher',
-                        'fleet-manager': member.role?.roleName === 'FleetManager',
-                        'user': member.role?.roleName === 'User',
+                        'admin': member.roleID === 1,
+                        'dispatcher': member.roleID === 3,
+                        'fleet-manager': member.roleID === 4,
+                        'user': member.roleID === 5,
                     
-                      }" class="role-tag">{{member.role?.roleName}}</div>           
+                      }" class="role-tag">
+                        @if (member.roleID ==1) {
+                            <p>Admin</p>
+                        }  
+                        @else if (member.roleID ==3) {
+                            <p>Dispatcher</p>
+                        } 
+                        @else if (member.roleID ==4) {
+                            <p>FleetManager</p>
+                        } 
+                        @else if (member.roleID ==5) {
+                            <p>User</p>
+                        } 
+                        @else {
+                            <p>None</p>
+                        }
+                    </div>           
                 </td>
                 <td>
                     <button (click)="openUpdateUser(member)" class="edit-member">Edit</button>

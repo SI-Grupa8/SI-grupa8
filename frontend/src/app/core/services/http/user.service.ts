@@ -42,7 +42,7 @@ export class UserService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return  this.http.get<any[]>(`${this.apiUrl}/Company/get-company-users?companyId=${companyId}` , { headers });
+    return  this.http.get<any[]>(`${this.apiUrl}/Company/get-company-users/${companyId}` , { headers });
   }
   getUser():Observable<any>{
     const token = localStorage.getItem("token");
