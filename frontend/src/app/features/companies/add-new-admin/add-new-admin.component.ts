@@ -37,7 +37,7 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
       name: [''],
       surname: [''],
       email: [''],
-      password: [''],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       companyId:[''],
       role: new FormControl(this.roles),
     });
@@ -50,7 +50,17 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
     //this.openAddedUserMessage();
   }
 
+  get passControl() {
+    return this.addAdminForm.get('password');
+  }
+
   add(event: Event) {
+    if (this.addAdminForm.invalid) {
+      Object.values(this.addAdminForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
+      return;
+    }
     this.userRequest.email = this.addAdminForm.get('email')?.value;
     this.userRequest.name = this.addAdminForm.get('name')?.value;
     this.userRequest.surname = this.addAdminForm.get('surname')?.value;
