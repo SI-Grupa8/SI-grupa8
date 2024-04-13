@@ -73,6 +73,12 @@ namespace API.Controllers
 		{
 			return Ok(await _userService.GetAdminsWihotuCompany());
 		}
+
+		[HttpPut("change-email")]
+        public async Task<ActionResult> ChangeEmail(UserDto request)
+        {
+            return Ok(await _userService.ChangeEmail(request));
+        }
     }
 }
 

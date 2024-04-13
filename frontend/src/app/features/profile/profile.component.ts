@@ -11,6 +11,8 @@ import { TwoFaRequest } from '../../core/models/two-fa-request';
 import { TwoFaResponse } from '../../core/models/two-fa-response';
 import { EnableTwofaComponent } from './enable-twofa/enable-twofa.component';
 import { UserService } from '../../core/services/http/user.service';
+import { UserRequest } from '../../core/models/user-request';
+import { ChangeEmailComponent } from './change-email/change-email.component';
 
 @Component({
   selector: 'app-profile',
@@ -80,6 +82,26 @@ ngOnInit(): void{
     dialogRef.componentInstance.dialogClosed.subscribe((twoFaEnabled: boolean) => {
       this.twoFaEnabled = twoFaEnabled;
     });
+  }
+
+  editDialog(user: UserRequest): void {
+    const dialogRef = this.dialog.open(ChangeEmailComponent, {
+      disableClose: true ,
+      data: { user: user }
+      // scrollStrategy: new NoopScrollStrategy()
+    });
+    console.log(user)
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+     dialogRef.componentInstance.userEdited.subscribe(() => {
+      console.log("evo update")
+       // Refresh after user is edited
+       this.userService.getUser().subscribe((userData) => {
+        this.userData = userData;
+      });
+     });
+
   }
 
 }

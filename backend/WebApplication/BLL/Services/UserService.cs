@@ -432,6 +432,24 @@ namespace BLL.Services
             return _mapper.Map<List<UserDto>>(users);
 
         }
+
+        public async Task<UserDto> ChangeEmail(UserDto userDto)
+        {
+                var mappedUser = _mapper.Map<User>(userDto);
+
+                var user = await _userRepository.GetById(userDto.UserID);
+
+                mappedUser.PasswordHash = user!.PasswordHash;
+                mappedUser.PasswordSalt = user.PasswordSalt;
+
+                _userRepository.DetachEntity(user);
+                mappedUser.Role = null;
+                //user = mappedUser;
+                _userRepository.Update(mappedUser);
+                await _userRepository.SaveChangesAsync();
+
+                return userDto;
+        }
     }
 }
 
