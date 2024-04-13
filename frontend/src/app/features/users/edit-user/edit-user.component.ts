@@ -27,7 +27,7 @@ export class EditUserComponent {
       name: [data.user?.name || ' '],
       surname: [data.user?.surname || ''],
       email: [data.user?.email || ''],
-      password: [data.user?.password || '', [Validators.required, Validators.minLength(8)]],
+      password: [data.user?.password || '', [Validators.minLength(8)]],
       role: [this.getRoleName(data.user?.roleID) || '']
     });
     this.userRequest = data.user

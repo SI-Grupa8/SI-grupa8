@@ -9,10 +9,7 @@
         <input formControlName="email"  name="usermail"type="text" placeholder="E-mail or phone number" >
         <input formControlName="password"  name="password"type="text" placeholder="Password" >
         @if (passControl?.dirty || passControl?.touched) {
-            @if (passControl?.hasError('required')) {
-                <span class="error">Password is required</span>
-            }
-            @else if (passControl?.hasError('minlength')) {
+            @if (passControl?.hasError('minlength')) {
                 <span class="error">Password has to be atleast 8 chars</span>
             }
         }  
