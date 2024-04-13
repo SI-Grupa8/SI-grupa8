@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserRequest } from '../../models/user-request';
+import { ChangePasswordRequest } from '../../models/change-password-request';
 
 @Injectable({
   providedIn: 'root'
@@ -67,5 +68,14 @@ return this.http.get<any>(`${this.apiUrl}/User/get-current-user`, {headers});
       'Authorization': `Bearer ${token}`
     });
     return this.http.put<any>(`${this.apiUrl}/User/change-email`, request, { headers });
+  }
+
+  changePassword(request: ChangePasswordRequest): Observable<any>{
+    console.log(request)
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.put<any>(`${this.apiUrl}/User/change-password`, request, { headers });
   }
 }

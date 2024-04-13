@@ -79,6 +79,13 @@ namespace API.Controllers
         {
             return Ok(await _userService.ChangeEmail(request));
         }
+
+        [HttpPut("change-password")]
+        [Authorize]
+        public async Task<ActionResult> ChangePassword(ChangePasswordDto request)
+        {
+            return Ok(await _userService.ChangePassword(request));
+        }
     }
 }
 

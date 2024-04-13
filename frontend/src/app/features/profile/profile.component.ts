@@ -13,6 +13,7 @@ import { EnableTwofaComponent } from './enable-twofa/enable-twofa.component';
 import { UserService } from '../../core/services/http/user.service';
 import { UserRequest } from '../../core/models/user-request';
 import { ChangeEmailComponent } from './change-email/change-email.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 @Component({
   selector: 'app-profile',
@@ -84,7 +85,7 @@ ngOnInit(): void{
     });
   }
 
-  editDialog(user: UserRequest): void {
+  editEmailDialog(user: UserRequest): void {
     const dialogRef = this.dialog.open(ChangeEmailComponent, {
       disableClose: true ,
       data: { user: user }
@@ -101,6 +102,26 @@ ngOnInit(): void{
         this.userData = userData;
       });
      });
+
+  }
+
+  editPasswordDialog(user: UserRequest): void {
+    const dialogRef = this.dialog.open(ChangePasswordComponent, {
+      disableClose: true ,
+      data: { user: user }
+      // scrollStrategy: new NoopScrollStrategy()
+    });
+    console.log(user)
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+    //  dialogRef.componentInstance.userEdited.subscribe(() => {
+    //   console.log("evo update")
+    //    // Refresh after user is edited
+    //    this.userService.getUser().subscribe((userData) => {
+    //     this.userData = userData;
+    //   });
+    //  });
 
   }
 

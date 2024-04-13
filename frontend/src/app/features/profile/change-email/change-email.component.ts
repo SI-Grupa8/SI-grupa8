@@ -48,6 +48,7 @@ export class ChangeEmailComponent {
     // const selectedRole = this.editUserForm.get('role')?.value;
     // console.log("Iz forme je:"+ selectedRole);
 
+    
     this.userService.changeEmail(this.userRequest).subscribe(() => {
       this.userEdited.emit();
       console.log("Edited:");
