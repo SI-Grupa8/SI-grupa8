@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {MatTabsModule} from '@angular/material/tabs';
 
@@ -11,8 +11,16 @@ import {MatTabsModule} from '@angular/material/tabs';
   styleUrl: './map-filter.component.scss'
 })
 export class MapFilterComponent {
+
+  @Output() closedFilter = new EventEmitter<void>();
+  
+  devices: any[] = [{}, {}, {}, {}, {}];
   //selectedView: string = '';
   selectedView: string = 'view1';
 
   switchView() {}
+
+  closeFilterComponent(): void {
+    this.closedFilter.emit();
+  }
 }

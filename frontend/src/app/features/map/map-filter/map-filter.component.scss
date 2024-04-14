@@ -90,7 +90,7 @@
                 width: 50px;
                 height: 50px;
                 border-radius: 50%;
-                border: 1px solid rgb(96, 126, 106);
+                border: 1px solid rgb(179, 195, 184);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -102,15 +102,59 @@
             }
             .card-data {
                 margin-left: 20px;
+                width: 160px;
+                //background-color: red;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
                 .device-name {
+                    font-weight: bolder;
+                    color: rgb(34, 95, 88);
+                }
+                .device-src {
+                    font-size: 13px;
+                }
+            }
+            .card-end {
+                display: flex;
+                flex-direction: column;
+                margin-left: 10px;
+                align-items: end;
+                gap: 5px;
+                svg {
+                    width: 18px;
+                    height: 18px;
+                    fill: rgb(255, 255, 255);
+                    cursor: pointer;
                     
                 }
-                .device-src {}
+                .trip-button {
+                    display: flex;
+                    width: 75px;
+                    border-radius: 3px;
+                    height: 23px;
+                    align-items: center;
+                    justify-content: space-evenly;
+                    border: none;
+                    background-color: #f0f0f0;
+                    cursor: pointer;
+                    
+                    P {
+                        font-size: 11px;
+                        color: rgb(88, 87, 87);
+                        font-weight: bolder;
+                    }
+                    svg {
+                        width: 13px;
+                        height: 13px;
+                        fill: rgb(77, 76, 76);
+                    }
+                }
             }
         }
         .device-filter-card:hover {
             cursor: pointer;
-            background-color: rgb(236, 252, 236);
+            background-color: rgb(242, 251, 242);
         } 
     }
     .devices-filter-list:nth-child(1){

@@ -21,6 +21,12 @@ import {MatChipsModule} from '@angular/material/chips';
 export class MapComponent implements OnInit{
   devices: any[] = [];
   markerOptions: any = {}; 
+
+  showFilterComponent: boolean = true;
+
+  toggleMapFilter() {
+    this.showFilterComponent = !this.showFilterComponent;
+  }
   
   mapOptions: any = {
     mapTypeId: 'roadmap', // or 'satellite', 'hybrid', 'terrain'

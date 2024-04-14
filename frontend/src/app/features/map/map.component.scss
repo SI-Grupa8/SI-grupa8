@@ -52,7 +52,23 @@
         background-color: red;
         //margin-left: 45px;
         //margin-top: 40px; /* Add spacing between header and map */
-        
+        .show-filters {
+            display: flex;
+            width: 40px;
+            height: 40px;
+            position: fixed;
+            margin-left: 10px;
+            margin-top: 10px;
+            z-index: 100;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            svg {
+                width: 25px;
+                height: 25px;
+                fill: rgb(92, 91, 91);
+            }
+        }
     }
 
     
