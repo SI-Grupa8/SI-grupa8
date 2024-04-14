@@ -8,7 +8,7 @@
     <div class="company-lower-header">
         <div class="company-basic-info">
             <div class="img-container">
-                <img src="https://image.similarpng.com/very-thumbnail/2020/07/Linkedin-logo-on-transparent-Background-PNG-.png" alt="">
+                <img src="../../../../assets/images/office-building.png" alt="">
             </div>
             <div class="company-basic-info-text">
                 <p class="company-title">{{company.companyName}}</p>
@@ -33,7 +33,7 @@
         <div class="searchbar"></div>
     <button type="submit" id="add-company" (click)="openDialogAdmin()" class="add-button" style="margin-bottom: 25px;" >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
-        <p>Add User</p>
+        <p>ADD USER</p>
     </button>
     </div>
     <table class="members-table">
@@ -49,9 +49,9 @@
         <tbody>
             @for (member of members; track $index) {
             <tr >
-                <td>1</td>
+                <td>{{member.userID}}</td>
                 <td>
-                    <div class="member-img"></div>
+                    <!-- <div class="member-img"></div> -->
                     <p class="member-name">{{ member | fullName }}</p>                
                 </td>
                 <td>

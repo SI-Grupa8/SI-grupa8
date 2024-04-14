@@ -38,7 +38,7 @@ export class CompaniesComponent {
 
   ngOnInit(): void {
     this.getAll();
-    this.getAllAdminsWithoutCompany();
+    //this.getAllAdminsWithoutCompany();
   }
   openDialog(): void {
     const dialogRef = this.dialog.open(AddNewCompanyComponent, {
@@ -80,12 +80,12 @@ export class CompaniesComponent {
       this.getAll(); 
     });
   }
-  getAllAdminsWithoutCompany() : void{
-    this.userService.getAllAdminsWithoutCompany().subscribe(users => {
-      this.users= users;
-      console.log("hhh"+this.users);
-    })
-  }
+  // getAllAdminsWithoutCompany() : void{
+  //   this.userService.getAllAdminsWithoutCompany().subscribe(users => {
+  //     this.users= users;
+  //     console.log("hhh"+this.users);
+  //   })
+  // }
   openDialogEdit(company: any):void{
     const dialogRef = this.dialog.open(EditCompanyComponent, {
       disableClose: true ,
