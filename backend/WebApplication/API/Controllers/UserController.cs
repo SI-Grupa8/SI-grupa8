@@ -73,6 +73,13 @@ namespace API.Controllers
 		{
 			return Ok(await _userService.GetAdminsWihotuCompany());
 		}
+
+        [HttpGet("get-dispatchers-new-device/{companyId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<UserDto>>> GetDispacthersForNewDevice(int companyId)
+		{
+			return await _userService.GetDispatchersForNewDevice(companyId);
+		}
     }
 }
 
