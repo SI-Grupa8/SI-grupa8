@@ -225,7 +225,7 @@ namespace BLL.Services
             mappedUser.PasswordHash = user!.PasswordHash;
             mappedUser.PasswordSalt = user.PasswordSalt;
 
-            //_userRepository.DetachEntity(user);
+            _userRepository.DetachEntity(user);
             mappedUser.Role = null;
             //user = mappedUser;
             _userRepository.Update(mappedUser);
