@@ -32,7 +32,9 @@
         display: flex;
         align-items: center;
         p {
-            font-size: 15px;
+            font-size: 14px;
+            font-weight: bolder;
+            color: rgb(101, 101, 101);
             margin-left: 60px;
             margin-right: 30px;
         }
@@ -60,6 +62,9 @@
             margin-left: 10px;
             margin-top: 10px;
             z-index: 100;
+            background-color: #e6f9ec;
+            border-radius: 5px;
+            border: 1px solid rgb(180, 180, 180);
             cursor: pointer;
             align-items: center;
             justify-content: center;

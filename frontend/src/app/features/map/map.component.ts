@@ -20,14 +20,16 @@ import {MatChipsModule} from '@angular/material/chips';
 
 export class MapComponent implements OnInit{
   devices: any[] = [];
-  markerOptions: any = {}; 
+  //markerOptions: any = {}; 
 
   showFilterComponent: boolean = true;
 
   toggleMapFilter() {
     this.showFilterComponent = !this.showFilterComponent;
   }
-  
+  markerOptions: any = {
+    // Default marker options here
+  };
   mapOptions: any = {
     mapTypeId: 'roadmap', // or 'satellite', 'hybrid', 'terrain'
     fullscreenControl: false, // Hide the fullscreen control
@@ -52,6 +54,7 @@ export class MapComponent implements OnInit{
         this.devices = devices; }); 
       })
       this.markerOptions = { 
+        
       icon: { 
         url: 'assets/images/location-pin-48.png', 
         scaledSize: { width: 32, height: 32 } } 
