@@ -7,18 +7,27 @@ import { DeviceFilterComponent } from './device-filter/device-filter.component';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../core/services/http/user.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { MapFilterComponent } from "./map-filter/map-filter.component";
+import {MatChipsModule} from '@angular/material/chips';
 
 @Component({
-  selector: 'app-map',
-  standalone: true,
-  imports: [ GoogleMapsModule, CommonModule, DeviceFilterComponent, FormsModule],
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'] 
+    selector: 'app-map',
+    standalone: true,
+    templateUrl: './map.component.html',
+    styleUrls: ['./map.component.scss'],
+    imports: [GoogleMapsModule, CommonModule, DeviceFilterComponent, FormsModule, MapFilterComponent,MatChipsModule]
 })
 
 export class MapComponent implements OnInit{
   devices: any[] = [];
   markerOptions: any = {}; 
+  
+  mapOptions: any = {
+    mapTypeId: 'roadmap', // or 'satellite', 'hybrid', 'terrain'
+    fullscreenControl: false, // Hide the fullscreen control
+    mapTypeControl: false // Hide the map type control (mode chooser)
+  };
+
   iframeSrc!: SafeResourceUrl | undefined;
   //companyId: any;
   selectedDeviceTypeId : number[] = [];
@@ -41,6 +50,7 @@ export class MapComponent implements OnInit{
         url: 'assets/images/location-pin-48.png', 
         scaledSize: { width: 32, height: 32 } } 
       }; 
+      
     }
     
   parseCoordinates(device: any): { lat: number, lng: number } {

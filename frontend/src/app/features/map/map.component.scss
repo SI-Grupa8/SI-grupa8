@@ -9,7 +9,8 @@
     flex-direction: column; /* Change to column layout */
 
     .home-header {
-        display: flex;
+        --background-color: red;
+        display: none;
         width: 100%;
         margin-top: 30px;
         justify-content: space-between;
@@ -22,15 +23,19 @@
             font-weight: 600;
         }
     }
-
+    .map-nav {
+        width: 100%;
+        height: 40px;
+        background-color: blue;
+    }
     .mapa {
-        margin-left: 45px;
-        margin-top: 40px; /* Add spacing between header and map */
+        width: 100%;
+        height: calc(100vh - 100px);
+        background-color: red;
+        //margin-left: 45px;
+        //margin-top: 40px; /* Add spacing between header and map */
+        
     }
 
-    .filter{
-        display: flex;
-        margin-top: 30px;
-        margin-left: 55px;
-    }
+    
 }
