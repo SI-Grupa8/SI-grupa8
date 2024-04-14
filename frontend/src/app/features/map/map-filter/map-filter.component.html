@@ -3,5 +3,32 @@
         <option value="view1" selected>Devices</option>
         <option value="view2" >Vehicles</option>
     </select>
-    <button class="esc"></button>
+    <button class="esc">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+
+    </button>
 </div>
+<div class="filter-subheader">
+    <form action="">
+        <input type="search" class="search" placeholder="Search devices" />
+      </form>
+</div>
+<mat-tab-group animationDuration="0">
+    <mat-tab label="ALL">
+        <div class="devices-filter-list">
+            <div class="device-filter-card">
+                <div class="img-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M16 64C16 28.7 44.7 0 80 0H304c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H80c-35.3 0-64-28.7-64-64V64zM224 448a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zM304 64H80V384H304V64z"/></svg>
+
+                </div>
+                <div class="card-data">
+                    <p class="device-name">Samsung A33</p>
+                    <p class="device-src">11as3d</p>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="ACTIVE"> Content 2 </mat-tab>
+    <mat-tab label="INACTIVE"> Content 3 </mat-tab>
+  </mat-tab-group>
+

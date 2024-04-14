@@ -1,7 +1,15 @@
 <!--<div class="home-header">
     <p class="greeting">Device Location Overview</p>
 </div>-->
-<div class="map-nav"></div>
+<div class="map-nav">
+    <p>SHOWING: </p>
+    <mat-chip-listbox aria-label="Fish selection" multiple>
+        <mat-chip-option  class="mat-chip" selected>All devices (40)</mat-chip-option>
+        <mat-chip-option class="mat-chip">Mobile&nbsp;&nbsp;(10)</mat-chip-option>
+        <mat-chip-option class="mat-chip" >GPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(10)</mat-chip-option>
+        <mat-chip-option class="mat-chip">Tracker&nbsp;&nbsp;(20)</mat-chip-option>
+      </mat-chip-listbox>
+</div>
 <div class="mapa">
     <app-map-filter></app-map-filter>
     <google-map
