@@ -10,7 +10,7 @@ import { UserRequest } from '../../models/user-request';
 })
 export class CompanyService {
   private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
-  //private apiUrl = 'https://localhost:7126/api';
+ //private apiUrl = 'https://localhost:7126/api';
 
   constructor(private http: HttpClient) { }
 
@@ -57,5 +57,12 @@ export class CompanyService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.delete(`${this.apiUrl}/Company/remove-company/${id}`,{headers});
+  }
+  getStatistics(id: number): Observable<any>{
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any>(`${this.apiUrl}/Company/get-statistics/${id}`,{headers});
   }
 }
