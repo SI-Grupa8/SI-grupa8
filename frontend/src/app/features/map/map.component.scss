@@ -9,7 +9,8 @@
     flex-direction: column; /* Change to column layout */
 
     .home-header {
-        display: flex;
+        --background-color: red;
+        display: none;
         width: 100%;
         margin-top: 30px;
         justify-content: space-between;
@@ -22,15 +23,58 @@
             font-weight: 600;
         }
     }
-
-    .mapa {
-        margin-left: 45px;
-        margin-top: 40px; /* Add spacing between header and map */
-    }
-
-    .filter{
+    .map-nav {
+        width: 100%;
+        height: 50px;
+        background-color: rgb(255, 255, 255);
+        border-bottom: 1px solid rgb(212, 212, 212);
+        border-top: 1px solid rgb(212, 212, 212);
         display: flex;
-        margin-top: 30px;
-        margin-left: 55px;
+        align-items: center;
+        p {
+            font-size: 14px;
+            font-weight: bolder;
+            color: rgb(101, 101, 101);
+            margin-left: 60px;
+            margin-right: 30px;
+        }
+        /*
+        .mat-chip  {
+            width: 150px;
+            //background-color: rgb(130, 245, 187);
+            
+            
+        }*/
+        
+        
     }
+    .mapa {
+        width: 100%;
+        height: calc(100vh - 110px);
+        background-color: red;
+        //margin-left: 45px;
+        //margin-top: 40px; /* Add spacing between header and map */
+        .show-filters {
+            display: flex;
+            width: 40px;
+            height: 40px;
+            position: fixed;
+            margin-left: 10px;
+            margin-top: 10px;
+            z-index: 100;
+            background-color: #e6f9ec;
+            border-radius: 5px;
+            border: 1px solid rgb(180, 180, 180);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            svg {
+                width: 25px;
+                height: 25px;
+                fill: rgb(92, 91, 91);
+            }
+        }
+    }
+
+    
 }

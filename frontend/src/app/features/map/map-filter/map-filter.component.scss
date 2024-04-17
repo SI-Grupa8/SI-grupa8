@@ -1,0 +1,163 @@
+:host {
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    z-index: 200;
+    position: fixed;
+    .filter-header {
+        width: 100%;
+        height: 70px;
+        background-color: rgb(255, 255, 255);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgb(203, 200, 200);
+        //justify-content: center;
+        select {
+            margin-left: 20px;
+            height: 40px;
+            width: 200px;
+            //font-weight: bold;
+            font-size: 18px;
+            padding-left: 10px;
+            //padding-right: 10px;
+            background-color: rgb(243, 244, 243);
+            border: none;
+            color: rgb(133, 132, 132);
+            option {
+                //font-weight: bold;
+                font-size: 18px;
+            }
+        }
+        .esc {
+            margin-right: 20px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            cursor: pointer;
+            justify-content: end;
+            background: none;
+            border: none;
+            svg {
+                width: 16px;
+                height: 16px;
+                fill: rgb(178, 177, 177);
+            }
+        }
+    }
+    .filter-subheader {
+        display: flex;
+        width: 100%;
+        height: 70px;
+        //background-color: aquamarine;
+        border-bottom: 1px solid rgb(199, 198, 198);
+        form {
+            //padding: 20px;
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            input[type="search"]{
+              //background: darken(white,15%);
+              border:1px solid lightgray;
+              background-color: #fffbfb;
+              border-radius: 3px;
+              line-height: 35px;
+              width: 310px;
+              padding: 0 10px;
+              outline: none;
+              margin-left: 20px;
+            }
+            input[type="search"]::-webkit-input-placeholder { color: #636363; }
+          }
+    }
+    .devices-filter-list {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        .device-filter-card {
+            width: 100%;
+            height: 70px;
+            background-color: white;
+            border-bottom: 1px solid rgb(207, 206, 206);
+            display: flex;
+            align-items: center;
+            .img-container {
+                margin-left: 20px;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                border: 1px solid rgb(179, 195, 184);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                svg {
+                    width: 30px;
+                    height: 30px;
+                    fill: gray;
+                }
+            }
+            .card-data {
+                margin-left: 20px;
+                width: 160px;
+                //background-color: red;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                .device-name {
+                    font-weight: bolder;
+                    color: rgb(34, 95, 88);
+                }
+                .device-src {
+                    font-size: 13px;
+                }
+            }
+            .card-end {
+                display: flex;
+                flex-direction: column;
+                margin-left: 10px;
+                align-items: end;
+                gap: 5px;
+                svg {
+                    width: 18px;
+                    height: 18px;
+                    fill: rgb(255, 255, 255);
+                    cursor: pointer;
+                    
+                }
+                .trip-button {
+                    display: flex;
+                    width: 75px;
+                    border-radius: 3px;
+                    height: 23px;
+                    align-items: center;
+                    justify-content: space-evenly;
+                    border: none;
+                    background-color: #f0f0f0;
+                    cursor: pointer;
+                    
+                    P {
+                        font-size: 11px;
+                        color: rgb(88, 87, 87);
+                        font-weight: bolder;
+                    }
+                    svg {
+                        width: 13px;
+                        height: 13px;
+                        fill: rgb(77, 76, 76);
+                    }
+                }
+            }
+        }
+        .device-filter-card:hover {
+            cursor: pointer;
+            background-color: rgb(242, 251, 242);
+        } 
+    }
+    .devices-filter-list:nth-child(1){
+        border-top: 1px solid rgb(207, 206, 206);
+    }
+}
