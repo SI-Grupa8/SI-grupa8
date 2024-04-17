@@ -10,6 +10,7 @@ using DAL.Entities;
 using DAL.Interfaces;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -443,12 +444,51 @@ namespace BLL.Services
 
         }
 
+
+        public async Task<UserDto> ChangeEmail(UserDto userDto)
+        {
+                var mappedUser = _mapper.Map<User>(userDto);
+
+                var user = await _userRepository.GetById(userDto.UserID);
+
+                mappedUser.PasswordHash = user!.PasswordHash;
+                mappedUser.PasswordSalt = user.PasswordSalt;
+
+                _userRepository.DetachEntity(user);
+                mappedUser.Role = null;
+                //user = mappedUser;
+                _userRepository.Update(mappedUser);
+                await _userRepository.SaveChangesAsync();
+
+                return userDto;
+        }
+
+        public async Task<UserDto> ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            var user = await _userRepository.GetById(changePasswordDto.UserId);
+
+            if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.CurrentPassword, Encoding.UTF8.GetString(user.PasswordHash)))
+            {
+                throw new Exception("Wrong password.");
+            }
+
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
+
+            // Update the user's password hash with the new one
+            user.PasswordHash = Encoding.UTF8.GetBytes(passwordHash);
+
+            // Save the changes to the database
+            await _userRepository.SaveChangesAsync();
+
+            return _mapper.Map<UserDto>(user);
+
         public async Task<List<UserDto>> GetDispatchersForNewDevice(int companyId)
         {
             var users = await _userRepository.GetDispatchersForNewDevice(companyId);
 
             return _mapper.Map<List<UserDto>>(users);
           
+
         }
     }
 }

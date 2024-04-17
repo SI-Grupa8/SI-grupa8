@@ -95,7 +95,7 @@ export class LoginComponent {
             console.log(this.authResponse.email)
             console.log(this.authResponse.token);
             this.authService.setUserRole(response.role);
-            this.router.navigate(['profile']);
+            this.router.navigate(['']);
             this.authService.getCurrentUser().subscribe((res  : any)=> {
               this.authService.user.next(res);
             })
@@ -134,7 +134,7 @@ export class LoginComponent {
         console.log(expirationDate);
         document.cookie = "refresh="+this.authResponse.refresh+"; expires="+expirationDate;
 
-        this.router.navigate(['profile']);
+        this.router.navigate(['']);
             
       }
     })

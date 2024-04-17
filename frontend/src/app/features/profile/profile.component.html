@@ -14,10 +14,10 @@
         <div class="grid-container">
             <div class="grid-item">
                 <p class="section-item-title">Email address</p>
-                <p class="section-item-subtitle">{{twoFaRequest.email}}</p>
+                <p class="section-item-subtitle">{{userData.email}}</p>
             </div>
             <div class="grid-item">
-                <button class="change-button">CHANGE</button>
+                <button class="change-button" (click)="editEmailDialog(userData)" type="submit">CHANGE</button>
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
                 <p class="section-item-subtitle">Password must be at least 8 characters long</p>
             </div>
             <div class="grid-item">
-                <button class="change-button">CHANGE</button>
+                <button class="change-button" (click)="editPasswordDialog(userData)" type="submit">CHANGE</button>
             </div>
         </div>
     </div>
