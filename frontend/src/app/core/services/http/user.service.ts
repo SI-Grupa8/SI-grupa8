@@ -63,21 +63,22 @@ return this.http.get<any>(`${this.apiUrl}/User/get-current-user`, {headers});
 
 //FIX THIS - PRIORITYYYYYYY
   changeEmail(request: UserRequest): Observable<any>{
-    console.log(request)
-
-    
-  getDispatchersForNewDevice(companyId : number ) : Observable<any[]> {
-
-    
+    //console.log(request)
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
-    
     return this.http.put<any>(`${this.apiUrl}/User/change-email`, request, { headers });
   }
 
+  getDispatchersForNewDevice(companyId : number ) : Observable<any[]> {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any[]>(`${this.apiUrl}/User/get-dispatchers-new-device/${companyId}`, {headers});
+  }
+  
   changePassword(request: ChangePasswordRequest): Observable<any>{
     console.log(request)
     const token = localStorage.getItem("token");
@@ -85,10 +86,5 @@ return this.http.get<any>(`${this.apiUrl}/User/get-current-user`, {headers});
       'Authorization': `Bearer ${token}`
     });
     return this.http.put<any>(`${this.apiUrl}/User/change-password`, request, { headers });
-
-    
-    return this.http.get<any[]>(`${this.apiUrl}/User/get-dispatchers-new-device/${companyId}`, {headers});
-
-    
   }
 }
