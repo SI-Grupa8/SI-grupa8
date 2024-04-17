@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { CompanyService } from '../../core/services/http/company.service';
 import { AuthService } from '../../core/services/http/auth.service';
+import { DeviceService } from '../../core/services/http/device.service';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -27,20 +28,26 @@ export class HomeComponent implements OnInit {
   yAxisVBC = true;
   showYAxisLabelVBC = true;
   yAxisLabelVBC = "Percentage (%)";
-companyId: number=0;
-barChartcustomColors = [
-  { name: "admins", value: '#c8e6c9' }, 
-  { name: "dispatcher", value: '#81c784' }, 
-  { name: "fleetManagers", value: '#4caf50' }, 
-  { name: "users", value: '#aed581' }  
-];
+  companyId: number=0;
+  barChartcustomColors = [
+    { name: "admins", value: '#c8e6c9' }, 
+    { name: "dispatcher", value: '#81c784' }, 
+    { name: "fleetManagers", value: '#4caf50' }, 
+    { name: "users", value: '#aed581' }  
+  ];
+  usersCount: number = 0;
+  devicesCount: number = 0;
+  activeRoutesCount: number = 0;
+  alertsCount: number = 0;
 
-  constructor(private http: HttpClient, private companyService: CompanyService, private authService: AuthService) {}
+  constructor(private http: HttpClient, private companyService: CompanyService, private authService: AuthService, private deviceService: DeviceService) {}
 
   ngOnInit() {
     this.authService.getCurrentUser().subscribe((res : any) => {
       this.companyId = res.companyID;
       this.getStatistics();
+      this.getCompanyUsersCount();
+      this.getCompanyDevicesCount();
     });
     
   }
@@ -57,8 +64,20 @@ barChartcustomColors = [
   
     });
   }
+
   dataLabelFormatterVBC(tooltipText: any) {
     return tooltipText + "%";
   }
 
+  getCompanyUsersCount(): void {
+    this.companyService.getCompanyUsers(this.companyId).subscribe((users: any[]) => {
+      this.usersCount = users.length;
+    });
+  }
+
+  getCompanyDevicesCount(): void {
+    this.deviceService.getCompanyDevices(this.companyId).subscribe((devices: any[]) => {
+      this.devicesCount = devices.length;
+    });
+  }
 }
