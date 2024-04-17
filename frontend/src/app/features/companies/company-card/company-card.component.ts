@@ -27,6 +27,7 @@ export class CompanyCardComponent implements OnInit {
   ngOnInit(): void {
     
     this.companyId = this.company?.companyID;
+    console.log(this.company.users?.length)
     //console.log(this.companyId)
   }
 
