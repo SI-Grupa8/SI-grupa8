@@ -263,7 +263,7 @@ namespace BLL.Services
             string fullName = $"{Uri.EscapeDataString(user.Name)}+{Uri.EscapeDataString(user.Surname)}";
             string qrCodeContent = $"otpauth://totp/WebApplication:{fullName}?secret={manualEntryKey}&issuer=WebApplicationApp";
 
-            var qrCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl={Uri.EscapeDataString(qrCodeContent)}";
+            var qrCodeImageUrl = $"https://qrickit.com/api/qr.php?d={Uri.EscapeDataString(qrCodeContent)}&qrsize=200&t=p";
 
             return qrCodeImageUrl;
         }
