@@ -8,11 +8,19 @@
         <input formControlName="surname"  name="lastname" type="text" placeholder="Last name" >
         <input formControlName="email"  name="usermail"type="text" placeholder="E-mail or phone number" >
         <input formControlName="password"  name="pass" type="password" placeholder="Password">
+        @if (passControl?.dirty || passControl?.touched) {
+            @if (passControl?.hasError('required')) {
+                <span class="error">Password is required</span>
+            }
+            @else if (passControl?.hasError('minlength')) {
+                <span class="error">Password has to be atleast 8 chars</span>
+            }
+        }  
         <div class="dropdown">
             <select formControlName="role" name="role" id="role">
-                <option value="4">Dispatcher</option>
-                <option value="3">Fleet Manager</option>
-                <option value="0">User</option>
+                <option value="3">Dispatcher</option>
+                <option value="4">Fleet Manager</option>
+                <option value="5">User</option>
             </select>
         </div>
         <button  type="submit" >ADD USER</button>

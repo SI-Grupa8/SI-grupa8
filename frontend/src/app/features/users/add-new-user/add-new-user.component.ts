@@ -25,15 +25,25 @@ export class AddNewUserComponent {
       surname: [''],
       role:[''],
       email: [''],
-      password: ['']
+      password: ['', [Validators.required, Validators.minLength(8)]]
     });
     
+  }
+
+  get passControl() {
+    return this.addUserForm.get('password');
   }
 
   closeDialog(): void {
     this.dialogRef.close();
   }
   add(event: Event) {
+    if (this.addUserForm.invalid) {
+      Object.values(this.addUserForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
+      return;
+    }
     this.userRequest.email = this.addUserForm.get('email')?.value;
     this.userRequest.name = this.addUserForm.get('name')?.value;
     this.userRequest.surname = this.addUserForm.get('surname')?.value;

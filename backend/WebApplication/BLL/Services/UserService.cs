@@ -10,6 +10,7 @@ using DAL.Entities;
 using DAL.Interfaces;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -56,7 +57,7 @@ namespace BLL.Services
                 throw new Exception("Invalid 2FA code.");
             }
             user.TwoFactorEnabled = true;
-            _userRepository.Update(user);
+            //_userRepository.Update(user);
             await _userRepository.SaveChangesAsync();
             return _mapper.Map<UserDto>(user);
         }
@@ -67,60 +68,11 @@ namespace BLL.Services
             if (user == null) throw new Exception("User not found");
             user.TwoFactorEnabled = false;
             user.TwoFactorKey = string.Empty;
-            _userRepository.Update(user);
+            //_userRepository.Update(user);
             await _userRepository.SaveChangesAsync();
             return _mapper.Map<UserDto>(user);
         }
-        /*
-        public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogIn(UserLogIn userRequest)
-        {
-            var user = new User();
-            if (!string.IsNullOrEmpty(userRequest.Email))
-            {
-                user = await _userRepository.FindByEmail(userRequest.Email);
-            }
-            else if (!string.IsNullOrEmpty(userRequest.PhoneNumber))
-            {
-                user = await _userRepository.FindByPhoneNumber(userRequest.PhoneNumber);
-            }
-
-            if (!BCrypt.Net.BCrypt.Verify(userRequest.Password, Encoding.UTF8.GetString(user.PasswordHash)))
-            {
-                throw new Exception("Wrong password.");
-            }
-            var refreshToken = GenerateRefreshToken();//edis
-            var cookieOptions = SetRefreshToken(refreshToken, user);//edis
-            if (user.TwoFactorEnabled == false)
-            {
-                string token = CreateToken(user);
-                //var refreshToken = GenerateRefreshToken();
-                //var cookieOptions = SetRefreshToken(refreshToken, user);
-                RefreshTokenDto refresh = new RefreshTokenDto()
-                {
-                    Token = refreshToken.Token,
-                    Created = refreshToken.Created,
-                    Expires = refreshToken.Expires,
-                };
-                await RefreshUserToken(user.UserID, refresh);
-
-                return (cookieOptions, refreshToken.Token,
-                    new
-                    {
-                        token = token,
-                        twoFaEnabled = user.TwoFactorEnabled,
-                        email = user.Email,
-                        refresh = refresh.Token,
-                        expires = refresh.Expires.ToString()
-                    });
-            }
-            return (cookieOptions, null,
-                new
-                {
-                    twoFaEnabled = user.TwoFactorEnabled,
-                    email = user.Email
-                });
-        }
-        */
+       
         public async Task<(CookieOptions? cookiesOption, string? refreshToken, object data)> UserLogIn(UserLogIn userRequest)
         {
             var user = new User();
@@ -275,7 +227,8 @@ namespace BLL.Services
             mappedUser.PasswordSalt = user.PasswordSalt;
 
             _userRepository.DetachEntity(user);
-
+            mappedUser.Role = null;
+            //user = mappedUser;
             _userRepository.Update(mappedUser);
             await _userRepository.SaveChangesAsync();
 
@@ -315,17 +268,6 @@ namespace BLL.Services
 
             return qrCodeImageUrl;
         }
-        /*
-        public string GenerateQRCodeImageUrl(User user, SetupCode setupCode)
-        {
-            string manualEntryKey = setupCode.ManualEntryKey;
-            string fullName = Uri.EscapeDataString(user.Name + user.Surname);
-            string qrCodeContent = $"otpauth://totp/WebApplication:{fullName}?secret={manualEntryKey}&issuer=WebApplicationApp";
-
-            var qrCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl={qrCodeContent}";
-
-            return qrCodeImageUrl;
-        }*/
 
         private byte[] ConvertToBytes(string secret, bool secretIsBase32) =>
                secretIsBase32 ? Base32Encoding.ToBytes(secret) : Encoding.UTF8.GetBytes(secret);
@@ -366,22 +308,6 @@ namespace BLL.Services
                 // Handle the case where the user with the specified ID does not exist
                 // This could be logging an error, throwing an exception, or any other appropriate action
             }
-            /*var oldUser = await _userRepository.GetById(userID);
-            User user = new User
-            {
-                Email = oldUser.Email,
-                PhoneNumber = oldUser.PhoneNumber,
-                PasswordHash = oldUser.PasswordHash,
-                PasswordSalt = oldUser.PasswordSalt,
-                RoleID = oldUser.RoleID,
-                RefreshToken = refreshTokenDto.RefreshToken,
-                TokenCreated = refreshTokenDto.TokenCreated.ToUniversalTime(),
-                //TokenExpires = refreshTokenDto.TokenExpires.ToUniversalTime()
-                TokenExpires = DateTime.Now.AddSeconds(20).ToUniversalTime()
-            };
-            _userRepository.Update(user);
-            await _userRepository.SaveChangesAsync();
-            var userDto = _mapper.Map<UserDto>(user);*/
         }
 
         private string CreateToken(User user)
@@ -506,6 +432,44 @@ namespace BLL.Services
 
             return _mapper.Map<List<UserDto>>(users);
 
+        }
+
+        public async Task<UserDto> ChangeEmail(UserDto userDto)
+        {
+                var mappedUser = _mapper.Map<User>(userDto);
+
+                var user = await _userRepository.GetById(userDto.UserID);
+
+                mappedUser.PasswordHash = user!.PasswordHash;
+                mappedUser.PasswordSalt = user.PasswordSalt;
+
+                _userRepository.DetachEntity(user);
+                mappedUser.Role = null;
+                //user = mappedUser;
+                _userRepository.Update(mappedUser);
+                await _userRepository.SaveChangesAsync();
+
+                return userDto;
+        }
+
+        public async Task<UserDto> ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            var user = await _userRepository.GetById(changePasswordDto.UserId);
+
+            if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.CurrentPassword, Encoding.UTF8.GetString(user.PasswordHash)))
+            {
+                throw new Exception("Wrong password.");
+            }
+
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
+
+            // Update the user's password hash with the new one
+            user.PasswordHash = Encoding.UTF8.GetBytes(passwordHash);
+
+            // Save the changes to the database
+            await _userRepository.SaveChangesAsync();
+
+            return _mapper.Map<UserDto>(user);
         }
     }
 }

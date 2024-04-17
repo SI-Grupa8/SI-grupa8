@@ -52,8 +52,17 @@ namespace BLL.Services
 
         public async Task RemoveCompany(int companyId)
         {
-            var company = await _companyRepository.GetById(companyId);
+            var company =  await _companyRepository.GetAllUsersForCompany(companyId);
+            var users = company.Users.ToList();
+            
+            users.ForEach(x =>
+            {
+                x.Company = null;
+            });
 
+            users.ForEach(x => x.CompanyID = null);
+
+            await _userRepository.SaveChangesAsync();
             _companyRepository.Remove(company!);
 
             await _companyRepository.SaveChangesAsync();
@@ -77,7 +86,6 @@ namespace BLL.Services
 
                 adminUser.CompanyID = returnedCompany.CompanyID;
                 adminUser.RoleID = 1;
-                //_userRepository.Update(adminUser);
 
                 await _userRepository.SaveChangesAsync();
             }

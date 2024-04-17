@@ -12,6 +12,7 @@ import { UserService } from '../../../core/services/http/user.service';
 import { EditUserComponent } from '../../users/edit-user/edit-user.component';
 import { DeleteUserComponent } from '../../users/delete-user/delete-user.component';
 import { FullNamePipe } from "../../../core/pipes/full-name.pipe";
+import { NoopScrollStrategy } from '@angular/cdk/overlay';
 
 @Component({
     selector: 'app-company-itempage',
@@ -24,7 +25,7 @@ export class CompanyItempageComponent implements OnInit {
 
   @Input() tabsArray: string[] = ['Overview', 'Members'];
   @Output() onTabChange = new EventEmitter<number>();
-  activatedTab: number = 0;
+  activatedTab: number = 1;
 
   setTab(index:number) {
     this.activatedTab = index;
@@ -47,9 +48,13 @@ ngOnInit(): void {
   }
   console.log("id:" +this.id);
   this.getCompany();
-  this.getCompanyUsers();
-  console.log("Company: " + this.company);
-  console.log("Members:" + this.members);
+
+  setTimeout(() => {
+    this.getCompanyUsers();
+    console.log("Company: ", this.company);
+    console.log("Members: ", this.members);
+  }, 200);
+  
   
 }
   getCompany(): void {
@@ -72,7 +77,8 @@ ngOnInit(): void {
   }
   openDialogAdmin(): void {
     const dialogRef = this.dialog.open(AddNewAdminComponent, {
-      data: {companyId: this.id}
+      data: {companyId: this.id},
+      scrollStrategy: new NoopScrollStrategy()
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -91,8 +97,10 @@ ngOnInit(): void {
     
     const dialogRef = this.dialog.open(EditUserComponent, {
       disableClose: true,
+      scrollStrategy: new NoopScrollStrategy(),
       data: {
         user: user
+
       }
     });
 
@@ -112,6 +120,7 @@ ngOnInit(): void {
     //const confirmDelete = window.confirm('Are you sure you want to delete this user?');
     const dialogRef = this.dialog.open(DeleteUserComponent, {
       disableClose: true,
+      scrollStrategy: new NoopScrollStrategy(),
       data: {
         userId: user.userID
       }

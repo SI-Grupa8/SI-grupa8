@@ -1,0 +1,10 @@
+<div class="filter-container">
+    <label class="filter-label">Filter by Device Type:</label>
+    <div class="checkbox-group">
+      <div *ngFor="let type of deviceFilter" class="checkbox-item">
+        <input type="checkbox" id="{{ type.deviceTypeID }}" [value]="type.deviceTypeID" [(ngModel)]="type.selected" (ngModelChange)="applyFilter()">
+        <label for="{{ type.deviceTypeID }}">{{ type.deviceTypeName }}</label>
+      </div>
+    </div>
+  </div>
+  

@@ -14,7 +14,7 @@ export class DeleteUserComponent {
   userId: number =0;
   @Output() userDeleted = new EventEmitter<boolean>();
 
-  durationInSeconds = 5;
+  durationInSeconds = 1;
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
