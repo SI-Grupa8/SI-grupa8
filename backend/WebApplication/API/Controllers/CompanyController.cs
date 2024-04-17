@@ -67,6 +67,12 @@ namespace API.Controllers
             return Ok(await _companyService.GetCompanyByID(companyId));
         }
 
+        [HttpGet("get-statistics/{companyId}")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<object>> GetUserStatistics(int companyId)
+        {
+            return Ok(await _companyService.GetUserStatistics(companyId));
+        }
     }
 }
 

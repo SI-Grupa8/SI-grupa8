@@ -61,12 +61,20 @@ return this.http.get<any>(`${this.apiUrl}/User/get-current-user`, {headers});
     return this.http.get<any>(`${this.apiUrl}/User/get-admins-without-company`, {headers});
   }
 
+//FIX THIS - PRIORITYYYYYYY
   changeEmail(request: UserRequest): Observable<any>{
     console.log(request)
+
+    
+  getDispatchersForNewDevice(companyId : number ) : Observable<any[]> {
+
+    
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
+
+    
     return this.http.put<any>(`${this.apiUrl}/User/change-email`, request, { headers });
   }
 
@@ -77,5 +85,10 @@ return this.http.get<any>(`${this.apiUrl}/User/get-current-user`, {headers});
       'Authorization': `Bearer ${token}`
     });
     return this.http.put<any>(`${this.apiUrl}/User/change-password`, request, { headers });
+
+    
+    return this.http.get<any[]>(`${this.apiUrl}/User/get-dispatchers-new-device/${companyId}`, {headers});
+
+    
   }
 }

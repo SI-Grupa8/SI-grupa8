@@ -74,18 +74,27 @@ namespace API.Controllers
 			return Ok(await _userService.GetAdminsWihotuCompany());
 		}
 
-		[HttpPut("change-email")]
-        public async Task<ActionResult> ChangeEmail(UserDto request)
-        {
-            return Ok(await _userService.ChangeEmail(request));
-        }
 
-        [HttpPut("change-password")]
-        [Authorize]
-        public async Task<ActionResult> ChangePassword(ChangePasswordDto request)
-        {
-            return Ok(await _userService.ChangePassword(request));
-        }
+		[HttpPut("change-email")]
+    public async Task<ActionResult> ChangeEmail(UserDto request)
+    {
+      return Ok(await _userService.ChangeEmail(request));
+    }
+
+    [HttpPut("change-password")]
+    [Authorize]
+    public async Task<ActionResult> ChangePassword(ChangePasswordDto request)
+    {
+      return Ok(await _userService.ChangePassword(request));
+    }
+
+    [HttpGet("get-dispatchers-new-device/{companyId}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<List<UserDto>>> GetDispacthersForNewDevice(int companyId)
+		{
+			return await _userService.GetDispatchersForNewDevice(companyId);
+		}
+
     }
 }
 
