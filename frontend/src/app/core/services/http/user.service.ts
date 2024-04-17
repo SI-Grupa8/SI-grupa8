@@ -59,4 +59,12 @@ return this.http.get<any>(`${this.apiUrl}/User/get-current-user`, {headers});
     });
     return this.http.get<any>(`${this.apiUrl}/User/get-admins-without-company`, {headers});
   }
+
+  getDispatchersForNewDevice(companyId : number ) : Observable<any[]> {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any[]>(`${this.apiUrl}/User/get-dispatchers-new-device/${companyId}`, {headers});
+  }
 }
