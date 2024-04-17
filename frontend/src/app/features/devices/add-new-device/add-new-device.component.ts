@@ -69,7 +69,7 @@ export class AddNewDeviceComponent {
   }
 
   getAllUsers(companyID : number){
-    this.userService.getCompanyUsers(companyID).subscribe(x => {
+    this.userService.getDispatchersForNewDevice(companyID).subscribe(x => {
       this.users = x;
     })
   }

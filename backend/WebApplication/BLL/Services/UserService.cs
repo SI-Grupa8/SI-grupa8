@@ -20,13 +20,15 @@ namespace BLL.Services
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly IDeviceRepository _deviceRepository;
         private readonly IConfiguration _configuration;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
+        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IDeviceRepository deviceRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _configuration = configuration;
+            _deviceRepository = deviceRepository;
         }
 
         public async Task<object> EnableTwoFactorAuthentication(int userID)
@@ -337,6 +339,14 @@ namespace BLL.Services
         public async Task RemoveUser(int userId)
         {
             var user = await _userRepository.GetById(userId);
+
+            if(user!.RoleID == 3)
+            {
+                var device = await _deviceRepository.GetByUserID(userId);
+
+                if (device != null) _deviceRepository.Remove(device);
+            }
+
             _userRepository.Remove(user!);
 
             await _userRepository.SaveChangesAsync();
@@ -431,6 +441,14 @@ namespace BLL.Services
 
             return _mapper.Map<List<UserDto>>(users);
 
+        }
+
+        public async Task<List<UserDto>> GetDispatchersForNewDevice(int companyId)
+        {
+            var users = await _userRepository.GetDispatchersForNewDevice(companyId);
+
+            return _mapper.Map<List<UserDto>>(users);
+          
         }
     }
 }
