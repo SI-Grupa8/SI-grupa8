@@ -42,13 +42,13 @@ namespace DAL.Repositories
 
             var data = _context.Devices.Where(x => userIds.Contains((int)x.UserID!)).AsQueryable();
 
-            if (deviceFilter.DeviceTypeIds != null)
+            if (deviceFilter.DeviceTypeIds != null && deviceFilter.DeviceTypeIds.Count() > 0)
             {
 
                 data = data.Where(x => deviceFilter.DeviceTypeIds.Contains((int)x!.DeviceTypeID!));
             }
 
-            if(deviceFilter.DeviceIds != null)
+            if(deviceFilter.DeviceIds != null && deviceFilter.DeviceIds.Count() > 0)
             {
                 data = data.Where(x => deviceFilter.DeviceIds.Contains(x.DeviceID));
             }
