@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {MatTabsModule} from '@angular/material/tabs';
+import { DeviceService } from '../../../core/services/http/device.service';
+import { AuthService } from '../../../core/services/http/auth.service';
 
 @Component({
   selector: 'app-map-filter',
@@ -13,8 +15,16 @@ import {MatTabsModule} from '@angular/material/tabs';
 export class MapFilterComponent {
 
   @Output() closedFilter = new EventEmitter<void>();
+  companyId : number = 0;
+
+  constructor(private deviceService: DeviceService, private authService: AuthService){
+    this.authService.getCurrentUser().subscribe((res : any) => {
+      this.companyId = res.companyID;
+      this.getAll(res.companyID);
+    })
+  }
   
-  devices: any[] = [{}, {}, {}, {}, {}];
+  filteredDevices: any[] = [];
   //selectedView: string = '';
   selectedView: string = 'view1';
 
@@ -23,4 +33,12 @@ export class MapFilterComponent {
   closeFilterComponent(): void {
     this.closedFilter.emit();
   }
+
+  getAll(companyId : number): void {
+    this.deviceService.getCompanyDevices(companyId).subscribe(devices => {
+      this.filteredDevices = devices;
+    });
+  }
+
+  
 }
