@@ -18,8 +18,25 @@ export class MapFilterComponent {
   companyId : number = 0;
   @Output() zoomEvent = new EventEmitter<number>();
 
+  activeDeviceId: number | null = null; // Track the ID of the active device
+
   zoomToSpecificPoint(deviceID: number) {
     this.zoomEvent.emit(deviceID);
+  }
+
+  toggleActiveDevice(deviceId: number) {
+    if (this.activeDeviceId === deviceId) {
+      // If the clicked device ais already active, deactivate it
+      this.activeDeviceId = null;
+    } else {
+      // Otherwise, activate the clicked device
+      this.activeDeviceId = deviceId;
+    }
+  }
+
+  // Function to check if a device is active
+  isDeviceActive(deviceId: number) {
+    return this.activeDeviceId === deviceId;
   }
 
   constructor(private deviceService: DeviceService, private authService: AuthService){

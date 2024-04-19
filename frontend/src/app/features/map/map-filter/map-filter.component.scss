@@ -78,13 +78,16 @@
         display: flex;
         flex-direction: column;
         width: 100%;
+        
         .device-filter-card {
+            cursor: pointer;
             width: 100%;
             height: 70px;
             background-color: white;
             border-bottom: 1px solid rgb(207, 206, 206);
             display: flex;
             align-items: center;
+            
             .img-container {
                 margin-left: 20px;
                 width: 50px;
@@ -156,6 +159,9 @@
             cursor: pointer;
             background-color: rgb(242, 251, 242);
         } 
+        .device-filter-card.active {
+            background-color: rgb(144, 255, 203);
+        }
     }
     .devices-filter-list:nth-child(1){
         border-top: 1px solid rgb(207, 206, 206);
