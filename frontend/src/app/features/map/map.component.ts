@@ -147,20 +147,21 @@ getFilteredDevices() {
   // Extract selected chip IDs based on their state
   const selectedDeviceTypeIds: number[] = [];
   if (this.mobileDevicesSelected) {
-      selectedDeviceTypeIds.push(/* ID for mobile devices */);
+      selectedDeviceTypeIds.push(1);
   }
   if (this.gpsDevicesSelected) {
-      selectedDeviceTypeIds.push(/* ID for GPS devices */);
+      selectedDeviceTypeIds.push(2);
   }
   if (this.carDevicesSelected) {
-      selectedDeviceTypeIds.push(/* ID for car devices */);
+      selectedDeviceTypeIds.push(3);
   }
 
   // Call the service method to get filtered devices
-  this.deviceService.getFilteredDevices(selectedDeviceTypeIds, [], [])
+  this.deviceService.getFilteredDevices(selectedDeviceTypeIds, [])
       .subscribe(devices => {
           // Update the filteredDevices attribute with the retrieved devices
           this.filteredDevices = devices;
+          console.log(this.filteredDevices);
       });
   }
 }

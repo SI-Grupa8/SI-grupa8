@@ -51,24 +51,20 @@ export class DeviceService {
     return this.http.get<any[]>(`${this.apiUrl}/DeviceType/get-all`, {headers});
   }
 
-  getFilteredDevices(deviceTypeIds: number[], devices: string[], deviceIds: number[]) {
+  getFilteredDevices(deviceTypeIds: number[], deviceIds: number[]): Observable<any> {
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    let params = new HttpParams();
-    if (deviceTypeIds && deviceTypeIds.length > 0) {
-      params = params.set('DeviceTypeIds', deviceTypeIds.join(','));
-    }
-    if (devices && devices.length > 0) {
-      params = params.set('Devices', devices.join(','));
-    }
-    if (deviceIds && deviceIds.length > 0) {
-      params = params.set('DeviceIds', deviceIds.join(','));
-    }
+    // Prepare the payload
+    const payload = {
+      deviceTypeIds: deviceTypeIds,
+      deviceIds: deviceIds
+    };
 
-    return this.http.get<any[]>(`${this.apiUrl}/Device/get-company-devices-v1`, { headers: headers, params: params });
+    // Make the POST request
+    return this.http.post<any[]>(`${this.apiUrl}/Device/get-company-devices-v1`, payload, { headers: headers });
   }
 
 }
