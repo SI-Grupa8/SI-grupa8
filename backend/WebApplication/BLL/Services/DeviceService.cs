@@ -3,6 +3,7 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
+using DAL.Utilities;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BLL.Services
@@ -83,7 +84,7 @@ namespace BLL.Services
             await _deviceRepository.SaveChangesAsync();
         }
 
-        public async Task<List<DeviceDto>> GetDevicesByType(int adminId, List<int>? deviceTypeIDs = null)
+        public async Task<List<DeviceDto>> GetDevicesByType(int adminId, DeviceFilterDto deviceFilterDto)
         {
             var user = await _userRepository.GetById(adminId);
             var companyUsers = await _companyRepository.GetAllUsersForCompany((int)user!.CompanyID!);
@@ -92,7 +93,8 @@ namespace BLL.Services
 
             var users = companyUsers.Users.Select(x => x!.UserID).ToList();
 
-            var devices = await _deviceRepository.GetFilteredDevicesByUserIds(users, deviceTypeIDs);
+            var deviceFilter = _mapper.Map<DeviceFilter>(deviceFilterDto);
+            var devices = await _deviceRepository.GetFilteredDevicesByUserIds(users, deviceFilter);
 
             return _mapper.Map<List<DeviceDto>>(devices);
         }

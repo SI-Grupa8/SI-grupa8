@@ -55,11 +55,11 @@ namespace API.Controllers
 
         [HttpGet("get-company-devices-v1")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<DeviceDto>>> FilterDevices([FromQuery] List<int>? deviceTypeIDs=null)
+        public async Task<ActionResult<List<DeviceDto>>> FilterDevices([FromQuery] DeviceFilterDto deviceFilterDto)
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
             var adminId = JWTHelper.GetUserIDFromClaims(token);
-            return await _deviceService.GetDevicesByType(adminId, deviceTypeIDs);
+            return await _deviceService.GetDevicesByType(adminId, deviceFilterDto);
         }
     }
 }

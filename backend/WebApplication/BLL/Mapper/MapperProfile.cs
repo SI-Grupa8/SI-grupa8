@@ -1,9 +1,10 @@
 ﻿using System;
 using AutoMapper;
+using DAL.Utilities;
 
 namespace BLL.Mapper
 {
-	public class MapperProfile : Profile
+    public class MapperProfile : Profile
 	{
 		public MapperProfile()
 		{
@@ -12,7 +13,9 @@ namespace BLL.Mapper
             CreateMap<DAL.Entities.Company, DTOs.CompanyDto>().ReverseMap();
             CreateMap<DAL.Entities.Device, DTOs.DeviceDto>().ReverseMap();
 			CreateMap<DAL.Entities.DeviceType, DTOs.DeviceTypeDto>().ReverseMap();
+            CreateMap<DeviceFilter, DTOs.DeviceFilterDto>().ReverseMap();
+
         }
-	}
+    }
 }
 
