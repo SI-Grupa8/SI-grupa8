@@ -42,11 +42,16 @@ namespace DAL.Repositories
 
             var data = _context.Devices.Where(x => userIds.Contains((int)x.UserID!)).AsQueryable();
 
-            if (deviceFilter.DeviceTypeIds is null)
+            if (deviceFilter.DeviceTypeIds != null)
             {
-                deviceFilter.DeviceTypeIds = new List<int> {1};
+
+                data = data.Where(x => deviceFilter.DeviceTypeIds.Contains((int)x!.DeviceTypeID!));
             }
-            data = data.Where(x => deviceFilter.DeviceTypeIds.Contains((int)x!.DeviceTypeID!));
+
+            if(deviceFilter.DeviceIds != null)
+            {
+                data = data.Where(x => deviceFilter.DeviceIds.Contains(x.DeviceID));
+            }
 
             return await data.ToListAsync();
 

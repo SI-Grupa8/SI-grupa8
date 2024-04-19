@@ -8,7 +8,7 @@ namespace BLL.DTOs
 {
     public class DeviceFilterDto
     {
-        public List<int> DeviceTypeIds { get; set; }
-        public List<string> Devices { get; set; }
+        public List<int>? DeviceTypeIds { get; set; }
+        public List<int>? DeviceIds { get; set; }
     }
 }
