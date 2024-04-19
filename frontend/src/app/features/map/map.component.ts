@@ -60,6 +60,8 @@ export class MapComponent implements OnInit{
             // If not all devices are selected, deselect the "All devices" option
             this.allDevicesSelected = false;
         }
+        // Call getFilteredDevices method with updated selected chips
+        this.getFilteredDevices();
     });
 }
 
@@ -127,7 +129,7 @@ export class MapComponent implements OnInit{
 
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
-}
+  }
 
 move(event: google.maps.MapMouseEvent) {
   if (event.latLng != null) this.display = event.latLng.toJSON();
@@ -141,4 +143,24 @@ onDeviceTypeSelected(event: any): void {
   })
 }*/
 
+getFilteredDevices() {
+  // Extract selected chip IDs based on their state
+  const selectedDeviceTypeIds: number[] = [];
+  if (this.mobileDevicesSelected) {
+      selectedDeviceTypeIds.push(/* ID for mobile devices */);
+  }
+  if (this.gpsDevicesSelected) {
+      selectedDeviceTypeIds.push(/* ID for GPS devices */);
+  }
+  if (this.carDevicesSelected) {
+      selectedDeviceTypeIds.push(/* ID for car devices */);
+  }
+
+  // Call the service method to get filtered devices
+  this.deviceService.getFilteredDevices(selectedDeviceTypeIds, [], [])
+      .subscribe(devices => {
+          // Update the filteredDevices attribute with the retrieved devices
+          this.filteredDevices = devices;
+      });
+  }
 }
