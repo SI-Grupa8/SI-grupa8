@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild  } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { DeviceService } from '../../core/services/http/device.service';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,8 @@ import { DeviceFilterComponent } from './device-filter/device-filter.component';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../core/services/http/user.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { forkJoin, of } from 'rxjs';
+import { switchMap, map, tap, catchError, concatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -15,61 +17,105 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'] 
 })
-
-export class MapComponent implements OnInit{
+export class MapComponent implements OnInit {
   devices: any[] = [];
-  markerOptions: any = {}; 
-  iframeSrc!: SafeResourceUrl | undefined;
-  //companyId: any;
-  selectedDeviceTypeId : number[] = [];
-  markers: any[] = [
-    { lat: 43.856430, lng: 18.413029 },
-    { lat: 44.53842, lng: 18.66709 }
-  ];
+  locations: any[] = [];
+  markerOptions: any = {};
+  selectedDeviceTypeId: number[] = [];
+  display: any;
+  center: google.maps.LatLngLiteral = {
+    lat: 44.44929, 
+    lng: 18.64978
+  };
+  zoom = 7;
+  routeCoordinates: google.maps.LatLngLiteral[] = [];
 
-  constructor(private deviceService: DeviceService, private authService : AuthService, private userService: UserService, private sanitizer: DomSanitizer) {}
-
-
+  constructor(
+    private deviceService: DeviceService,
+    private authService: AuthService,
+    private userService: UserService,
+    private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef
+  ) {} 
 
   ngOnInit(): void {
-    this.userService.getUser().subscribe(user => {
-      this.deviceService.getCompanyDevices(user.companyID).subscribe(devices => { 
-        this.devices = devices; }); 
+    this.userService.getUser().pipe(
+      concatMap(user => {
+        if (user) {
+          return this.deviceService.getCompanyDevices(user.companyID).pipe(
+            concatMap(devices => {
+              this.devices=devices;
+              const deviceObservables = devices.map(device => {
+                const deviceId = device.deviceID;
+                if (!deviceId || deviceId === 0) {
+                  console.error('Invalid device ID:', deviceId);
+                  return of([]);
+                }
+                return this.deviceService.getDeviceLocations(deviceId);
+              });
+              return forkJoin(deviceObservables);
+            })
+          );
+        }
+        return of(null);
+      }),
+      catchError(error => {
+        console.error('Error fetching devices:', error);
+        return of(null);
       })
-      this.markerOptions = { 
-      icon: { 
-        url: 'assets/images/location-pin-48.png', 
-        scaledSize: { width: 32, height: 32 } } 
-      }; 
-    }
-    
-  parseCoordinates(device: any): { lat: number, lng: number } {
+    ).subscribe(locations => {
+      if (locations && locations.length > 0) {
+        this.locations = locations.flat();
+        this.routeCoordinates = this.locations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
+        this.cdr.detectChanges();
+      } else {
+        this.routeCoordinates = [];
+      }
+    });
+  }
+  parseCoordinatesd(device: any): { lat: number, lng: number } {
     return { 
       lat: parseFloat(device.xCoordinate),
       lng: parseFloat(device.yCoordinate)
     };
   }
-  display: any;
-  center: google.maps.LatLngLiteral = {
-      lat: 22.2736308,
-      lng: 70.7512555
-  };
-  zoom = 6;
+  
+  parseCoordinates(location: any): google.maps.LatLngLiteral | null {
+    const lat = parseFloat(location.xCoordinate);
+    const lng = parseFloat(location.yCoordinate);
+
+    if (isNaN(lat) || isNaN(lng)) {
+      console.error('Invalid coordinates for location:', location);
+      return null;
+    }
+
+    return {
+      lat: lat,
+      lng: lng
+    };
+  }
 
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
-}
+  }
 
-move(event: google.maps.MapMouseEvent) {
-  if (event.latLng != null) this.display = event.latLng.toJSON();
-}
+  onDeviceTypeSelected(event: any): void {
+    this.deviceService.getFilteredDevices(event).subscribe(devices => {
+      this.devices = devices;
+    });
+  }
 
-onDeviceTypeSelected(event: any): void {
-  this.selectedDeviceTypeId = event;
-  this.deviceService.getFilteredDevices(this.selectedDeviceTypeId).subscribe(x =>{
-    console.log(x);
-    this.devices = x;
-  })
-}
-
+  calculateAndDisplayRoute(): void {
+    const selectedDeviceId = (document.getElementById('start') as HTMLSelectElement).value;
+  
+    const sortedLocations = this.sortAndFilterLocationsForDevice(selectedDeviceId);
+  
+    this.routeCoordinates = sortedLocations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
+    this.cdr.detectChanges();
+  }
+  
+  private sortAndFilterLocationsForDevice(deviceId: string): any[] {
+    const deviceLocations = this.locations.filter(location => location.deviceID === parseInt(deviceId, 10));
+    return deviceLocations.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  }
 }

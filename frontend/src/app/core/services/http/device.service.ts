@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { DeviceRequest } from '../../models/device-request';
 
 @Injectable({
@@ -63,6 +63,19 @@ export class DeviceService {
     })
 
     return this.http.get<any[]>(`${this.apiUrl}/Device/get-company-devices-v1?${params.toString()}`, {headers});
+  }
+
+  getDeviceLocations(deviceId: number):Observable<any[]>{
+    if (!deviceId || deviceId === 0) {
+      console.error('Invalid device IDDDDD:', deviceId);
+      return of([]);
+    }
+    console.log("ovdje"+deviceId);
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any[]>(`${this.apiUrl}/LocationStorage/get-device-locations/${deviceId}`, {headers});
   }
 
 }

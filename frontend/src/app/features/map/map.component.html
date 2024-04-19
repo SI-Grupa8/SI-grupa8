@@ -3,18 +3,25 @@
 </div>
 <div class="filter">
     <app-device-filter (deviceTypeSelectedId)="onDeviceTypeSelected($event)"></app-device-filter>
+    <select id="start" (change)="calculateAndDisplayRoute()">
+        <option *ngFor="let device of devices" [value]="device.deviceID">{{ device.deviceName }}</option>
+    </select>
 </div>
-<div class="mapa">
+<div id="map" class="map-container">
     <google-map 
-                width="1250px"
-                [center]="{ lat: 43.8563, lng: 18.4131 }"
-                [zoom]="15"
-                (mapClick)="moveMap($event)"
-                (mapMousemove)="move($event)">
-                <map-marker *ngFor="let device of devices"
+        width="1250px"
+        [center]="center"
+        [zoom]="zoom"
+        (mapClick)="moveMap($event)">
+   <!--   <map-marker *ngFor="let device of devices"
                 [position]="parseCoordinates(device)"
                 [title]="device.deviceName"
                 [options]="markerOptions">
-    </map-marker>
+    </map-marker>-->
+        <map-polyline *ngIf="routeCoordinates.length > 0"
+            [path]="routeCoordinates"
+            [options]="{strokeColor: '#FF0000', strokeOpacity: 1.0, strokeWeight: 2}">
+        </map-polyline>
+        
     </google-map>
 </div>
