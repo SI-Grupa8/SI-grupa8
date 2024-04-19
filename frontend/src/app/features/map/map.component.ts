@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild  } from '@angular/core';
-import { GoogleMapsModule } from '@angular/google-maps';
+import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
 import { DeviceService } from '../../core/services/http/device.service';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/http/auth.service';
@@ -19,6 +19,8 @@ import {MatChipsModule} from '@angular/material/chips';
 })
 
 export class MapComponent implements OnInit{
+  center = { lat: 43.8563, lng: 18.4131 };
+  zoom = 15;
   filteredDevices: any[] = [];
   
   allDevicesSelected: boolean = true;
@@ -121,11 +123,7 @@ export class MapComponent implements OnInit{
     };
   }
   display: any;
-  center: google.maps.LatLngLiteral = {
-      lat: 22.2736308,
-      lng: 70.7512555
-  };
-  zoom = 6;
+  
 
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
@@ -143,25 +141,43 @@ onDeviceTypeSelected(event: any): void {
   })
 }*/
 
-getFilteredDevices() {
-  // Extract selected chip IDs based on their state
-  const selectedDeviceTypeIds: number[] = [];
-  if (this.mobileDevicesSelected) {
-      selectedDeviceTypeIds.push(1);
-  }
-  if (this.gpsDevicesSelected) {
-      selectedDeviceTypeIds.push(2);
-  }
-  if (this.carDevicesSelected) {
-      selectedDeviceTypeIds.push(3);
+  getFilteredDevices() {
+    // Extract selected chip IDs based on their state
+    const selectedDeviceTypeIds: number[] = [];
+    if (this.mobileDevicesSelected) {
+        selectedDeviceTypeIds.push(1);
+    }
+    if (this.gpsDevicesSelected) {
+        selectedDeviceTypeIds.push(2);
+    }
+    if (this.carDevicesSelected) {
+        selectedDeviceTypeIds.push(3);
+    }
+
+    // Call the service method to get filtered devices
+    this.deviceService.getFilteredDevices(selectedDeviceTypeIds, [])
+        .subscribe(devices => {
+            // Update the filteredDevices attribute with the retrieved devices
+            this.filteredDevices = devices;
+            console.log(this.filteredDevices);
+        });
   }
 
-  // Call the service method to get filtered devices
-  this.deviceService.getFilteredDevices(selectedDeviceTypeIds, [])
-      .subscribe(devices => {
-          // Update the filteredDevices attribute with the retrieved devices
-          this.filteredDevices = devices;
-          console.log(this.filteredDevices);
-      });
+  @ViewChild(GoogleMap) map!: GoogleMap;
+  unzoomFromDevice(deviceId: number){}
+  zoomToSpecificPoint(deviceID: number) {
+    console.log(deviceID)
+    
+    const device = this.filteredDevices.find(device => device.deviceID === deviceID);
+    if (device) {
+        // Extract the coordinates from the device object
+        const { xCoordinate, yCoordinate } = device;
+        // Set the center of the map to the device coordinates
+        const newPosition = new google.maps.LatLng(parseFloat(xCoordinate), parseFloat(yCoordinate));
+        this.map.panTo(newPosition);
+        this.zoom=15;
+    }
+    //this.center = { lat: 1, lng: 1};
+
   }
 }

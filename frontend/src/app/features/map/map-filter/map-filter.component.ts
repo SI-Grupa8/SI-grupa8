@@ -16,6 +16,11 @@ export class MapFilterComponent {
 
   @Output() closedFilter = new EventEmitter<void>();
   companyId : number = 0;
+  @Output() zoomEvent = new EventEmitter<number>();
+
+  zoomToSpecificPoint(deviceID: number) {
+    this.zoomEvent.emit(deviceID);
+  }
 
   constructor(private deviceService: DeviceService, private authService: AuthService){
     this.authService.getCurrentUser().subscribe((res : any) => {
