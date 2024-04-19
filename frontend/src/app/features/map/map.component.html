@@ -4,10 +4,10 @@
 <div class="map-nav">
     <p>SHOWING: </p>
     <mat-chip-listbox aria-label="Fish selection" multiple>
-        <mat-chip-option  class="mat-chip" selected>All devices (40)</mat-chip-option>
-        <mat-chip-option class="mat-chip">Mobile&nbsp;&nbsp;(10)</mat-chip-option>
-        <mat-chip-option class="mat-chip" >GPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(10)</mat-chip-option>
-        <mat-chip-option class="mat-chip">Tracker&nbsp;&nbsp;(20)</mat-chip-option>
+        <mat-chip-option [selected]="allDevicesSelected"  class="mat-chip" (click)="selectAllDevices()" selected>All devices (40)</mat-chip-option>
+        <mat-chip-option [selected]="mobileDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('mobile')">Mobile&nbsp;&nbsp;(10)</mat-chip-option>
+        <mat-chip-option [selected]="gpsDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('gps')">GPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(10)</mat-chip-option>
+        <mat-chip-option [selected]="carDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('car')">Car&nbsp;&nbsp;(20)</mat-chip-option>
       </mat-chip-listbox>
 </div>
 <div class="mapa">
@@ -27,7 +27,7 @@
         (mapMousemove)="move($event)"
         [options]="mapOptions"
     >
-        <map-marker *ngFor="let device of devices"
+        <map-marker *ngFor="let device of filteredDevices"
             [position]="parseCoordinates(device)"
             [title]="device.deviceName"
             [options]="markerOptions">

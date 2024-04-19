@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DeviceRequest } from '../../models/device-request';
@@ -51,18 +51,24 @@ export class DeviceService {
     return this.http.get<any[]>(`${this.apiUrl}/DeviceType/get-all`, {headers});
   }
 
-  getFilteredDevices(filters : number[]) {
+  getFilteredDevices(deviceTypeIds: number[], devices: string[], deviceIds: number[]) {
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    const params = new URLSearchParams();
-    filters.forEach(x => {
-      params.append("deviceTypeIDs", x.toString())
-    })
+    let params = new HttpParams();
+    if (deviceTypeIds && deviceTypeIds.length > 0) {
+      params = params.set('DeviceTypeIds', deviceTypeIds.join(','));
+    }
+    if (devices && devices.length > 0) {
+      params = params.set('Devices', devices.join(','));
+    }
+    if (deviceIds && deviceIds.length > 0) {
+      params = params.set('DeviceIds', deviceIds.join(','));
+    }
 
-    return this.http.get<any[]>(`${this.apiUrl}/Device/get-company-devices-v1?${params.toString()}`, {headers});
+    return this.http.get<any[]>(`${this.apiUrl}/Device/get-company-devices-v1`, { headers: headers, params: params });
   }
 
 }

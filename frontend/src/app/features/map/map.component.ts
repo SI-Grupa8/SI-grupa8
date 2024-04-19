@@ -6,7 +6,7 @@ import { AuthService } from '../../core/services/http/auth.service';
 import { DeviceFilterComponent } from './device-filter/device-filter.component';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../core/services/http/user.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import {  DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MapFilterComponent } from "./map-filter/map-filter.component";
 import {MatChipsModule} from '@angular/material/chips';
 
@@ -19,7 +19,57 @@ import {MatChipsModule} from '@angular/material/chips';
 })
 
 export class MapComponent implements OnInit{
-  devices: any[] = [];
+  filteredDevices: any[] = [];
+  
+  allDevicesSelected: boolean = true;
+  mobileDevicesSelected: boolean = false;
+  gpsDevicesSelected: boolean = false;
+  carDevicesSelected: boolean = false;
+
+  selectAllDevices() {
+    this.allDevicesSelected = true;
+    this.mobileDevicesSelected = false;
+    this.gpsDevicesSelected = false;
+    this.carDevicesSelected = false;
+  }
+
+  toggleDeviceSelection(deviceType: string) {
+    switch(deviceType) {
+        case 'mobile':
+            this.mobileDevicesSelected = !this.mobileDevicesSelected;
+            break;
+        case 'gps':
+            this.gpsDevicesSelected = !this.gpsDevicesSelected;
+            break;
+        case 'car':
+            this.carDevicesSelected = !this.carDevicesSelected;
+            break;
+        // Add cases for other device types if needed
+    }
+    
+    // Use setTimeout to delay the state check
+    setTimeout(() => {
+        // Check if all devices are selected
+        if (this.mobileDevicesSelected && this.gpsDevicesSelected && this.carDevicesSelected) {
+            // If all devices are selected, deselect individual devices
+            this.selectAllDevices();
+        } else if (!this.mobileDevicesSelected && !this.gpsDevicesSelected && !this.carDevicesSelected) {
+            // If no individual devices are selected, select the "All devices" option
+            this.selectAllDevices();
+        } else {
+            // If not all devices are selected, deselect the "All devices" option
+            this.allDevicesSelected = false;
+        }
+    });
+}
+
+
+  deselectAllIfAllSelected() {
+    if (this.allDevicesSelected) {
+        this.allDevicesSelected = false;
+    }
+  }
+
   //markerOptions: any = {}; 
 
   showFilterComponent: boolean = true;
@@ -51,7 +101,7 @@ export class MapComponent implements OnInit{
   ngOnInit(): void {
     this.userService.getUser().subscribe(user => {
       this.deviceService.getCompanyDevices(user.companyID).subscribe(devices => { 
-        this.devices = devices; }); 
+        this.filteredDevices = devices; }); 
       })
       this.markerOptions = { 
         
@@ -82,13 +132,13 @@ export class MapComponent implements OnInit{
 move(event: google.maps.MapMouseEvent) {
   if (event.latLng != null) this.display = event.latLng.toJSON();
 }
-
+/*
 onDeviceTypeSelected(event: any): void {
   this.selectedDeviceTypeId = event;
   this.deviceService.getFilteredDevices(this.selectedDeviceTypeId).subscribe(x =>{
     console.log(x);
-    this.devices = x;
+    this.filteredDevices = x;
   })
-}
+}*/
 
 }
