@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using BLL.DTOs;
 using BLL.Interfaces;
+using DAL.Entities;
 using DAL.Interfaces;
+using DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +21,19 @@ namespace BLL.Services
         {
             _locationStorageRepository = locationStorageRepository;
             _mapper = mapper;
+        }
+
+        public async Task<List<LocationStorageDto>> GetLocationsByDeviceId(int deviceId)
+        {
+            var locations =  await _locationStorageRepository.getLocationsByDeviceId(deviceId);
+            return _mapper.Map<List<LocationStorageDto>>(locations);
+        }
+
+        public async Task SaveLocation(LocationStorageDto locationStorageDto)
+        {
+            var location = _mapper.Map<LocationStorage>(locationStorageDto);
+            _locationStorageRepository.Add(location);
+            await _locationStorageRepository.SaveChangesAsync();
         }
     }
 }

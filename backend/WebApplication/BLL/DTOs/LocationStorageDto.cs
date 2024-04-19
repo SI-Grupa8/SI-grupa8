@@ -12,7 +12,7 @@ namespace BLL.DTOs
 
         public int DeviceID { get; set; }
 
-        public DeviceDto? Device { get; set; }
+        //public DeviceDto? Device { get; set; }
 
         public string XCoordinate { get; set; } = string.Empty;
 
