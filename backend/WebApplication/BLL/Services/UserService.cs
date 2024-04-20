@@ -481,6 +481,7 @@ namespace BLL.Services
             await _userRepository.SaveChangesAsync();
 
             return _mapper.Map<UserDto>(user);
+        }
 
         public async Task<List<UserDto>> GetDispatchersForNewDevice(int companyId)
         {
