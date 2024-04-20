@@ -10,13 +10,14 @@ import {  DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MapFilterComponent } from "./map-filter/map-filter.component";
 import {MatChipsModule} from '@angular/material/chips';
 import { DeviceRequest } from '../../core/models/device-request';
+import { DeviceDetailsComponent } from "./device-details/device-details.component";
 
 @Component({
     selector: 'app-map',
     standalone: true,
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss'],
-    imports: [GoogleMapsModule, CommonModule, DeviceFilterComponent, FormsModule, MapFilterComponent,MatChipsModule]
+    imports: [GoogleMapsModule, CommonModule, DeviceFilterComponent, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent]
 })
 
 export class MapComponent implements OnInit{
@@ -31,6 +32,7 @@ export class MapComponent implements OnInit{
   mobileDevicesSelected: boolean = false;
   gpsDevicesSelected: boolean = false;
   carDevicesSelected: boolean = false;
+selectedDevice: any;
 
   selectAllDevices() {
     this.allDevicesSelected = true;
@@ -179,12 +181,17 @@ onDeviceTypeSelected(event: any): void {
 
         if (this.activeDeviceId === deviceID) {
             this.activeDeviceId = null;
-            this.center = { lat: 43.8563, lng: 18.4131 };
+            this.map.panTo(this.center);
+            //this.center = { lat: 43.8563, lng: 18.4131 };
             this.zoom = 15;
+            this.selectedDevice = null;
         } else {
             this.activeDeviceId = deviceID;
-            this.center = newPosition;
-            this.zoom = 15;
+            this.map.panTo(newPosition);
+
+            //this.center = newPosition;
+            this.zoom = 16;
+            this.selectedDevice = device;
         }
     }
   }

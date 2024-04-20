@@ -25,7 +25,12 @@ export class MapFilterComponent {
   zoomToSpecificPoint(deviceID: number) {
     this.zoomEvent.emit(deviceID);
   }
-
+  onMarkerClicked(deviceID: number) {
+    // Handle the marker click event here
+    console.log('Marker clicked:', deviceID);
+    // Update the active device in the filter component
+    // Other logic...
+  }
   toggleActiveDevice(deviceId: number) {
     if (this.activeDeviceId === deviceId) {
       // If the clicked device ais already active, deactivate it
