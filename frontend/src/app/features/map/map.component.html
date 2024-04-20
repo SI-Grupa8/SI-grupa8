@@ -4,10 +4,10 @@
 <div class="map-nav">
     <p>SHOWING: </p>
     <mat-chip-listbox aria-label="Fish selection" multiple>
-        <mat-chip-option [selected]="allDevicesSelected"  class="mat-chip" (click)="selectAllDevices()" selected>All devices (40)</mat-chip-option>
+        <mat-chip-option [selected]="allDevicesSelected"  class="mat-chip" (click)="selectAllDevices()" selected>All devices (10)</mat-chip-option>
         <mat-chip-option [selected]="mobileDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('mobile')">Mobile&nbsp;&nbsp;(10)</mat-chip-option>
         <mat-chip-option [selected]="gpsDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('gps')">GPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(10)</mat-chip-option>
-        <mat-chip-option [selected]="carDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('car')">Car&nbsp;&nbsp;(20)</mat-chip-option>
+        <mat-chip-option [selected]="carDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('car')">Car&nbsp;&nbsp;(10)</mat-chip-option>
       </mat-chip-listbox>
 </div>
 <div class="mapa">
@@ -36,5 +36,7 @@
             
         </map-marker>
     </google-map>
-    <app-device-details [selectedDevice]="selectedDevice"></app-device-details>
+    @if(this.activeDeviceId !=null && this.selectedDevice != null){
+        <app-device-details (close)="closeDetails()" [selectedDevice]="selectedDevice"></app-device-details>
+    }
 </div>

@@ -25,7 +25,7 @@ export class MapComponent implements OnInit{
   zoom = 15;
   filteredDevices: any[] = [];
 
-  // Define activeDeviceId property to track the active device
+  
   activeDeviceId: number | null = null;
   
   allDevicesSelected: boolean = true;
@@ -53,7 +53,7 @@ selectedDevice: any;
         case 'car':
             this.carDevicesSelected = !this.carDevicesSelected;
             break;
-        // Add cases for other device types if needed
+        
     }
     
     // Use setTimeout to delay the state check
@@ -81,7 +81,6 @@ selectedDevice: any;
     }
   }
 
-  //markerOptions: any = {}; 
 
   showFilterComponent: boolean = true;
 
@@ -98,7 +97,7 @@ selectedDevice: any;
   };
 
   iframeSrc!: SafeResourceUrl | undefined;
-  //companyId: any;
+  
   selectedDeviceTypeId : number[] = [];
   markers: any[] = [
     { lat: 43.856430, lng: 18.413029 },
@@ -139,17 +138,10 @@ selectedDevice: any;
 move(event: google.maps.MapMouseEvent) {
   if (event.latLng != null) this.display = event.latLng.toJSON();
 }
-/*
-onDeviceTypeSelected(event: any): void {
-  this.selectedDeviceTypeId = event;
-  this.deviceService.getFilteredDevices(this.selectedDeviceTypeId).subscribe(x =>{
-    console.log(x);
-    this.filteredDevices = x;
-  })
-}*/
+
 
   getFilteredDevices() {
-    // Extract selected chip IDs based on their state
+    
     const selectedDeviceTypeIds: number[] = [];
     if (this.mobileDevicesSelected) {
         selectedDeviceTypeIds.push(1);
@@ -161,10 +153,10 @@ onDeviceTypeSelected(event: any): void {
         selectedDeviceTypeIds.push(3);
     }
 
-    // Call the service method to get filtered devices
+    
     this.deviceService.getFilteredDevices(selectedDeviceTypeIds, [])
         .subscribe(devices => {
-            // Update the filteredDevices attribute with the retrieved devices
+            
             this.filteredDevices = devices;
             console.log(this.filteredDevices);
         });
@@ -182,46 +174,52 @@ onDeviceTypeSelected(event: any): void {
         if (this.activeDeviceId === deviceID) {
             this.activeDeviceId = null;
             this.map.panTo(this.center);
-            //this.center = { lat: 43.8563, lng: 18.4131 };
+            
             this.zoom = 15;
             this.selectedDevice = null;
         } else {
             this.activeDeviceId = deviceID;
             this.map.panTo(newPosition);
 
-            //this.center = newPosition;
+            
             this.zoom = 16;
             this.selectedDevice = device;
         }
     }
   }
+  
   getMarkerOptions(device: DeviceRequest): any {
     if (device.deviceTypeID == 1){
       return {
           icon: {
-              // Specify the URL of the custom device icon
+              
               url: 'assets/images/phone.png',
-              scaledSize: { width: 40, height: 40 } // Adjust the size as needed
+              scaledSize: { width: 40, height: 40 } 
           }
       };
     }
     else if (device.deviceTypeID == 2){
       return {
           icon: {
-              // Specify the URL of the custom device icon
+              
               url: 'assets/images/gps.png',
-              scaledSize: { width: 40, height: 40 } // Adjust the size as needed
+              scaledSize: { width: 40, height: 40 } 
           }
       };
     }
     else if (device.deviceTypeID == 3){
       return {
           icon: {
-              // Specify the URL of the custom device icon
+              
               url: 'assets/images/car.png',
-              scaledSize: { width: 40, height: 40 } // Adjust the size as needed
+              scaledSize: { width: 40, height: 40 } 
           }
       };
     }
-}
+  }
+  closeDetails() {
+    this.selectedDevice = null;
+    
+    console.log(this.selectedDevice);
+  }
 }

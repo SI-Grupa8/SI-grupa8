@@ -13,35 +13,43 @@ import { AuthService } from '../../../core/services/http/auth.service';
   styleUrl: './map-filter.component.scss'
 })
 export class MapFilterComponent {
-
+  searchQuery: string = '';
+  allDevices: any[] = [];
+  searchedDevices: any[] = [];
 
   @Input() filteredDevices: any[] = [];
   @Output() closedFilter = new EventEmitter<void>();
   companyId : number = 0;
   @Output() zoomEvent = new EventEmitter<number>();
 
-  activeDeviceId: number | null = null; // Track the ID of the active device
-
+  activeDeviceId: number | null = null; 
+  filtered: any[] | undefined;
+  searchDevices(): void {
+    
+    this.filtered = this.filteredDevices;
+    this.searchedDevices = this.filtered.filter(device => 
+      device.deviceName.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+  }
   zoomToSpecificPoint(deviceID: number) {
     this.zoomEvent.emit(deviceID);
   }
   onMarkerClicked(deviceID: number) {
-    // Handle the marker click event here
+    
     console.log('Marker clicked:', deviceID);
-    // Update the active device in the filter component
-    // Other logic...
+    
   }
   toggleActiveDevice(deviceId: number) {
     if (this.activeDeviceId === deviceId) {
-      // If the clicked device ais already active, deactivate it
+      
       this.activeDeviceId = null;
     } else {
-      // Otherwise, activate the clicked device
+      
       this.activeDeviceId = deviceId;
     }
   }
 
-  // Function to check if a device is active
+ 
   isDeviceActive(deviceId: number) {
     return this.activeDeviceId === deviceId;
   }
@@ -50,11 +58,11 @@ export class MapFilterComponent {
     this.authService.getCurrentUser().subscribe((res : any) => {
       this.companyId = res.companyID;
       this.getAll(res.companyID);
+      
     })
+    
   }
   
-  //filteredDevices: any[] = [];
-  //selectedView: string = '';
   selectedView: string = 'view1';
 
   switchView() {}
@@ -66,6 +74,7 @@ export class MapFilterComponent {
   getAll(companyId : number): void {
     this.deviceService.getCompanyDevices(companyId).subscribe(devices => {
       this.filteredDevices = devices;
+      
     });
   }
 
