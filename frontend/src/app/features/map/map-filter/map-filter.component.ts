@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {MatTabsModule} from '@angular/material/tabs';
 import { DeviceService } from '../../../core/services/http/device.service';
@@ -14,6 +14,8 @@ import { AuthService } from '../../../core/services/http/auth.service';
 })
 export class MapFilterComponent {
 
+
+  @Input() filteredDevices: any[] = [];
   @Output() closedFilter = new EventEmitter<void>();
   companyId : number = 0;
   @Output() zoomEvent = new EventEmitter<number>();
@@ -46,7 +48,7 @@ export class MapFilterComponent {
     })
   }
   
-  filteredDevices: any[] = [];
+  //filteredDevices: any[] = [];
   //selectedView: string = '';
   selectedView: string = 'view1';
 

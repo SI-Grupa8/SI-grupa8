@@ -12,7 +12,7 @@
 </div>
 <div class="mapa">
     @if (showFilterComponent) {
-        <app-map-filter (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()"></app-map-filter>
+        <app-map-filter [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()"></app-map-filter>
     }
     @else {
         <button  (click)="toggleMapFilter()" class="show-filters">

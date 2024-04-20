@@ -36,6 +36,7 @@ export class MapComponent implements OnInit{
     this.mobileDevicesSelected = false;
     this.gpsDevicesSelected = false;
     this.carDevicesSelected = false;
+    this.getFilteredDevices();
   }
 
   toggleDeviceSelection(deviceType: string) {
