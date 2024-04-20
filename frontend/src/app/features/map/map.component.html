@@ -30,7 +30,10 @@
         <map-marker *ngFor="let device of filteredDevices"
             [position]="parseCoordinates(device)"
             [title]="device.deviceName"
-            [options]="markerOptions">
+            [options]="markerOptions"
+            [options]="getMarkerOptions(device)"
+            (mapClick)="zoomToSpecificPoint(device.deviceID)">
+            
         </map-marker>
     </google-map>
 </div>

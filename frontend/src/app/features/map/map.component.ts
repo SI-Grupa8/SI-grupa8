@@ -9,6 +9,7 @@ import { UserService } from '../../core/services/http/user.service';
 import {  DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MapFilterComponent } from "./map-filter/map-filter.component";
 import {MatChipsModule} from '@angular/material/chips';
+import { DeviceRequest } from '../../core/models/device-request';
 
 @Component({
     selector: 'app-map',
@@ -187,4 +188,33 @@ onDeviceTypeSelected(event: any): void {
         }
     }
   }
+  getMarkerOptions(device: DeviceRequest): any {
+    if (device.deviceTypeID == 1){
+      return {
+          icon: {
+              // Specify the URL of the custom device icon
+              url: 'assets/images/phone.png',
+              scaledSize: { width: 40, height: 40 } // Adjust the size as needed
+          }
+      };
+    }
+    else if (device.deviceTypeID == 2){
+      return {
+          icon: {
+              // Specify the URL of the custom device icon
+              url: 'assets/images/gps.png',
+              scaledSize: { width: 40, height: 40 } // Adjust the size as needed
+          }
+      };
+    }
+    else if (device.deviceTypeID == 3){
+      return {
+          icon: {
+              // Specify the URL of the custom device icon
+              url: 'assets/images/car.png',
+              scaledSize: { width: 40, height: 40 } // Adjust the size as needed
+          }
+      };
+    }
+}
 }
