@@ -23,13 +23,16 @@ export class MapFilterComponent {
   @Output() zoomEvent = new EventEmitter<number>();
 
   activeDeviceId: number | null = null; 
-  filtered: any[] | undefined;
+  beforeFiltered: any[] =[];
+  temp: any[] = [];
   searchDevices(): void {
-    
-    this.filtered = this.filteredDevices;
-    this.searchedDevices = this.filtered.filter(device => 
-      device.deviceName.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+    if (this.searchQuery.trim() !== '') {
+      this.filteredDevices = this.beforeFiltered.filter(device => 
+        device.deviceName.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    } else {
+      this.filteredDevices = this.beforeFiltered;
+    }
   }
   zoomToSpecificPoint(deviceID: number) {
     this.zoomEvent.emit(deviceID);
@@ -60,7 +63,7 @@ export class MapFilterComponent {
       this.getAll(res.companyID);
       
     })
-    
+    //this.searchedDevices = this.filteredDevices;
   }
   
   selectedView: string = 'view1';
@@ -74,7 +77,7 @@ export class MapFilterComponent {
   getAll(companyId : number): void {
     this.deviceService.getCompanyDevices(companyId).subscribe(devices => {
       this.filteredDevices = devices;
-      
+      this.beforeFiltered = devices;
     });
   }
 
