@@ -272,10 +272,12 @@ selectedDevice: any;
     this.filteredDevices.forEach(device => {
       const deviceLatLng =  this.parseCoordinatesNew(device) ;
       console.log(device);
+      const markerOptions = this.getMarkerOptions(device);
       new google.maps.Marker({
         position: deviceLatLng,
         map: map,
         title: device.deviceName,
+        icon: markerOptions.icon
       });
     });
   }
@@ -314,8 +316,8 @@ selectedDevice: any;
       return {
           icon: {
               
-              url: 'assets/images/phone.png',
-              scaledSize: { width: 40, height: 40 } 
+              url: 'assets/images/mobile-marker.png',
+              scaledSize: { width: 70, height: 70 } 
           }
       };
     }
@@ -323,8 +325,8 @@ selectedDevice: any;
       return {
           icon: {
               
-              url: 'assets/images/gps.png',
-              scaledSize: { width: 40, height: 40 } 
+              url: 'assets/images/gps-marker.png',
+              scaledSize: { width: 70, height: 70 } 
           }
       };
     }
@@ -332,8 +334,8 @@ selectedDevice: any;
       return {
           icon: {
               
-              url: 'assets/images/car.png',
-              scaledSize: { width: 40, height: 40 } 
+              url: 'assets/images/car-marker.png',
+              scaledSize: { width: 70, height: 70 } 
           }
       };
     }
