@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { DeviceRequest } from '../../models/device-request';
@@ -7,8 +7,8 @@ import { DeviceRequest } from '../../models/device-request';
   providedIn: 'root'
 })
 export class DeviceService {
-  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
-  //private apiUrl = 'https://localhost:7126/api';
+  //private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
+  private apiUrl = 'https://localhost:7126/api';
 
   constructor(private http: HttpClient) { }
 
@@ -51,18 +51,20 @@ export class DeviceService {
     return this.http.get<any[]>(`${this.apiUrl}/DeviceType/get-all`, {headers});
   }
 
-  getFilteredDevices(filters : number[]) {
+  getFilteredDevices(deviceTypeIds: number[], deviceIds: number[]): Observable<any> {
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    const params = new URLSearchParams();
-    filters.forEach(x => {
-      params.append("deviceTypeIDs", x.toString())
-    })
+    // Prepare the payload
+    const payload = {
+      deviceTypeIds: deviceTypeIds,
+      deviceIds: deviceIds
+    };
 
-    return this.http.get<any[]>(`${this.apiUrl}/Device/get-company-devices-v1?${params.toString()}`, {headers});
+    // Make the POST request
+    return this.http.post<any[]>(`${this.apiUrl}/Device/get-company-devices-v1`, payload, { headers: headers });
   }
 
   getDeviceLocations(deviceId: number):Observable<any[]>{

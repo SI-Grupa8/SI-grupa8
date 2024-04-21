@@ -1,11 +1,49 @@
-<div class="home-header">
+<!--<div class="home-header">
     <p class="greeting">Device Location Overview</p>
-  </div>
-  <div class="filter">
-    <app-device-filter (deviceTypeSelectedId)="onDeviceTypeSelected($event)"></app-device-filter>
-    <select id="start" (change)="calculateAndDisplayRoute()">
+
+</div>-->
+<div class="map-nav">
+    <p>SHOWING: </p>
+    <mat-chip-listbox aria-label="Fish selection" multiple>
+        <mat-chip-option [selected]="allDevicesSelected"  class="mat-chip" (click)="selectAllDevices()" selected>All devices (10)</mat-chip-option>
+        <mat-chip-option [selected]="mobileDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('mobile')">Mobile&nbsp;&nbsp;(10)</mat-chip-option>
+        <mat-chip-option [selected]="gpsDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('gps')">GPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(10)</mat-chip-option>
+        <mat-chip-option [selected]="carDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('car')">Car&nbsp;&nbsp;(10)</mat-chip-option>
+      </mat-chip-listbox>
+</div>
+<div class="mapa">
+    @if (showFilterComponent) {
+        <app-map-filter [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()"></app-map-filter>
+    }
+    @else {
+        <button  (click)="toggleMapFilter()" class="show-filters">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg>
+        </button>
+    }
+  <div #mapContainer id="mapa" class="map-container" style="height: 500px;"></div><!--
+    <google-map #map
+        width="100%" height="100%"
+        [center]="center"
+        [zoom]="zoom"
+        (mapClick)="moveMap($event)"
+        (mapMousemove)="move($event)"
+        [options]="mapOptions"
+    >
+        <map-marker *ngFor="let device of filteredDevices"
+            [position]="parseCoordinates(device)"
+            [title]="device.deviceName"
+            [options]="markerOptions"
+            [options]="getMarkerOptions(device)"
+            (mapClick)="zoomToSpecificPoint(device.deviceID)">
+            
+        </map-marker>
+    </google-map>-->
+    @if(this.activeDeviceId !=null && this.selectedDevice != null){
+        <app-device-details (close)="closeDetails()" [selectedDevice]="selectedDevice"></app-device-details>
+    }
+</div>
+
+    <!--<select id="start" (change)="calculateAndDisplayRoute()">
       <option *ngFor="let device of devices" [value]="device.deviceID">{{ device.deviceName }}</option>
-    </select>
-  </div>
-  <div #mapContainer id="mapa" class="map-container" style="height: 500px;"></div>
-  
+    </select>-->
+
