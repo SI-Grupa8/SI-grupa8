@@ -12,12 +12,12 @@ import { AuthTfaResponse } from '../../core/models/auth-tfa-response';
 
 function emailOrPhoneValidator(control: FormControl) {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const phonePattern = /^\d{10}$/;
+  const phonePattern = /^\d{9}$/;
 
   if (!emailPattern.test(control.value) && !phonePattern.test(control.value)) {
     return { invalidFormat: true };
   }
-  return null;
+  return null; 
 }
 @Component({
   selector: 'app-login',
@@ -40,7 +40,7 @@ export class LoginComponent {
 
   constructor(private f: FormBuilder, private authService: AuthService, private router: Router){
     this.loginForm = this.f.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, emailOrPhoneValidator]],
       pass:['', [Validators.required, Validators.minLength(8)]]
     });
     this.loginTwofaForm = this.f.group({

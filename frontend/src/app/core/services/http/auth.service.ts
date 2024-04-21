@@ -22,11 +22,11 @@ export class AuthService {
 
   user : BehaviorSubject<UserRequest | null> = new BehaviorSubject<UserRequest | null>(null)
 
-  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/Auth';
-  private apiUserUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/User'
-  //private apiUrl = 'https://localhost:7126/api/Auth';
+  //private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/Auth';
+  //private apiUserUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/User'
+  private apiUrl = 'https://localhost:7126/api/Auth';
 
-  //private apiShorterUrl = 'https://localhost:7126/Api';
+  private apiUserUrl = 'https://localhost:7126/api/User';
 
   constructor(private http: HttpClient, private router: Router) { 
     this.userRole = localStorage.getItem('role') as string;
