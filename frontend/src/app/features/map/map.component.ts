@@ -1,6 +1,6 @@
 
 //import { Component, ElementRef, OnInit, ViewChild  } from '@angular/core';
-import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
+import { GoogleMap, GoogleMapsModule, MapAdvancedMarker } from '@angular/google-maps';
 
 import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
@@ -24,7 +24,7 @@ import { FormsModule } from '@angular/forms';
     standalone: true,
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss'],
-    imports: [GoogleMapsModule, CommonModule, DeviceFilterComponent, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent]
+    imports: [MapAdvancedMarker,GoogleMapsModule, CommonModule, DeviceFilterComponent, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent]
 })
 
 export class MapComponent implements OnInit, AfterViewInit {
@@ -91,6 +91,7 @@ selectedDevice: any;
         }
         // Call getFilteredDevices method with updated selected chips
         this.getFilteredDevices();
+        this.initMap()
     });
 }
 
@@ -177,7 +178,8 @@ selectedDevice: any;
     ).subscribe(locations => {
       if (locations && locations.length > 0) {
         this.locations = locations.flat();
-        this.displayRoute(this.locations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[]);
+        //this.displayRoute(this.locations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[]);
+        this.initMap();
       }
     });
   }
@@ -245,8 +247,37 @@ selectedDevice: any;
         .subscribe(devices => {
             
             this.filteredDevices = devices;
+            this.initMap()
             console.log(this.filteredDevices);
         });
+  }
+  parseCoordinatesNew(device: any): { lat: number, lng: number } {
+    return { 
+      lat: parseFloat(device.xCoordinate),
+      lng: parseFloat(device.yCoordinate)
+    };
+  }
+
+  initMap(): void {
+    const myLatLng = { lat: 43.8582, lng: 18.3566 };
+  
+    const map = new google.maps.Map(
+      document.getElementById("mapContainer") as HTMLElement,
+      {
+        zoom: 10,
+        center: myLatLng,
+      }
+    );
+  
+    this.filteredDevices.forEach(device => {
+      const deviceLatLng =  this.parseCoordinatesNew(device) ;
+      console.log(device);
+      new google.maps.Marker({
+        position: deviceLatLng,
+        map: map,
+        title: device.deviceName,
+      });
+    });
   }
 
   @ViewChild(GoogleMap) map!: GoogleMap;
@@ -263,12 +294,9 @@ selectedDevice: any;
             this.center = this.defaultCenter;
             this.zoom = 15;
             this.selectedDevice = null;
+            this.initMap()
             //console.log(this.selectedDevice)
-            this.directionsRenderer.setMap(new google.maps.Map(this.mapContainer.nativeElement, {
-              center: this.defaultCenter,
-              zoom: 15,
-              mapTypeControl: false
-            }));
+            
             
             
         } else {
