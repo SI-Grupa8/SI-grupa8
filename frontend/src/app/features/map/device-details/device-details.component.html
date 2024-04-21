@@ -6,6 +6,10 @@
     </button>
 </div>
 <p class="device-name">{{selectedDevice?.deviceName}}</p>
+<div class="status" [ngClass]="{'active': deviceStatus === 'active', 'idle': deviceStatus === 'idle', 'inactive': deviceStatus === 'inactive'}">
+    <div class="status-dot"></div>
+    <span>{{ deviceStatus }}</span>
+</div>
 <hr class="separator">
 <div class="info">
     <p class="info-label" style="color: rgb(70, 64, 64)">Current location:</p>
@@ -14,7 +18,7 @@
     </div>
 </div>
 <div class="info">
-    <p><b style="color: rgb(70, 64, 64)">User: </b> {{userName}}</p>
+    <p><b style="color: rgb(70, 64, 64)">User: </b> {{userEmail}}</p>
 </div>
 <div class="info">
     <p><b style="color: rgb(70, 64, 64)">Reference: </b> {{selectedDevice?.reference}}</p>

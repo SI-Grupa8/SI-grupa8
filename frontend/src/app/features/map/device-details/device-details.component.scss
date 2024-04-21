@@ -66,3 +66,32 @@
     color: #1e5631;
     margin-right: 5px;
 }
+.status {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    span {
+        font-style: italic;
+        font-size: 14px;
+    }
+}
+
+.status-dot {
+    width: 9px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.active .status-dot {
+    background-color: green;
+}
+
+.idle .status-dot {
+    background-color: grey;
+}
+
+.inactive .status-dot {
+    background-color: red;
+}

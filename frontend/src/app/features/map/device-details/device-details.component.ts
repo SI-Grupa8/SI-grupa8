@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DeviceRequest } from '../../../core/models/device-request';
 import { UserService } from '../../../core/services/http/user.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-device-details',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './device-details.component.html',
   styleUrls: ['./device-details.component.scss']
 })
@@ -12,13 +14,14 @@ export class DeviceDetailsComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Input() selectedDevice: DeviceRequest | null = null; 
 
-  userName: string | undefined;
+  userEmail: string | undefined;
+  deviceStatus: string = 'active';
 
   constructor(private userService: UserService) {}
 
   ngOnInit() {
     if (this.selectedDevice) {
-      this.getUserName(this.selectedDevice.userID);
+      this.getUserEmail(this.selectedDevice.userID);
     }
   }
 
@@ -26,11 +29,11 @@ export class DeviceDetailsComponent implements OnInit {
     this.close.emit();
   }
 
-  getUserName(userId: number | undefined) {
+  getUserEmail(userId: number | undefined) {
     if (userId) {
       this.userService.getUser().subscribe(
         (user: any) => {
-          this.userName = user.email;
+          this.userEmail = user.email;
         },
         (error: any) => {
           console.error('Error fetching user:', error);
