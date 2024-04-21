@@ -13,6 +13,11 @@ namespace DAL.Interfaces
         Task<List<Device>> GetAllByCompanyUsersIds(List<int> usersIds);
         Task<Device> GetWithUser(int deviceId);
         Task<Device> GetByMacAddress(string macAddress);
+
         Task<List<Device>> GetFilteredDevicesByUserIds(List<int> userIds, DeviceFilter deviceFilter);
+
+        
+        Task<Device> GetByUserID(int userID);
+
     }
 }

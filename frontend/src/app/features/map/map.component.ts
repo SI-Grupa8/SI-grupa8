@@ -1,11 +1,17 @@
+
 import { Component, ElementRef, OnInit, ViewChild  } from '@angular/core';
 import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
-import { DeviceService } from '../../core/services/http/device.service';
+
+import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { forkJoin, of } from 'rxjs';
+import { catchError, concatMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
+import { DeviceService } from '../../core/services/http/device.service';
 import { AuthService } from '../../core/services/http/auth.service';
 import { DeviceFilterComponent } from './device-filter/device-filter.component';
-import { FormsModule } from '@angular/forms';
 import { UserService } from '../../core/services/http/user.service';
+
+
 import {  DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MapFilterComponent } from "./map-filter/map-filter.component";
 import {MatChipsModule} from '@angular/material/chips';
@@ -20,10 +26,19 @@ import { DeviceDetailsComponent } from "./device-details/device-details.componen
     imports: [GoogleMapsModule, CommonModule, DeviceFilterComponent, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent]
 })
 
-export class MapComponent implements OnInit{
-  center: google.maps.LatLngLiteral = { lat: 43.8563, lng: 18.4131 };
+export class MapComponent implements OnInit, AfterViewInit {
+  //center: google.maps.LatLngLiteral = { lat: 43.8563, lng: 18.4131 };
   zoom = 15;
   filteredDevices: any[] = [];
+  devices: any[] = [];
+  locations: any[] = [];
+  center: google.maps.LatLngLiteral = {
+    lat: 44.44929,
+    lng: 18.64978
+  };
+  zoom = 7;
+  directionsService: google.maps.DirectionsService;
+  directionsRenderer: google.maps.DirectionsRenderer;
 
   
   activeDeviceId: number | null = null;
@@ -107,37 +122,101 @@ selectedDevice: any;
   constructor(private deviceService: DeviceService, private authService : AuthService, private userService: UserService, private sanitizer: DomSanitizer) {}
 
 
+  @ViewChild('mapContainer')
+  mapContainer!: ElementRef;
+
+  constructor(
+    private deviceService: DeviceService,
+    private userService: UserService,
+  ) {
+    this.directionsService = new google.maps.DirectionsService();
+    this.directionsRenderer = new google.maps.DirectionsRenderer();
+  }
 
   ngOnInit(): void {
-    this.userService.getUser().subscribe(user => {
-      this.deviceService.getCompanyDevices(user.companyID).subscribe(devices => { 
-        this.filteredDevices = devices; }); 
-      })
-      this.markerOptions = { 
+
+      /*this.markerOptions = { 
         
       icon: { 
         url: 'assets/images/location-pin-48.png', 
         scaledSize: { width: 32, height: 32 } } 
-      }; 
+      }; */
       
+
+    this.userService.getUser().pipe(
+      concatMap(user => {
+        if (user) {
+          return this.deviceService.getCompanyDevices(user.companyID).pipe(
+            concatMap(devices => {
+              this.filteredDevices = devices;
+              const deviceObservables = devices.map(device => {
+                const deviceId = device.deviceID;
+                if (!deviceId || deviceId === 0) {
+                  console.error('Invalid device ID:', deviceId);
+                  return of([]);
+                }
+                return this.deviceService.getDeviceLocations(deviceId);
+              });
+              return forkJoin(deviceObservables);
+            })
+          );
+        }
+        return of(null);
+      }),
+      catchError(error => {
+        console.error('Error fetching devices:', error);
+        return of(null);
+      })
+    ).subscribe(locations => {
+      if (locations && locations.length > 0) {
+        this.locations = locations.flat();
+        this.displayRoute(this.locations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[]);
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    //this.displayRoute();
+  }
+
+  parseCoordinates(location: any): google.maps.LatLngLiteral | null {
+    const lat = parseFloat(location.xCoordinate);
+    const lng = parseFloat(location.yCoordinate);
+
+    if (isNaN(lat) || isNaN(lng)) {
+      console.error('Invalid coordinates for location:', location);
+      return null;
+
     }
-    
-  parseCoordinates(device: any): { lat: number, lng: number } {
-    return { 
-      lat: parseFloat(device.xCoordinate),
-      lng: parseFloat(device.yCoordinate)
+
+    return {
+      lat: lat,
+      lng: lng
     };
   }
+
   display: any;
   
 
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
+  
+
+
+  onDeviceTypeSelected(event: any): void {
+    this.deviceService.getFilteredDevices(event).subscribe(devices => {
+      this.devices = devices;
+    });
   }
 
-move(event: google.maps.MapMouseEvent) {
-  if (event.latLng != null) this.display = event.latLng.toJSON();
-}
+
+  calculateAndDisplayRoute(): void {
+    const selectedDeviceId = (document.getElementById('start') as HTMLSelectElement).value;
+    const sortedLocations = this.sortAndFilterLocationsForDevice(selectedDeviceId);
+    const routeCoordinates = sortedLocations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
+    this.displayRoute(routeCoordinates);
+  }
+
 
 
   getFilteredDevices() {
@@ -223,3 +302,41 @@ move(event: google.maps.MapMouseEvent) {
     console.log(this.selectedDevice);
   }
 }
+
+  private sortAndFilterLocationsForDevice(deviceId: string): any[] {
+    const deviceLocations = this.locations.filter(location => location.deviceID === parseInt(deviceId, 10));
+    return deviceLocations.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  }
+
+  private displayRoute(coordinates?: google.maps.LatLngLiteral[]): void {
+    if (!coordinates) {
+      coordinates = this.locations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
+    }
+    
+    const start = new google.maps.LatLng(coordinates[0].lat, coordinates[0].lng);
+    const end = new google.maps.LatLng(coordinates[coordinates.length - 1].lat, coordinates[coordinates.length - 1].lng);
+  
+    const waypts = coordinates.slice(1, -1).map(coord => ({ location: new google.maps.LatLng(coord.lat, coord.lng) }));
+  
+    const request = {
+      origin: start,
+      destination: end,
+      waypoints: waypts,
+      travelMode: google.maps.TravelMode.DRIVING,
+    };
+  
+    this.directionsService.route(request, (result, status) => {
+      if (status === google.maps.DirectionsStatus.OK) {
+        this.directionsRenderer.setDirections(result);
+        this.directionsRenderer.setMap(new google.maps.Map(this.mapContainer.nativeElement, {
+          center: this.center,
+          zoom: this.zoom
+        }));
+      } else {
+        console.error('Directions request failed due to ' + status);
+      }
+    });
+  }
+  
+}
+

@@ -31,6 +31,7 @@ builder.Services.AddScoped(typeof(ICompanyService), typeof(CompanyService));
 builder.Services.AddScoped(typeof(IDeviceService), typeof(DeviceService));
 builder.Services.AddScoped(typeof(IDeviceLocationService), typeof(DeviceLocationService));
 builder.Services.AddScoped(typeof(IDeviceTypeService), typeof(DeviceTypeService));
+builder.Services.AddScoped(typeof(ILocationStorageService), typeof(LocationStorageService));
 
 //Repositories
 builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
@@ -39,6 +40,7 @@ builder.Services.AddScoped(typeof(ICompanyRepository), typeof(CompanyRepository)
 builder.Services.AddScoped(typeof(IDeviceRepository), typeof(DeviceRepository));
 builder.Services.AddScoped(typeof(IDeviceLocationService), typeof(DeviceLocationService));
 builder.Services.AddScoped(typeof(IDeviceTypeRepository), typeof(DeviceTypeRepository));
+builder.Services.AddScoped(typeof(ILocationStorageRepository), typeof(LocationStorageRepository));
 
 
 //Db context

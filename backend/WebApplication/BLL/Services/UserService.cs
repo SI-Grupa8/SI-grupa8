@@ -10,6 +10,7 @@ using DAL.Entities;
 using DAL.Interfaces;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -20,13 +21,15 @@ namespace BLL.Services
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly IDeviceRepository _deviceRepository;
         private readonly IConfiguration _configuration;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
+        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IDeviceRepository deviceRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _configuration = configuration;
+            _deviceRepository = deviceRepository;
         }
 
         public async Task<object> EnableTwoFactorAuthentication(int userID)
@@ -263,7 +266,7 @@ namespace BLL.Services
             string fullName = $"{Uri.EscapeDataString(user.Name)}+{Uri.EscapeDataString(user.Surname)}";
             string qrCodeContent = $"otpauth://totp/WebApplication:{fullName}?secret={manualEntryKey}&issuer=WebApplicationApp";
 
-            var qrCodeImageUrl = $"https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl={Uri.EscapeDataString(qrCodeContent)}";
+            var qrCodeImageUrl = $"https://qrickit.com/api/qr.php?d={Uri.EscapeDataString(qrCodeContent)}&qrsize=200&t=p";
 
             return qrCodeImageUrl;
         }
@@ -337,6 +340,14 @@ namespace BLL.Services
         public async Task RemoveUser(int userId)
         {
             var user = await _userRepository.GetById(userId);
+
+            if(user!.RoleID == 3)
+            {
+                var device = await _deviceRepository.GetByUserID(userId);
+
+                if (device != null) _deviceRepository.Remove(device);
+            }
+
             _userRepository.Remove(user!);
 
             await _userRepository.SaveChangesAsync();
@@ -428,6 +439,53 @@ namespace BLL.Services
         public async Task<List<UserDto>> GetAdminsWihotuCompany()
         {
             var users = await _userRepository.GetAllAdminsWithoutCompany();
+
+            return _mapper.Map<List<UserDto>>(users);
+
+        }
+
+
+        public async Task<UserDto> ChangeEmail(UserDto userDto)
+        {
+                var mappedUser = _mapper.Map<User>(userDto);
+
+                var user = await _userRepository.GetById(userDto.UserID);
+
+                mappedUser.PasswordHash = user!.PasswordHash;
+                mappedUser.PasswordSalt = user.PasswordSalt;
+
+                _userRepository.DetachEntity(user);
+                mappedUser.Role = null;
+                //user = mappedUser;
+                _userRepository.Update(mappedUser);
+                await _userRepository.SaveChangesAsync();
+
+                return userDto;
+        }
+
+        public async Task<UserDto> ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            var user = await _userRepository.GetById(changePasswordDto.UserId);
+
+            if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.CurrentPassword, Encoding.UTF8.GetString(user.PasswordHash)))
+            {
+                throw new Exception("Wrong password.");
+            }
+
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
+
+            // Update the user's password hash with the new one
+            user.PasswordHash = Encoding.UTF8.GetBytes(passwordHash);
+
+            // Save the changes to the database
+            await _userRepository.SaveChangesAsync();
+
+            return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task<List<UserDto>> GetDispatchersForNewDevice(int companyId)
+        {
+            var users = await _userRepository.GetDispatchersForNewDevice(companyId);
 
             return _mapper.Map<List<UserDto>>(users);
 
