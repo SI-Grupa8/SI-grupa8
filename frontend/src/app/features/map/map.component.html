@@ -1,20 +1,11 @@
 <div class="home-header">
     <p class="greeting">Device Location Overview</p>
-</div>
-<div class="filter">
+  </div>
+  <div class="filter">
     <app-device-filter (deviceTypeSelectedId)="onDeviceTypeSelected($event)"></app-device-filter>
-</div>
-<div class="mapa">
-    <google-map 
-                width="1250px"
-                [center]="{ lat: 43.8563, lng: 18.4131 }"
-                [zoom]="15"
-                (mapClick)="moveMap($event)"
-                (mapMousemove)="move($event)">
-                <map-marker *ngFor="let device of devices"
-                [position]="parseCoordinates(device)"
-                [title]="device.deviceName"
-                [options]="markerOptions">
-    </map-marker>
-    </google-map>
-</div>
+    <select id="start" (change)="calculateAndDisplayRoute()">
+      <option *ngFor="let device of devices" [value]="device.deviceID">{{ device.deviceName }}</option>
+    </select>
+  </div>
+  <div #mapContainer id="mapa" class="map-container" style="height: 500px;"></div>
+  
