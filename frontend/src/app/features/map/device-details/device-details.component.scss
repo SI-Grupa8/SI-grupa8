@@ -4,11 +4,12 @@
     display: flex;
     flex-direction: column;
     background-color: rgb(255, 255, 255);
-    z-index: 200;
+    z-index: 9999;
+    position: fixed;
     right: 0;
     //align-items: center;
     top: 220px;
-    position: fixed;
+    //position: fixed;
     border-radius: 10px 0 0 10px;
     .upper-header {
         width: 100%;

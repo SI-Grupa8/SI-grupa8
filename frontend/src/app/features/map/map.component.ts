@@ -1,5 +1,5 @@
 
-import { Component, ElementRef, OnInit, ViewChild  } from '@angular/core';
+//import { Component, ElementRef, OnInit, ViewChild  } from '@angular/core';
 import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
 
 import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
@@ -17,6 +17,7 @@ import { MapFilterComponent } from "./map-filter/map-filter.component";
 import {MatChipsModule} from '@angular/material/chips';
 import { DeviceRequest } from '../../core/models/device-request';
 import { DeviceDetailsComponent } from "./device-details/device-details.component";
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-map',
@@ -28,10 +29,14 @@ import { DeviceDetailsComponent } from "./device-details/device-details.componen
 
 export class MapComponent implements OnInit, AfterViewInit {
   //center: google.maps.LatLngLiteral = { lat: 43.8563, lng: 18.4131 };
-  zoom = 15;
+  //zoom = 15;
   filteredDevices: any[] = [];
   devices: any[] = [];
   locations: any[] = [];
+  defaultCenter:google.maps.LatLngLiteral = {
+    lat: 44.44929,
+    lng: 18.64978
+  };
   center: google.maps.LatLngLiteral = {
     lat: 44.44929,
     lng: 18.64978
@@ -119,7 +124,7 @@ selectedDevice: any;
     { lat: 44.53842, lng: 18.66709 }
   ];
 
-  constructor(private deviceService: DeviceService, private authService : AuthService, private userService: UserService, private sanitizer: DomSanitizer) {}
+  //constructor(private deviceService: DeviceService, private authService : AuthService, private userService: UserService, private sanitizer: DomSanitizer) {}
 
 
   @ViewChild('mapContainer')
@@ -128,6 +133,8 @@ selectedDevice: any;
   constructor(
     private deviceService: DeviceService,
     private userService: UserService,
+    private authService : AuthService,
+    private sanitizer: DomSanitizer
   ) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
@@ -200,19 +207,20 @@ selectedDevice: any;
 
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
-  
+  }
 
-
+/*
   onDeviceTypeSelected(event: any): void {
     this.deviceService.getFilteredDevices(event).subscribe(devices => {
       this.devices = devices;
     });
-  }
+  }*/
 
 
   calculateAndDisplayRoute(): void {
-    const selectedDeviceId = (document.getElementById('start') as HTMLSelectElement).value;
-    const sortedLocations = this.sortAndFilterLocationsForDevice(selectedDeviceId);
+    //const selectedDeviceId = (document.getElementById('start') as HTMLSelectElement).value;
+    
+    const sortedLocations = this.sortAndFilterLocationsForDevice(this.selectedDevice.deviceID);
     const routeCoordinates = sortedLocations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
     this.displayRoute(routeCoordinates);
   }
@@ -252,20 +260,17 @@ selectedDevice: any;
 
         if (this.activeDeviceId === deviceID) {
             this.activeDeviceId = null;
-            this.map.panTo(this.center);
-            
+            this.center = this.defaultCenter;
             this.zoom = 15;
             this.selectedDevice = null;
         } else {
             this.activeDeviceId = deviceID;
-            this.map.panTo(newPosition);
-
-            
+            this.center = newPosition;
             this.zoom = 16;
             this.selectedDevice = device;
         }
     }
-  }
+}
   
   getMarkerOptions(device: DeviceRequest): any {
     if (device.deviceTypeID == 1){
@@ -301,7 +306,7 @@ selectedDevice: any;
     
     console.log(this.selectedDevice);
   }
-}
+
 
   private sortAndFilterLocationsForDevice(deviceId: string): any[] {
     const deviceLocations = this.locations.filter(location => location.deviceID === parseInt(deviceId, 10));
@@ -309,8 +314,9 @@ selectedDevice: any;
   }
 
   private displayRoute(coordinates?: google.maps.LatLngLiteral[]): void {
-    if (!coordinates) {
-      coordinates = this.locations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
+    if (!coordinates || coordinates.length === 0) {
+        console.error('No coordinates provided for displaying route.');
+        return;
     }
     
     const start = new google.maps.LatLng(coordinates[0].lat, coordinates[0].lng);
@@ -330,13 +336,14 @@ selectedDevice: any;
         this.directionsRenderer.setDirections(result);
         this.directionsRenderer.setMap(new google.maps.Map(this.mapContainer.nativeElement, {
           center: this.center,
-          zoom: this.zoom
+          zoom: this.zoom,
+          mapTypeControl: false
         }));
       } else {
         console.error('Directions request failed due to ' + status);
       }
     });
-  }
+}
   
 }
 

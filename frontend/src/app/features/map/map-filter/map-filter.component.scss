@@ -2,9 +2,10 @@
     width: 350px;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: calc(100% - 110px);
+    margin-top: 50px;
     background-color: rgb(255, 255, 255);
-    z-index: 200;
+    z-index: 9999 !important;
     position: fixed;
     .filter-header {
         width: 100%;
