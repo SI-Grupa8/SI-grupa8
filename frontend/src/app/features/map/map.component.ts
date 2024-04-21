@@ -46,7 +46,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   directionsRenderer: google.maps.DirectionsRenderer;
 
   
-  activeDeviceId: number | null = null;
+  activeDeviceId: number | null | undefined;
   
   allDevicesSelected: boolean = true;
   mobileDevicesSelected: boolean = false;
@@ -263,11 +263,20 @@ selectedDevice: any;
             this.center = this.defaultCenter;
             this.zoom = 15;
             this.selectedDevice = null;
+            //console.log(this.selectedDevice)
+            this.directionsRenderer.setMap(new google.maps.Map(this.mapContainer.nativeElement, {
+              center: this.defaultCenter,
+              zoom: 15,
+              mapTypeControl: false
+            }));
+            
+            
         } else {
             this.activeDeviceId = deviceID;
             this.center = newPosition;
             this.zoom = 16;
             this.selectedDevice = device;
+            this.calculateAndDisplayRoute()
         }
     }
 }
@@ -308,8 +317,8 @@ selectedDevice: any;
   }
 
 
-  private sortAndFilterLocationsForDevice(deviceId: string): any[] {
-    const deviceLocations = this.locations.filter(location => location.deviceID === parseInt(deviceId, 10));
+  private sortAndFilterLocationsForDevice(deviceId: number): any[] {
+    const deviceLocations = this.locations.filter(location => location.deviceID === deviceId);
     return deviceLocations.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }
 

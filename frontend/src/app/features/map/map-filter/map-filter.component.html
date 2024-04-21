@@ -18,6 +18,7 @@
         <div class="devices-filter-list">
             @for (device of filteredDevices; track $index) {
                 <div (click)="zoomToSpecificPoint(device.deviceID)" 
+                
                 class="device-filter-card"
                 (click)="toggleActiveDevice(device.deviceID)"
                 [class.active]="isDeviceActive(device.deviceID)"
