@@ -481,13 +481,13 @@ namespace BLL.Services
             await _userRepository.SaveChangesAsync();
 
             return _mapper.Map<UserDto>(user);
+        }
 
         public async Task<List<UserDto>> GetDispatchersForNewDevice(int companyId)
         {
             var users = await _userRepository.GetDispatchersForNewDevice(companyId);
 
             return _mapper.Map<List<UserDto>>(users);
-          
 
         }
     }
