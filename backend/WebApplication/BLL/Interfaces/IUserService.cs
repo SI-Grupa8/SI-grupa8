@@ -31,6 +31,10 @@ namespace BLL.Interfaces
         Task<UserDto> GetUser(int userID);
         Task<UserDto> ConfirmTfa(UserLoginTfa request, int userID);
         Task<UserDto> DisableTfa(int userID);
+        Task<UserDto> ChangeEmail(UserDto userDto);
+        Task<UserDto> ChangePassword(ChangePasswordDto changePasswordDto);
+        Task<List<UserDto>> GetDispatchersForNewDevice(int companyId);
+
     }
 }
 

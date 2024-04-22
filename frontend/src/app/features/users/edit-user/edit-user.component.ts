@@ -27,20 +27,51 @@ export class EditUserComponent {
       name: [data.user?.name || ' '],
       surname: [data.user?.surname || ''],
       email: [data.user?.email || ''],
-      password: [data.user?.password || ''],
-      role: new FormControl(this.roles),
+      password: [data.user?.password || '', [Validators.minLength(8)]],
+      role: [this.getRoleName(data.user?.roleID) || '']
     });
     this.userRequest = data.user
     //this.userRequest.companyID = data.companyId;
+  }
+
+  getRoleName(roleID: number | undefined): string | null {
+    if (typeof roleID === 'undefined') {
+      return null; // Return null if roleID is undefined
+    }
+  
+    switch (roleID) {
+      case 1:
+        return 'Admin';
+      case 2:
+        return 'SuperAdmin';
+      case 3:
+        return 'Dispatcher';
+      case 4:
+        return 'FleetManager';
+      case 5:
+        return 'User';
+      default:
+        return null;
+    }
   }
 
   closeDialog(): void {
     this.dialogRef.close();
   }
 
+  get passControl() {
+    return this.editUserForm.get('password');
+  }
+
 
   edit(event: Event) {
-    
+    if (this.editUserForm.invalid) {
+      Object.values(this.editUserForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
+      return;
+    }
+
     this.userRequest.email = this.editUserForm.get('email')?.value;
     this.userRequest.name = this.editUserForm.get('name')?.value;
     this.userRequest.surname = this.editUserForm.get('surname')?.value;

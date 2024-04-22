@@ -135,5 +135,10 @@ namespace BLL.Services
 
             return _mapper.Map<List<UserDto>>(users);
         }
+
+        public async Task<object> GetUserStatistics(int companyId)
+        {
+            return await _companyRepository.GetUserStatistics(companyId);
+        }
     }
 }

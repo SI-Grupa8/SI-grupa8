@@ -19,11 +19,31 @@ export class HeaderComponent {
   toggleProfileMenu(): void {    
     this.isProfileClicked = !this.isProfileClicked;
   }
+
+  // assuming the roles are fixed with ids
+  getRoleName(roleID: number): string {
+    switch (roleID) {
+      case 1:
+        return 'Admin';
+      case 2:
+        return 'Super Admin';
+      case 3:
+        return 'Dispatcher';
+      case 4:
+        return 'Fleet Manager';
+      case 5:
+        return 'User';
+      default:
+        return 'Unknown Role';
+    }
+  }
+
   ngOnInit(): void{
     if(localStorage.getItem("token")){
       this.userService.getUser().subscribe(
         (data) => {
           this.userData = data;
+          console.log(this.userData)
         },
     )};
   };
