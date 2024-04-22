@@ -29,7 +29,9 @@ function emailOrPhoneValidator(control: FormControl) {
 export class LoginComponent {
   showLoginForm=true;
   refreshToken = '';
-  authRequest: AuthRequest = {};
+  authRequest: AuthRequest = {
+    phoneNumber: ''
+  };
   authRequestTfa: AuthTfaRequest = {};
   authResponseTfa: AuthTfaResponse = {};
   loginForm: FormGroup;
@@ -66,6 +68,13 @@ export class LoginComponent {
   }
 
   login() {
+
+    const input = this.loginForm.get('email')?.value;
+    if (input.match(/^\d{9}$/)) { 
+      this.authRequest.phoneNumber = input;
+    } else {
+      this.authRequest.email = input;
+    } 
     // Mark all form controls as touched to display errors
     if (this.loginForm.invalid) {
       Object.values(this.loginForm.controls).forEach(control => {
@@ -73,7 +82,6 @@ export class LoginComponent {
       });
       return;
     }
-    this.authRequest.email = this.loginForm.get('email')?.value;
     this.authRequest.password = this.loginForm.get('pass')?.value;
 
     this.authService.login(this.authRequest)
