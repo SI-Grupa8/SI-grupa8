@@ -25,5 +25,18 @@ namespace DAL.Repositories
                                    .OrderBy(location => location.Timestamp)
                                    .ToListAsync();
         }
+
+        public async Task DeleteOldRecords(DateTime threshold)
+        {
+            var oldRecords = await _context.LocationStorages
+                .Where(ls => ls.Timestamp < threshold)
+                .ToListAsync();
+
+            if (oldRecords.Count != 0)
+            {
+                _context.LocationStorages.RemoveRange(oldRecords);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }
