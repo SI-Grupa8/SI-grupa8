@@ -82,11 +82,11 @@ export class DeviceService {
     return this.http.get<any[]>(`${this.apiUrl}/LocationStorage/get-device-locations/${deviceId}`, {headers});
   }
 
-  getDateTimeStamps(date: DateRequest):Observable<LocationStorage[]> {
+  getDateTimeStamps(date: DateRequest):Observable<any[]> {
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.post<any[]>(`${this.apiUrl}/DeviceLocation/locations-filter`, date, { headers });
+    return this.http.post<LocationStorage[]>(`${this.apiUrl}/DeviceLocation/locations-filter`, date, { headers });
   }
 }

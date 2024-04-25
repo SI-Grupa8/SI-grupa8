@@ -368,6 +368,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   private displayRoute(coordinates?: google.maps.LatLngLiteral[]): void {
+    console.log("KOO:" + coordinates);
     if (!coordinates || coordinates.length === 0) {
         console.error('No coordinates provided for displaying route.');
         return;
@@ -409,12 +410,17 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
     this.deviceService.getDateTimeStamps(this.dateRequest).subscribe(x => {
       var coordinates : any = []
-   
-      x.forEach((element) => {
+      coordinates =  x.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
+
+      console.log("x is:" +x);
+      /*x.forEach((element) => {
         var e = element.xCoordinate;
         var e2 =  element.yCoordinate;
+        console.log("b: " + e + e2);
         coordinates.push([e, e2]);
-      });
+      });*/
+      console.log("aa:" + coordinates);
+      console.log("aaaaaaaaaaaaaaa")
       this.displayRoute(coordinates);
     })
   }
