@@ -45,14 +45,14 @@ namespace API.Controllers
             return Ok(new { Message = "Location saved" });
         }
 
-        [HttpGet("locations-filter")]
+        [HttpPost("locations-filter")]
         [Authorize(Roles ="Admin")]
-        public ActionResult<List<LocationStorageDto>> GetDeviceRoutesFilter(DateTime startTime, DateTime endTime)
+        public ActionResult<List<LocationStorageDto>> GetDeviceRoutesFilter(DateTimes time)
         {
             string token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
             var adminId = JWTHelper.GetUserIDFromClaims(token);
 
-            return _deviceLocationService.GetDeviceLocationsFilter(adminId, startTime, endTime);
+            return _deviceLocationService.GetDeviceLocationsFilter(adminId, time.date1, time.date2);
 
         }
     }

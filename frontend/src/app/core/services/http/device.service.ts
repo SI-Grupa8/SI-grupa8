@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { DeviceRequest } from '../../models/device-request';
+import { DateRequest } from '../../models/date-request';
 
 @Injectable({
   providedIn: 'root'
@@ -80,4 +81,11 @@ export class DeviceService {
     return this.http.get<any[]>(`${this.apiUrl}/LocationStorage/get-device-locations/${deviceId}`, {headers});
   }
 
+  getDateTimeStamps(date: DateRequest):Observable<any> {
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any[]>(`${this.apiUrl}/DeviceLocation/locations-filter`, date, { headers });
+  }
 }

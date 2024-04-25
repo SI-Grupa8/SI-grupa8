@@ -18,6 +18,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import { DeviceRequest } from '../../core/models/device-request';
 import { DeviceDetailsComponent } from "./device-details/device-details.component";
 import { FormsModule } from '@angular/forms';
+import { DateRequest } from '../../core/models/date-request';
 
 @Component({
     selector: 'app-map',
@@ -33,6 +34,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   filteredDevices: any[] = [];
   devices: any[] = [];
   locations: any[] = [];
+  date1: Date = new Date();
+  date2: Date = new Date();
   defaultCenter:google.maps.LatLngLiteral = {
     lat: 44.44929,
     lng: 18.64978
@@ -45,14 +48,17 @@ export class MapComponent implements OnInit, AfterViewInit {
   directionsService: google.maps.DirectionsService;
   directionsRenderer: google.maps.DirectionsRenderer;
 
-  
+  dateRequest: DateRequest = {
+    date1: this.date1,
+    date2: this.date2
+  }
   activeDeviceId: number | null | undefined;
   
   allDevicesSelected: boolean = true;
   mobileDevicesSelected: boolean = false;
   gpsDevicesSelected: boolean = false;
   carDevicesSelected: boolean = false;
-selectedDevice: any;
+  selectedDevice: any;
 
   selectAllDevices() {
     this.allDevicesSelected = true;
@@ -225,6 +231,7 @@ selectedDevice: any;
     const sortedLocations = this.sortAndFilterLocationsForDevice(this.selectedDevice.deviceID);
     const routeCoordinates = sortedLocations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
     this.displayRoute(routeCoordinates);
+    
   }
 
 
@@ -247,10 +254,18 @@ selectedDevice: any;
         .subscribe(devices => {
             
             this.filteredDevices = devices;
+
             this.initMap()
             console.log(this.filteredDevices);
         });
   }
+
+  getSearchDevices(deviceRequest: DeviceRequest[]) {
+    this.filteredDevices = deviceRequest;
+
+    this.initMap()
+  }
+
   parseCoordinatesNew(device: any): { lat: number, lng: number } {
     return { 
       lat: parseFloat(device.xCoordinate),
@@ -357,7 +372,10 @@ selectedDevice: any;
         console.error('No coordinates provided for displaying route.');
         return;
     }
-    
+    let filterCoordinates = coordinates;
+    filterCoordinates.forEach(x => {
+
+    })
     const start = new google.maps.LatLng(coordinates[0].lat, coordinates[0].lng);
     const end = new google.maps.LatLng(coordinates[coordinates.length - 1].lat, coordinates[coordinates.length - 1].lng);
   
@@ -383,6 +401,12 @@ selectedDevice: any;
       }
     });
 }
-  
+
+  showTimeStamps(date1: Date, date2: Date) {
+    console.log('timestampssss')
+    this.deviceService.getDateTimeStamps(this.dateRequest).subscribe(x => {
+      console.log(x)
+    })
+  }
 }
 

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import {MatTabsModule} from '@angular/material/tabs';
 import { DeviceService } from '../../../core/services/http/device.service';
 import { AuthService } from '../../../core/services/http/auth.service';
+import { DeviceRequest } from '../../../core/models/device-request';
 
 @Component({
   selector: 'app-map-filter',
@@ -21,6 +22,7 @@ export class MapFilterComponent {
   @Output() closedFilter = new EventEmitter<void>();
   companyId : number = 0;
   @Output() zoomEvent = new EventEmitter<number>();
+  @Output() search = new EventEmitter<DeviceRequest[]>();
 
   activeDeviceId: number | null = null; 
   beforeFiltered: any[] =[];
@@ -30,6 +32,7 @@ export class MapFilterComponent {
       this.filteredDevices = this.beforeFiltered.filter(device => 
         device.deviceName.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
+      this.search.emit(this.filteredDevices);
     } else {
       this.filteredDevices = this.beforeFiltered;
     }

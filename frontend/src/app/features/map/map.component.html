@@ -3,17 +3,24 @@
 
 </div>-->
 <div class="map-nav">
-    <p>SHOWING: </p>
-    <mat-chip-listbox aria-label="Fish selection" multiple>
-        <mat-chip-option [selected]="allDevicesSelected"  class="mat-chip" (click)="selectAllDevices()" selected>All devices (10)</mat-chip-option>
-        <mat-chip-option [selected]="mobileDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('mobile')">Mobile&nbsp;&nbsp;(10)</mat-chip-option>
-        <mat-chip-option [selected]="gpsDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('gps')">GPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(10)</mat-chip-option>
-        <mat-chip-option [selected]="carDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('car')">Car&nbsp;&nbsp;(10)</mat-chip-option>
-      </mat-chip-listbox>
+    <div class="sort">
+        <p>SHOWING: </p>
+        <mat-chip-listbox aria-label="Fish selection" multiple>
+            <mat-chip-option [selected]="allDevicesSelected"  class="mat-chip" (click)="selectAllDevices()" selected>All devices (10)</mat-chip-option>
+            <mat-chip-option [selected]="mobileDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('mobile')">Mobile&nbsp;&nbsp;(10)</mat-chip-option>
+            <mat-chip-option [selected]="gpsDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('gps')">GPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(10)</mat-chip-option>
+            <mat-chip-option [selected]="carDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('car')">Car&nbsp;&nbsp;(10)</mat-chip-option>
+          </mat-chip-listbox>
+    </div>
+      <div class="date">
+          <input type="datetime-local" id="datetime1" name="datetime1" [(ngModel)]="date1">
+          <input type="datetime-local" id="datetime2" name="datetime2" [(ngModel)]="date2">
+          <button class="show" (click)="showTimeStamps(date1, date2)">SHOW</button>
+      </div>
 </div>
     <div  #mapContainer id="mapContainer" class="map-container" style="z-index: 100;" ></div>
     @if (showFilterComponent) {
-        <app-map-filter style="z-index: 9999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()"></app-map-filter>
+        <app-map-filter style="z-index: 9999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)"></app-map-filter>
     } 
     @else {
         <button (click)="toggleMapFilter()" class="show-filters">
