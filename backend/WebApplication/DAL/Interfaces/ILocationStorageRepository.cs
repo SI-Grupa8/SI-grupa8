@@ -10,5 +10,6 @@ namespace DAL.Interfaces
     public interface ILocationStorageRepository : IRepository<LocationStorage>
     {
         Task<List<LocationStorage>> getLocationsByDeviceId(int deviceId);
+        List<LocationStorage> GetFilteredLocation(int adminId, DateTime startDate, DateTime endDate);
     }
 }

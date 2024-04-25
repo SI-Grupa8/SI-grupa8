@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using AutoMapper;
+using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -17,12 +18,14 @@ namespace BLL.Services
 		private readonly IMapper _mapper;
 		private readonly IConfiguration _configuration;
         private readonly IDeviceRepository _deviceRepository;
+        private readonly ILocationStorageRepository _locationStorageRepository;
 
-		public DeviceLocationService(IConfiguration configuration, IMapper mapper, IDeviceRepository deviceRepository)
+		public DeviceLocationService(IConfiguration configuration, IMapper mapper, IDeviceRepository deviceRepository, ILocationStorageRepository locationStorageRepository)
 		{
 			_configuration = configuration;
 			_mapper = mapper;
             _deviceRepository = deviceRepository;
+            _locationStorageRepository = locationStorageRepository;
 		}
 
         public string CreateDeviceToken(string macAddressName)
@@ -76,6 +79,14 @@ namespace BLL.Services
             {
                 throw new UnauthorizedAccessException("Unauthorized: Incorrect longitude and latitude values.");
             }
+        }
+
+        public List<LocationStorageDto> GetDeviceLocationsFilter(int adminId, DateTime startTime, DateTime endTime)
+        {
+
+            var locations = _locationStorageRepository.GetFilteredLocation(adminId, startTime, endTime);
+
+            return _mapper.Map<List<LocationStorageDto>>(locations);
         }
 
         private static bool IsValidLatitude(string location, string locationCode)
