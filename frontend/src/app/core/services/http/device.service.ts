@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { DeviceRequest } from '../../models/device-request';
 import { DateRequest } from '../../models/date-request';
+import { LocationStorage } from '../../models/location-storage';
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +82,7 @@ export class DeviceService {
     return this.http.get<any[]>(`${this.apiUrl}/LocationStorage/get-device-locations/${deviceId}`, {headers});
   }
 
-  getDateTimeStamps(date: DateRequest):Observable<any> {
+  getDateTimeStamps(date: DateRequest):Observable<LocationStorage[]> {
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`

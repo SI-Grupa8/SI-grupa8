@@ -403,9 +403,19 @@ export class MapComponent implements OnInit, AfterViewInit {
 }
 
   showTimeStamps(date1: Date, date2: Date) {
-    console.log('timestampssss')
+    this.dateRequest = {
+      date1,
+      date2
+    }
     this.deviceService.getDateTimeStamps(this.dateRequest).subscribe(x => {
-      console.log(x)
+      var coordinates : any = []
+   
+      x.forEach((element) => {
+        var e = element.xCoordinate;
+        var e2 =  element.yCoordinate;
+        coordinates.push([e, e2]);
+      });
+      this.displayRoute(coordinates);
     })
   }
 }

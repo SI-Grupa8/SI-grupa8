@@ -21,6 +21,8 @@ namespace DAL.Repositories
         {
             _context = context;
             _configuration = configuration;
+
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
 
         public async Task<List<LocationStorage>> getLocationsByDeviceId(int deviceId)
