@@ -4,6 +4,7 @@ using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
 using DAL.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,11 @@ namespace BLL.Services
             var location = _mapper.Map<LocationStorage>(locationStorageDto);
             _locationStorageRepository.Add(location);
             await _locationStorageRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteOldRecords(DateTime threshold)
+        {
+            await _locationStorageRepository.DeleteOldRecords(threshold);
         }
     }
 }

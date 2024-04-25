@@ -1,4 +1,4 @@
-﻿using DAL.Entities;
+using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +29,19 @@ namespace DAL.Repositories
                                    .Where(location => location.DeviceID == deviceId)
                                    .OrderBy(location => location.Timestamp)
                                    .ToListAsync();
+        }
+
+        public async Task DeleteOldRecords(DateTime threshold)
+        {
+            var oldRecords = await _context.LocationStorages
+                .Where(ls => ls.Timestamp < threshold)
+                .ToListAsync();
+
+            if (oldRecords.Count != 0)
+            {
+                _context.LocationStorages.RemoveRange(oldRecords);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public List<LocationStorage> GetFilteredLocation(int adminId, DateTime startDate, DateTime endDate)
@@ -69,7 +82,6 @@ namespace DAL.Repositories
 
             return locationStorages;
         }
-
     }
     
 }

@@ -32,6 +32,7 @@ builder.Services.AddScoped(typeof(IDeviceService), typeof(DeviceService));
 builder.Services.AddScoped(typeof(IDeviceLocationService), typeof(DeviceLocationService));
 builder.Services.AddScoped(typeof(IDeviceTypeService), typeof(DeviceTypeService));
 builder.Services.AddScoped(typeof(ILocationStorageService), typeof(LocationStorageService));
+builder.Services.AddSingleton<IHostedService, LocationCleanupService>();
 
 //Repositories
 builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));

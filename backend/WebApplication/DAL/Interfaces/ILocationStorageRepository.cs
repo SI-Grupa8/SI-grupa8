@@ -1,4 +1,4 @@
-﻿using DAL.Entities;
+using DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +10,10 @@ namespace DAL.Interfaces
     public interface ILocationStorageRepository : IRepository<LocationStorage>
     {
         Task<List<LocationStorage>> getLocationsByDeviceId(int deviceId);
+
+        Task DeleteOldRecords(DateTime threshold);
+
         List<LocationStorage> GetFilteredLocation(int adminId, DateTime startDate, DateTime endDate);
+
     }
 }
