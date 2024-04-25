@@ -29,7 +29,7 @@ namespace BLL.Services
         {
             var device = await _deviceRepository.GetById(id);
 
-            return _mapper.Map<DeviceDto>(device); 
+            return _mapper.Map<DeviceDto>(device);
         }
 
         public async Task<List<DeviceDto>> GetAllForCompany(int companyId)
@@ -44,7 +44,7 @@ namespace BLL.Services
             var users = company.Users.Select(x => x!.UserID).ToList();
 
             var devices = await _deviceRepository.GetAllByCompanyUsersIds(users);
-            
+
             return _mapper.Map<List<DeviceDto>>(devices);
         }
 
@@ -68,10 +68,10 @@ namespace BLL.Services
         {
             var device = await _deviceRepository.GetWithUser(deviceId);
 
-            if(companyId != device!.User!.CompanyID)
-            {
-                throw new Exception("You do not have permissions to remove this device.");
-            }
+            //if (companyId != device!.User!.CompanyID)
+            //{
+            //    throw new Exception("You do not have permissions to remove this device.");
+            //}
 
             _deviceRepository.Remove(device);
             await _deviceRepository.SaveChangesAsync();

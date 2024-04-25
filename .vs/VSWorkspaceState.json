@@ -1,9 +1,14 @@
-
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\backend",
+    "\\backend\\WebApplication",
+    "\\backend\\WebApplication\\API",
+    "\\backend\\WebApplication\\API\\Controllers",
+    "\\backend\\WebApplication\\BLL",
+    "\\backend\\WebApplication\\BLL\\DTOs",
+    "\\backend\\WebApplication\\BLL\\Services"
   ],
   "SelectedNode": "\\backend\\WebApplication\\WebApplication.sln",
   "PreviewInSolutionExplorer": false
 }
-
