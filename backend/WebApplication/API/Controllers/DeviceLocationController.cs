@@ -1,4 +1,5 @@
 ﻿using API.JWTHelpers;
+using BLL.DTOs;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +43,17 @@ namespace API.Controllers
             }
 
             return Ok(new { Message = "Location saved" });
+        }
+
+        [HttpGet("locations-filter")]
+        [Authorize(Roles ="Admin")]
+        public ActionResult<List<LocationStorageDto>> GetDeviceRoutesFilter(DateTime startTime, DateTime endTime)
+        {
+            string token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
+            var adminId = JWTHelper.GetUserIDFromClaims(token);
+
+            return _deviceLocationService.GetDeviceLocationsFilter(adminId, startTime, endTime);
+
         }
     }
 }
