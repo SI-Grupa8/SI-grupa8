@@ -13,8 +13,10 @@
           </mat-chip-listbox>
     </div>
     <div class="date" [ngClass]="{'hide': !activeDeviceId}">
-        <input type="datetime-local" id="datetime1" name="datetime1" [(ngModel)]="date1" [min]="last24HoursDateTime" [max]="maxDateTime">
-        <input type="datetime-local" id="datetime2" name="datetime2" [(ngModel)]="date2" [min]="last24HoursDateTime" [max]="maxDateTime">
+        <input [owlDateTime]="dt1" [min]="minDateTime" [max]="maxDateTime" placeholder="From" [owlDateTimeTrigger]="dt1" [(ngModel)]="date1">
+        <owl-date-time [pickerType]="'both'" #dt1 [owlDateTimeTrigger]="dt1"></owl-date-time>
+        <input [owlDateTime]="dt2" [min]="minDateTime" [max]="maxDateTime" placeholder="To" [owlDateTimeTrigger]="dt2" [(ngModel)]="date2">
+        <owl-date-time [pickerType]="'both'" #dt2 [owlDateTimeTrigger]="dt2"></owl-date-time>
         <button class="show" (click)="showTimeStamps(date1, date2)">SHOW</button>
     </div>
 </div>

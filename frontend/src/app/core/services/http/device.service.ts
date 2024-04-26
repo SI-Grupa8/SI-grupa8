@@ -82,7 +82,7 @@ export class DeviceService {
     return this.http.get<any[]>(`${this.apiUrl}/LocationStorage/get-device-locations/${deviceId}`, {headers});
   }
 
-  getDateTimeStamps(date: DateRequest, deviceId : number):Observable<any[]> {
+  getDateTimeStamps(date: any, deviceId : number):Observable<any[]> {
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
