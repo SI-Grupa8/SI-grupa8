@@ -19,25 +19,46 @@ import { DeviceRequest } from '../../core/models/device-request';
 import { DeviceDetailsComponent } from "./device-details/device-details.component";
 import { FormsModule } from '@angular/forms';
 import { DateRequest } from '../../core/models/date-request';
+import { OwlDateTimeFormats, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { DatePipe } from '@angular/common';
+  
 
 @Component({
     selector: 'app-map',
     standalone: true,
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss'],
-    imports: [MapAdvancedMarker,GoogleMapsModule, CommonModule, DeviceFilterComponent, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent]
+    providers: [DatePipe],
+    imports: [MapAdvancedMarker, GoogleMapsModule, CommonModule, DeviceFilterComponent, OwlDateTimeModule, OwlNativeDateTimeModule, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent]
 })
 
 export class MapComponent implements OnInit, AfterViewInit {
   //center: google.maps.LatLngLiteral = { lat: 43.8563, lng: 18.4131 };
   //zoom = 15;
+
+  currentDate: Date = new Date();
+  last24Hours: number = 24 * 60 * 60 * 1000;
+
+  maxDateTime: Date = new Date();
+  minDateTime: Date = new Date(this.currentDate.getTime() - this.last24Hours);
+
+  dateTimePickerFormat: OwlDateTimeFormats = {
+    parseInput: 'YYYY-MM-DD HH:mm',
+    fullPickerInput: 'YYYY-MM-DD HH:mm',
+    datePickerInput: 'YYYY-MM-DD',
+    timePickerInput: 'HH:mm',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  };
+  
   filteredDevices: any[] = [];
   devices: any[] = [];
   locations: any[] = [];
   date1: Date = new Date();
   date2: Date = new Date();
   last24HoursDateTime: string = '';
-  maxDateTime: string;
+  
   defaultCenter:google.maps.LatLngLiteral = {
     lat: 44.44929,
     lng: 18.64978
@@ -143,12 +164,11 @@ export class MapComponent implements OnInit, AfterViewInit {
     private deviceService: DeviceService,
     private userService: UserService,
     private authService : AuthService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private datePipe: DatePipe
   ) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
-    this.last24HoursDateTime = this.getLast24HoursDateTime();
-    this.maxDateTime = this.getMaxDateTime();
   }
 
   ngOnInit(): void {
@@ -410,58 +430,20 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
 }
 
-  showTimeStamps(date1: Date, date2: Date) {
-    this.dateRequest = {
-      date1,
-      date2
-    }
-    var deviceId = this.activeDeviceId ? this.activeDeviceId : this.selectedDevice.deviceID
-    this.deviceService.getDateTimeStamps(this.dateRequest, deviceId).subscribe(x => {
-      var coordinates : any = []
-      coordinates =  x.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
+showTimeStamps(date1: Date, date2: Date) {
+  console.log(date1.toISOString().replace('Z', ''), date2.toISOString().replace('Z', '')); 
 
-      console.log("x is:" +x);
-      /*x.forEach((element) => {
-        var e = element.xCoordinate;
-        var e2 =  element.yCoordinate;
-        console.log("b: " + e + e2);
-        coordinates.push([e, e2]);
-      });*/
-      console.log("aa:" + coordinates);
-      console.log("aaaaaaaaaaaaaaa")
-      this.displayRoute(coordinates);
-    })
+  var deviceId = this.activeDeviceId ? this.activeDeviceId : this.selectedDevice.deviceID
+  this.deviceService.getDateTimeStamps({date1: date1.toISOString().replace('Z', ''), date2: date2.toISOString().replace('Z', '')}, deviceId).subscribe(x => {
+    var coordinates : any = []
+    coordinates =  x.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
+
+    console.log("x is:" +x);
+    console.log("aa:" + coordinates);
+    console.log("aaaaaaaaaaaaaaa")
+    this.displayRoute(coordinates);
+
+  })
   }
-  getLast24HoursDateTime(): string {
-    const last24Hours = 24 * 60 * 60 * 1000;
-    const now = new Date().getTime();
-    const twentyFourHoursAgo = now - last24Hours;
-    const date = new Date(twentyFourHoursAgo);
-    const formattedDate = date.toISOString().slice(0, 16); 
-
-    const currentDateTime = new Date().toISOString().slice(0, 16);
-    if (formattedDate.slice(0, 10) === currentDateTime.slice(0, 10)) {
-        const currentHour = new Date().getHours();
-        const currentMinute = new Date().getMinutes();
-        const selectedHour = date.getHours();
-        const selectedMinute = date.getMinutes();
-
-        if (selectedHour > currentHour || (selectedHour === currentHour && selectedMinute > currentMinute)) {
-            date.setHours(currentHour);
-            date.setMinutes(currentMinute);
-            return date.toISOString().slice(0, 16);
-        }
-    } else if (date.getTime() < twentyFourHoursAgo) {
-        return new Date().toISOString().slice(0, 16);
-    }
-    return formattedDate;
-  }
-
-  getMaxDateTime() {
-      const now = new Date().toISOString().slice(0, 16); 
-      return now;
-  }
-
-
 }
 
