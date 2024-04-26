@@ -317,7 +317,10 @@ export class MapComponent implements OnInit, AfterViewInit {
             this.selectedDevice = null;
             this.initMap()
             //console.log(this.selectedDevice)
-            
+            const dateDiv = document.querySelector('.date');
+            if (dateDiv) {
+                dateDiv.classList.add('hide');
+            }
             
             
         } else {
@@ -453,7 +456,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
     return formattedDate;
   }
-  
+
   getMaxDateTime() {
       const now = new Date().toISOString().slice(0, 16); 
       return now;

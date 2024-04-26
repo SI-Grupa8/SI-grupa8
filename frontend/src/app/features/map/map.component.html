@@ -12,11 +12,11 @@
             <mat-chip-option [selected]="carDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('car')">Car&nbsp;&nbsp;(10)</mat-chip-option>
           </mat-chip-listbox>
     </div>
-      <div class="date">
-          <input type="datetime-local" id="datetime1" name="datetime1" [(ngModel)]="date1" [min]="last24HoursDateTime" [max]="maxDateTime">
-          <input type="datetime-local" id="datetime2" name="datetime2" [(ngModel)]="date2" [min]="last24HoursDateTime" [max]="maxDateTime">
-          <button class="show" (click)="showTimeStamps(date1, date2)">SHOW</button>
-      </div>
+    <div class="date" [ngClass]="{'hide': !activeDeviceId}">
+        <input type="datetime-local" id="datetime1" name="datetime1" [(ngModel)]="date1" [min]="last24HoursDateTime" [max]="maxDateTime">
+        <input type="datetime-local" id="datetime2" name="datetime2" [(ngModel)]="date2" [min]="last24HoursDateTime" [max]="maxDateTime">
+        <button class="show" (click)="showTimeStamps(date1, date2)">SHOW</button>
+    </div>
 </div>
     <div  #mapContainer id="mapContainer" class="map-container" style="z-index: 100;" ></div>
     @if (showFilterComponent) {
