@@ -36,6 +36,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   locations: any[] = [];
   date1: Date = new Date();
   date2: Date = new Date();
+  last24HoursDateTime: string = '';
+  maxDateTime: string;
   defaultCenter:google.maps.LatLngLiteral = {
     lat: 44.44929,
     lng: 18.64978
@@ -145,6 +147,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   ) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
+    this.last24HoursDateTime = this.getLast24HoursDateTime();
+    this.maxDateTime = this.getMaxDateTime();
   }
 
   ngOnInit(): void {
@@ -425,5 +429,36 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.displayRoute(coordinates);
     })
   }
+  getLast24HoursDateTime(): string {
+    const last24Hours = 24 * 60 * 60 * 1000;
+    const now = new Date().getTime();
+    const twentyFourHoursAgo = now - last24Hours;
+    const date = new Date(twentyFourHoursAgo);
+    const formattedDate = date.toISOString().slice(0, 16); 
+
+    const currentDateTime = new Date().toISOString().slice(0, 16);
+    if (formattedDate.slice(0, 10) === currentDateTime.slice(0, 10)) {
+        const currentHour = new Date().getHours();
+        const currentMinute = new Date().getMinutes();
+        const selectedHour = date.getHours();
+        const selectedMinute = date.getMinutes();
+
+        if (selectedHour > currentHour || (selectedHour === currentHour && selectedMinute > currentMinute)) {
+            date.setHours(currentHour);
+            date.setMinutes(currentMinute);
+            return date.toISOString().slice(0, 16);
+        }
+    } else if (date.getTime() < twentyFourHoursAgo) {
+        return new Date().toISOString().slice(0, 16);
+    }
+    return formattedDate;
+  }
+  
+  getMaxDateTime() {
+      const now = new Date().toISOString().slice(0, 16); 
+      return now;
+  }
+
+
 }
 
