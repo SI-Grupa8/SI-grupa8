@@ -13,8 +13,8 @@
           </mat-chip-listbox>
     </div>
       <div class="date">
-          <input type="datetime-local" id="datetime1" name="datetime1" [(ngModel)]="date1">
-          <input type="datetime-local" id="datetime2" name="datetime2" [(ngModel)]="date2">
+          <input type="datetime-local" id="datetime1" name="datetime1" [(ngModel)]="date1" [min]="last24HoursDateTime" [max]="maxDateTime">
+          <input type="datetime-local" id="datetime2" name="datetime2" [(ngModel)]="date2" [min]="last24HoursDateTime" [max]="maxDateTime">
           <button class="show" (click)="showTimeStamps(date1, date2)">SHOW</button>
       </div>
 </div>
