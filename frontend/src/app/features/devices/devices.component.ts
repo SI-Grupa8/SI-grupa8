@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/http/auth.service';
 import { NoopScrollStrategy } from '@angular/cdk/overlay';
 
-
 @Component({
   selector: 'app-devices',
   standalone: true,
@@ -89,7 +88,7 @@ export class DevicesComponent {
       this.devices = devices.filter(device => 
         device.deviceName.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
         device.reference.toLowerCase().startsWith(this.searchQuery.toLowerCase()) ||
-        device.user.company.companyName.toLowerCase().startsWith(this.searchQuery.toLowerCase())
+        device.deviceType!.deviceTypeName.toLowerCase().startsWith(this.searchQuery.toLowerCase())
       );
     });
   }

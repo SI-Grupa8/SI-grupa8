@@ -30,10 +30,12 @@
             align-items: center;
             justify-content: right;
             gap: 10px;
-            
+
             #add-company {
-                //margin-left: 20px;
-                //margin-top: 20px;
+                background-color: #1e5631;
+                color: #fdf1d3;
+                border: none;
+                border-radius: 20px;
                 cursor: pointer;
                 margin-top: 20px;
                 display: flex;
@@ -41,10 +43,6 @@
                 align-self: center;
                 width: 150px;
                 height: 35px;
-                border: none;
-                border-radius: 5px;
-                color: white;
-                background-color: lightseagreen;
                 svg {
                     fill: white;
                     height: 15px;

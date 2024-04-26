@@ -40,9 +40,12 @@
         width: 95%;
         border-collapse: collapse;
         background-color:whitesmoke;
+        thead {
+            background-color: lightgrey;
+        }
         th,
         td {
-            border: 1px solid #b9cdbe;
+            border: 1px solid lightgrey;
             padding: 8px;
             text-align: left;
         }

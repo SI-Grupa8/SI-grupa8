@@ -116,6 +116,35 @@ namespace DAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("DAL.Entities.LocationStorage", b =>
+                {
+                    b.Property<int>("LocationStorageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LocationStorageID"));
+
+                    b.Property<int>("DeviceID")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("XCoordinate")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("YCoordinate")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("LocationStorageID");
+
+                    b.HasIndex("DeviceID");
+
+                    b.ToTable("LocationStorages");
+                });
+
             modelBuilder.Entity("DAL.Entities.Role", b =>
                 {
                     b.Property<int>("RoleID")
@@ -238,6 +267,17 @@ namespace DAL.Migrations
                     b.Navigation("DeviceType");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Entities.LocationStorage", b =>
+                {
+                    b.HasOne("DAL.Entities.Device", "Device")
+                        .WithMany()
+                        .HasForeignKey("DeviceID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("DAL.Entities.User", b =>
