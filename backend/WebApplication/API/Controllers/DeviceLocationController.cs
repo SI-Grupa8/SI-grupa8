@@ -47,12 +47,9 @@ namespace API.Controllers
 
         [HttpPost("locations-filter")]
         [Authorize(Roles ="Admin")]
-        public ActionResult<List<LocationStorageDto>> GetDeviceRoutesFilter(DateTimes time)
+        public ActionResult<List<LocationStorageDto>> GetDeviceRoutesFilter(DateTimes time, int deviceId)
         {
-            string token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
-            var adminId = JWTHelper.GetUserIDFromClaims(token);
-
-            return _deviceLocationService.GetDeviceLocationsFilter(adminId, time.date1, time.date2);
+            return _deviceLocationService.GetDeviceLocationsFilter(deviceId, time.date1, time.date2);
 
         }
     }

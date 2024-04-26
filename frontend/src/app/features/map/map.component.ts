@@ -408,7 +408,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       date1,
       date2
     }
-    this.deviceService.getDateTimeStamps(this.dateRequest).subscribe(x => {
+    var deviceId = this.activeDeviceId ? this.activeDeviceId : this.selectedDevice.deviceID
+    this.deviceService.getDateTimeStamps(this.dateRequest, deviceId).subscribe(x => {
       var coordinates : any = []
       coordinates =  x.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
 
