@@ -12,8 +12,8 @@
             <mat-chip-option [selected]="carDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('car')">Car&nbsp;&nbsp;(10)</mat-chip-option>
           </mat-chip-listbox>
     </div>
-    <div class="date" [ngClass]="{'hide': !activeDeviceId}">
-        <input [owlDateTime]="dt1" [min]="minDateTime" [max]="maxDateTime" placeholder="From" [owlDateTimeTrigger]="dt1" [(ngModel)]="date1">
+    <div class="date" [ngClass]="{'hide': !activeDeviceId}" style="z-index: 1000;">
+        <input [owlDateTime]="dt1" [min]="minDateTime" [max]="maxDateTime" placeholder="'From'" [owlDateTimeTrigger]="dt1" [(ngModel)]="date1">
         <owl-date-time [pickerType]="'both'" #dt1 [owlDateTimeTrigger]="dt1"></owl-date-time>
         <input [owlDateTime]="dt2" [min]="minDateTime" [max]="maxDateTime" placeholder="To" [owlDateTimeTrigger]="dt2" [(ngModel)]="date2">
         <owl-date-time [pickerType]="'both'" #dt2 [owlDateTimeTrigger]="dt2"></owl-date-time>
@@ -22,7 +22,7 @@
 </div>
     <div  #mapContainer id="mapContainer" class="map-container" style="z-index: 100;" ></div>
     @if (showFilterComponent) {
-        <app-map-filter style="z-index: 9999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)"></app-map-filter>
+        <app-map-filter style="z-index: 999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)"></app-map-filter>
     } 
     @else {
         <button (click)="toggleMapFilter()" class="show-filters">
