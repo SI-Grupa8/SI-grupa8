@@ -21,6 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { DateRequest } from '../../core/models/date-request';
 import { OwlDateTimeFormats, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { DatePipe } from '@angular/common';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
   
 
 @Component({
@@ -38,6 +39,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   currentDate: Date = new Date();
   last24Hours: number = 24 * 60 * 60 * 1000;
+
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
 
   maxDateTime: Date = new Date();
   minDateTime: Date = new Date(this.currentDate.getTime() - this.last24Hours);
@@ -165,7 +169,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     private userService: UserService,
     private authService : AuthService,
     private sanitizer: DomSanitizer,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private noResult: MatSnackBar
   ) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
@@ -435,6 +440,15 @@ showTimeStamps(date1: Date, date2: Date) {
 
   var deviceId = this.activeDeviceId ? this.activeDeviceId : this.selectedDevice.deviceID
   this.deviceService.getDateTimeStamps({date1: date1.toISOString().replace('Z', ''), date2: date2.toISOString().replace('Z', '')}, deviceId).subscribe(x => {
+    
+    if(x.length === 0){
+      this.noResult.open('No routes available for the selected time interval.', 'Close', {
+        duration: 4000,
+        horizontalPosition: this.horizontalPosition,
+        verticalPosition: this.verticalPosition,
+      });
+      return;
+    }
     var coordinates : any = []
     coordinates =  x.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
 
