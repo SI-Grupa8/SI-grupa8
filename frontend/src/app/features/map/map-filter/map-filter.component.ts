@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {MatTabsModule} from '@angular/material/tabs';
 import { DeviceService } from '../../../core/services/http/device.service';
@@ -27,6 +27,15 @@ export class MapFilterComponent {
   activeDeviceId: number | null = null; 
   beforeFiltered: any[] =[];
   temp: any[] = [];
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['filteredDevices'] && changes['filteredDevices'].currentValue) {
+      console.log('Filtered devices changed:', changes['filteredDevices'].currentValue);
+      this.higlightAllDevices();
+    }
+  }
+
+
   searchDevices(): void {
     if (this.searchQuery.trim() !== '') {
       this.filteredDevices = this.beforeFiltered.filter(device => 
@@ -81,8 +90,34 @@ export class MapFilterComponent {
     this.deviceService.getCompanyDevices(companyId).subscribe(devices => {
       this.filteredDevices = devices;
       this.beforeFiltered = devices;
+      // The method is called here to ensure devices are selected in the checkbox when being loaded
+      this.higlightAllDevices();
     });
   }
 
+  //isHighlighted: boolean = false;
+
+  onDeviceIconClicked(event: MouseEvent, device:any) {
+    // This method will be triggered when the button is clicked
+    // You can handle button click events here, such as triggering a trip
+    // Stop propagation to prevent the div click event from being triggered
+    device.isHighlighted = !device.isHighlighted;
+    console.log("Just button clicked");
+    event.stopPropagation();
+}
+
+higlightAllDevices(): void {
+  // Loop through each device and set its isHighlighted property to true
+  this.filteredDevices.forEach(device => {
+      device.isHighlighted = true;
+  });
+}
+
+hideAllDevices(): void {
+  // Loop through each device and set its isHighlighted property to false
+  this.filteredDevices.forEach(device => {
+    device.isHighlighted = false;
+  });
+}
   
 }

@@ -37,6 +37,9 @@ export class MapComponent implements OnInit, AfterViewInit {
   //center: google.maps.LatLngLiteral = { lat: 43.8563, lng: 18.4131 };
   //zoom = 15;
 
+  @ViewChild(MapFilterComponent)
+  mapFilterComponent!: MapFilterComponent;
+
   currentDate: Date = new Date();
   last24Hours: number = 24 * 60 * 60 * 1000;
 
@@ -93,6 +96,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.gpsDevicesSelected = false;
     this.carDevicesSelected = false;
     this.getFilteredDevices();
+    this.mapFilterComponent.higlightAllDevices()
   }
 
   toggleDeviceSelection(deviceType: string) {
@@ -283,8 +287,9 @@ export class MapComponent implements OnInit, AfterViewInit {
         .subscribe(devices => {
             
             this.filteredDevices = devices;
-
+            
             this.initMap()
+            // this.mapFilterComponent.higlightAllDevices()
             console.log(this.filteredDevices);
         });
   }
