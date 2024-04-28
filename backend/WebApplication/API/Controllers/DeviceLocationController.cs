@@ -1,4 +1,5 @@
-﻿using API.JWTHelpers;
+﻿using API.Helpers;
+using API.Helpers;
 using BLL.DTOs;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -47,9 +48,9 @@ namespace API.Controllers
 
         [HttpPost("locations-filter")]
         [Authorize(Roles ="Admin")]
-        public ActionResult<List<LocationStorageDto>> GetDeviceRoutesFilter(DateTimes time, int deviceId)
+        public ActionResult<List<LocationStorageDto>> GetDeviceRoutesFilter(LocationFilterRequest locationFilterRequest)
         {
-            return _deviceLocationService.GetDeviceLocationsFilter(deviceId, time.date1, time.date2);
+            return _deviceLocationService.GetDeviceLocationsFilter(locationFilterRequest.deviceIds, locationFilterRequest.deviceTimes.date1, locationFilterRequest.deviceTimes.date2);
 
         }
     }
