@@ -1,4 +1,4 @@
-﻿CREATE OR REPLACE FUNCTION DeviceLocation_Filter
+CREATE OR REPLACE FUNCTION DeviceLocation_Filter
 	("DeviceIds" INT[],
     "StartDate" TIMESTAMP,
     "EndDate" TIMESTAMP
@@ -16,6 +16,5 @@ BEGIN
 				AND ls."Timestamp" <= "EndDate"
 		ORDER BY ls."Timestamp" asc;
 	END LOOP;
-
 END;
 $$;
