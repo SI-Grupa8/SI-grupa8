@@ -13,7 +13,7 @@ namespace DAL.Interfaces
 
         Task DeleteOldRecords(DateTime threshold);
 
-        List<LocationStorage> GetFilteredLocation(int adminId, DateTime startDate, DateTime endDate);
+        List<LocationStorage> GetFilteredLocation(List<int> deviceIds, DateTime startDate, DateTime endDate);
 
     }
 }
