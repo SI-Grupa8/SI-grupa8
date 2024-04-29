@@ -10,6 +10,8 @@ import { DeviceService } from '../../core/services/http/device.service';
 import { AuthService } from '../../core/services/http/auth.service';
 import { DeviceFilterComponent } from './device-filter/device-filter.component';
 import { UserService } from '../../core/services/http/user.service';
+import * as jspdf from 'jspdf';
+import { NgxPrintModule, NgxPrintService } from 'ngx-print';
 
 
 import {  DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -22,6 +24,7 @@ import { DateRequest } from '../../core/models/date-request';
 import { OwlDateTimeFormats, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { DatePipe } from '@angular/common';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import html2canvas from 'html2canvas';
   
 
 @Component({
@@ -30,7 +33,7 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss'],
     providers: [DatePipe],
-    imports: [MapAdvancedMarker, GoogleMapsModule, CommonModule, DeviceFilterComponent, OwlDateTimeModule, OwlNativeDateTimeModule, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent]
+    imports: [MapAdvancedMarker, GoogleMapsModule, CommonModule, DeviceFilterComponent, OwlDateTimeModule, OwlNativeDateTimeModule, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent,NgxPrintModule]
 })
 
 export class MapComponent implements OnInit, AfterViewInit {
@@ -86,6 +89,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   gpsDevicesSelected: boolean = false;
   carDevicesSelected: boolean = false;
   selectedDevice: any;
+  //printService: any;
 
   selectAllDevices() {
     this.allDevicesSelected = true;
@@ -170,10 +174,12 @@ export class MapComponent implements OnInit, AfterViewInit {
     private authService : AuthService,
     private sanitizer: DomSanitizer,
     private datePipe: DatePipe,
-    private noResult: MatSnackBar
+    private noResult: MatSnackBar,
+    private printService: NgxPrintService
   ) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
+    this.printService=printService
   }
 
   ngOnInit(): void {
@@ -459,5 +465,8 @@ showTimeStamps(date1: Date, date2: Date) {
 
   })
   }
+
+
+
 }
 

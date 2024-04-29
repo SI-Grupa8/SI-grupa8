@@ -120,8 +120,15 @@
                 fill: rgb(92, 91, 91);
             }
         }
-    
-
+      
+.print{
+    background-color: white;
+    border: none;
+margin-right: 13px;
+img{
+    height: 30px;
+    width: 35px;
+}}
 
     .filter{
         display: flex;
