@@ -272,7 +272,14 @@ export class MapComponent implements OnInit, AfterViewInit {
       const routeCoordinates = sortedLocations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
       routeArray.push(routeCoordinates)
     });
-    this.displayRoutes(routeArray);
+    if(routeArray.length === 0){
+      this.initMap()
+
+    }
+    else{
+          this.displayRoutes(routeArray);
+
+    }
 
     
   }
