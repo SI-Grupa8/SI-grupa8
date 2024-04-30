@@ -1,5 +1,6 @@
 ﻿using BLL.DTOs;
 using DAL.Entities;
+using DAL.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,9 @@ namespace BLL.Interfaces
 
         Task<object> AddDevice(DeviceDto request);
 
-        Task UpdateDevice(DeviceDto deviceDto, int companyId);
+        Task UpdateDevice(DeviceDto deviceDto);
       
-        Task<List<DeviceDto>> GetDevicesByType(int adminId, List<int>? deviceTypeIDs = null);
+        Task<List<DeviceDto>> GetDevicesByType(int adminId, DeviceFilterDto deviceFilterDto);
 
         Task RemoveDevice(int deviceId, int companyId);
 

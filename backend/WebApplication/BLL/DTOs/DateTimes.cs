@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BLL.DTOs
 {
-    public class UserPhoneOrMail
+    public class DateTimes
     {
-        public string Email { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
+        public DateTime date1 {  get; set; }
+        public DateTime date2 { get; set; }
     }
 }

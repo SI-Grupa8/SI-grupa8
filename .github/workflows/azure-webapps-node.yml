@@ -20,11 +20,11 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
 
-    - name: npm install, build, and test
+    - name: npm install, build, and test 
       run: |
         dir
         cd ./frontend
-        npm install 
+        npm install --force
         npm install -g @angular/cli 
         ng build --configuration production
         dir

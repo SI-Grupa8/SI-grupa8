@@ -16,7 +16,7 @@ export class DeleteCompanyComponent {
   companyId: number =0;
   @Output() companyDeleted = new EventEmitter<boolean>();
 
-  durationInSeconds = 5;
+  durationInSeconds = 1;
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 

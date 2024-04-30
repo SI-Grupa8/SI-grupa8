@@ -56,24 +56,37 @@
                 flex-direction: column;
                 max-width: 500px;
                 .twofa-button {
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  height: 35px;
-                  width: 120px;
-                  margin-top: 10px;
-                  border-radius: 6px;
-                  
+                  // display: flex;
+                  // align-items: center;
+                  // justify-content: center;
+                  // height: 35px;
+                  // width: 120px;
+                  // margin-top: 10px;
+                  // border-radius: 6px;
+                      width: fit-content;
+                    align-self: flex-end;
+                    font-size:12px;
+                    font-weight: bold;
+                    background-color: #1e5631;
+                    color: #fdf1d3;
+                    padding: 10px 20px;
+                    margin-left: 57px;
+                    cursor: pointer;
+                    border: none;
+                    border-radius: 20px;
+                    outline: none;
+                    transition: background-color 0.3s;
+                    &:hover {
+                        background-color: #145123;
+                    }
                   //border: 1px solid lightblue;
                   cursor: pointer;
                 }
                 #setup-twofa {
-                  background-color: lightseagreen;
+                  
+                  background-color: #1e5631;
                   color: white;
                   border: none;
-                }
-                #setup-twofa:hover {
-                  background-color: rgb(63, 220, 212)
                 }
                 #remove-twofa {
                   background-color: rgb(255, 66, 66);

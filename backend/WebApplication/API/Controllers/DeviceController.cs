@@ -44,22 +44,22 @@ namespace API.Controllers
             return Ok(data);
         }
 
-        [HttpPut("update-device/{deviceId}")]
+        [HttpPut("update-device")]
         [Authorize(Roles = "Admin,SuperAdmin")]
-        public async Task<ActionResult<DeviceDto>> UpdateDevice(DeviceDto request, int companyId)
+        public async Task<ActionResult<DeviceDto>> UpdateDevice(DeviceDto request)
         {
-            await _deviceService.UpdateDevice(request, companyId);
+            await _deviceService.UpdateDevice(request);
 
             return request;
         }
 
-        [HttpGet("get-company-devices-v1")]
+        [HttpPost("get-company-devices-v1")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<DeviceDto>>> FilterDevices([FromQuery] List<int>? deviceTypeIDs=null)
+        public async Task<ActionResult<List<DeviceDto>>> FilterDevices(DeviceFilterDto deviceFilterDto)
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
             var adminId = JWTHelper.GetUserIDFromClaims(token);
-            return await _deviceService.GetDevicesByType(adminId, deviceTypeIDs);
+            return await _deviceService.GetDevicesByType(adminId, deviceFilterDto);
         }
     }
 }

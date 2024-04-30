@@ -1,0 +1,98 @@
+:host {
+    width: 250px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255, 255, 255);
+    z-index: 999;
+    position: fixed;
+    right: 0;
+    top: 220px;
+    border-radius: 10px 0 0 10px;
+}
+
+.upper-header {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+}
+
+.upper-header .close {
+    margin-right: 10px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.upper-header .close svg {
+    width: 16px;
+    height: 16px;
+    fill: grey;
+}
+
+.device-name {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 10px 5px;
+}
+
+.separator {
+    border-top: 1px solid #ccc;
+    margin: 5px 10px;
+}
+
+.info {
+    font-size: 15px;
+    margin: 0 10px 10px;
+}
+
+.info-label {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.coordinate-info {
+    display: flex;
+    align-items: center;
+}
+
+.coordinate {
+    font-size: 14px;
+    color: #1e5631;
+    margin-right: 5px;
+}
+.status {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    span {
+        font-style: italic;
+        font-size: 14px;
+    }
+}
+
+.status-dot {
+    margin-top: 3px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.active .status-dot {
+    background-color: green;
+}
+
+.idle .status-dot {
+    background-color: grey;
+}
+
+.inactive .status-dot {
+    background-color: red;
+}

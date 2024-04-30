@@ -52,8 +52,17 @@ namespace BLL.Services
 
         public async Task RemoveCompany(int companyId)
         {
-            var company = await _companyRepository.GetById(companyId);
+            var company =  await _companyRepository.GetAllUsersForCompany(companyId);
+            var users = company.Users.ToList();
+            
+            users.ForEach(x =>
+            {
+                x.Company = null;
+            });
 
+            users.ForEach(x => x.CompanyID = null);
+
+            await _userRepository.SaveChangesAsync();
             _companyRepository.Remove(company!);
 
             await _companyRepository.SaveChangesAsync();
@@ -125,6 +134,11 @@ namespace BLL.Services
             });
 
             return _mapper.Map<List<UserDto>>(users);
+        }
+
+        public async Task<object> GetUserStatistics(int companyId)
+        {
+            return await _companyRepository.GetUserStatistics(companyId);
         }
     }
 }

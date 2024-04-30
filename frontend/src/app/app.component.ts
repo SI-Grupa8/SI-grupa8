@@ -10,6 +10,8 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from './core/services/http/auth.service';
 import { DevicesComponent } from './features/devices/devices.component';
 import { UsersComponent } from './features/users/users.component';
+import { GoogleMapsModule } from '@angular/google-maps';
+
 import {
   MatSnackBar,
   MatSnackBarHorizontalPosition,
@@ -23,7 +25,7 @@ import { DeviceFilterComponent } from './features/map/device-filter/device-filte
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
 
-    imports: [SidebarComponent, RouterOutlet, HomeComponent, HeaderComponent, LoginComponent,ReactiveFormsModule,CommonModule, DevicesComponent, UsersComponent
+    imports: [GoogleMapsModule,SidebarComponent, RouterOutlet, HomeComponent, HeaderComponent, LoginComponent,ReactiveFormsModule,CommonModule, DevicesComponent, UsersComponent
     ]
 
 })

@@ -43,7 +43,7 @@ export class EditDeviceComponent {
     this.deviceRequest.deviceTypeID = this.data.device.deviceTypeID;
     this.deviceRequest.deviceID = deviceId;
     event.preventDefault();
-    this.deviceService.updateDevice(this.deviceRequest, deviceId).subscribe(() => {
+    this.deviceService.updateDevice(this.deviceRequest).subscribe(() => {
       this.deviceEdited.emit();
       console.log('Device edited successfully');
       this.closeDialog();

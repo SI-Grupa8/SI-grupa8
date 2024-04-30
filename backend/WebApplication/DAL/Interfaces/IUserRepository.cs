@@ -12,6 +12,7 @@ namespace DAL.Interfaces
         Task<List<User>> GetAllByRole(string role);
         Task<User> GetUserById(int userId);
         Task<List<User>> GetAllAdminsWithoutCompany();
+        Task<List<User>> GetDispatchersForNewDevice(int companyId);
     }
 }
 

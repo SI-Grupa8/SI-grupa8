@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddNewAdminComponent } from '../add-new-admin/add-new-admin.component';
 import { CompanyResponse } from '../../../core/models/company-response';
 import { DeleteCompanyComponent } from '../delete-company/delete-company.component';
+import { NoopScrollStrategy } from '@angular/cdk/overlay';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class CompanyCardComponent implements OnInit {
   ngOnInit(): void {
     
     this.companyId = this.company?.companyID;
+    console.log(this.company.users?.length)
     //console.log(this.companyId)
   }
 
@@ -41,7 +43,8 @@ export class CompanyCardComponent implements OnInit {
 
   openDialogAdmin(): void {
     const dialogRef = this.dialog.open(AddNewAdminComponent, {
-      data: {companyId: this.companyId}
+      data: {companyId: this.companyId},
+      scrollStrategy: new NoopScrollStrategy()
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -54,7 +57,8 @@ export class CompanyCardComponent implements OnInit {
   }
   openDialogDelete(): void {
     const dialogRef = this.dialog.open(DeleteCompanyComponent, {
-      data: {companyId: this.companyId}
+      data: {companyId: this.companyId},
+      scrollStrategy: new NoopScrollStrategy()
     });
 
     dialogRef.afterClosed().subscribe(result => {
