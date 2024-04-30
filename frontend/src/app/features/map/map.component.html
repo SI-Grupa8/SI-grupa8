@@ -34,7 +34,7 @@
     <div  #mapContainer id="mapContainer" class="map-container" style="z-index: 100;" ></div>
 
     @if (showFilterComponent) {
-        <app-map-filter style="z-index: 999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)"></app-map-filter>
+        <app-map-filter class="filtclass" style="z-index: 999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)"></app-map-filter>
     } 
     @else {
         <button (click)="toggleMapFilter()" class="show-filters">
@@ -43,7 +43,7 @@
         </button>
     }
     @if (activeDeviceId != null && selectedDevice != null){
-    <app-device-details (close)="closeDetails()" [selectedDevice]="selectedDevice"></app-device-details>
+    <app-device-details class="detclass" (close)="closeDetails()" [selectedDevice]="selectedDevice"></app-device-details>
     }
     
 
