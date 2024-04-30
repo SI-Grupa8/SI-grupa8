@@ -236,5 +236,74 @@ namespace TestProject2
             Assert.IsNotNull(result); // Check if result is not null
             Assert.IsInstanceOfType(result, typeof(ActionResult<List<UserDto>>)); // Check if result is Ok
         }
+
+        [TestMethod]
+        public async Task ChangeEmail_OkResult()
+        {
+            // Arrange
+            var request = new UserDto(); // Create a sample UserDto object
+
+            // Mock UserService.UpdateUser to return an ActionResult
+            userServiceMock.Setup(service => service.ChangeEmail(request));
+
+            // Act
+            var result = await controller.ChangeEmail(request);
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult)); // Check if result is Ok
+        }
+
+        [TestMethod]
+        public async Task ChangePassword_OkResult()
+        {
+            // Arrange
+            var request = new ChangePasswordDto(); // Create a sample UserDto object
+
+            // Mock UserService.UpdateUser to return an ActionResult
+            userServiceMock.Setup(service => service.ChangePassword(request));
+
+            // Set up mock HttpContext with a valid authorization token
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmc1NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIwIiwiZXhwIjoxNzEyMzE1NjY4fQ.FKkvIzmtzHnUUEeFrIqQEzc0chQTZhHnbWdAyWsvG2s"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = await controller.ChangePassword(request);
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult)); // Check if result is Ok
+        }
+
+        [TestMethod]
+        public async Task GetDispatchersForNewDevice_OkResult()
+        {
+            // Arrange
+            var userId = 1; // Sample user ID for testing
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmc1NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIwIiwiZXhwIjoxNzEyMzE1NjY4fQ.FKkvIzmtzHnUUEeFrIqQEzc0chQTZhHnbWdAyWsvG2s"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+            // Mock UserService.UpdateUser to return an ActionResult
+            userServiceMock.Setup(service => service.GetDispatchersForNewDevice(userId));
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+
+            // Act
+            var result = await controller.GetDispacthersForNewDevice(userId);
+
+            // Assert
+            Assert.IsNotNull(result); // Check if result is not null
+            Assert.IsInstanceOfType(result, typeof(ActionResult<List<UserDto>>)); // Check if result is Ok
+        }
     }
 }
