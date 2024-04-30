@@ -265,6 +265,10 @@ export class MapComponent implements OnInit, AfterViewInit {
   this.directionsRenderer.setMap(null);
     this.activeDeviceIds.forEach(deviceId => {
       const sortedLocations = this.sortAndFilterLocationsForDevice(deviceId);
+      console.log("SortedLocations"+sortedLocations);
+      if (sortedLocations.length === 0) {
+        return;
+    }
       const routeCoordinates = sortedLocations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
       routeArray.push(routeCoordinates)
     });
@@ -341,6 +345,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   
   zoomToSpecificPoint(deviceID: number) {
     const device = this.filteredDevices.find((device) => device.deviceID === deviceID);
+
     if (device) {
         const { xCoordinate, yCoordinate } = device;
         const newPosition: google.maps.LatLngLiteral = { lat: parseFloat(xCoordinate), lng: parseFloat(yCoordinate) };
@@ -354,9 +359,9 @@ export class MapComponent implements OnInit, AfterViewInit {
             this.center = this.defaultCenter;
             this.zoom = 15;
             console.log("aktivni: "+this.activeDeviceIds);
-            var previousDeviceID=this.activeDeviceIds[this.activeDeviceIds.length - 1];
+            var previousDeviceID = this.activeDeviceIds?.[this.activeDeviceIds.length - 1] ?? -1;
             this.selectedDevice = this.activeDeviceIds.length > 0 ? this.filteredDevices.find((device) => device.deviceID ===previousDeviceID) : null;
-            console.log("odabrani "+this.selectedDevice.deviceID);
+           
             if(this.selectedDevice!==null){
               this.calculateAndDisplayRoute()
             }

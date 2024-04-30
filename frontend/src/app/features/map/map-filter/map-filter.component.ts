@@ -40,7 +40,11 @@ export class MapFilterComponent {
   }
 
   zoomToSpecificPoint(deviceID: number) {
-          this.zoomEvent.emit(deviceID);
+    console.log("deviceID:",deviceID);
+    if(deviceID!=0){
+      this.zoomEvent.emit(deviceID);
+    }
+          
 
   }
   onMarkerClicked(deviceID: number) {
