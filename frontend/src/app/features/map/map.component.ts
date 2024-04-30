@@ -3,7 +3,7 @@
 import { GoogleMap, GoogleMapsModule, MapAdvancedMarker } from '@angular/google-maps';
 
 import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { forkJoin, of } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, concatMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { DeviceService } from '../../core/services/http/device.service';
@@ -22,6 +22,7 @@ import { DateRequest } from '../../core/models/date-request';
 import { OwlDateTimeFormats, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { DatePipe } from '@angular/common';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { LocationFilterRequest } from '../../core/models/location-filter';
 
 
 @Component({
@@ -517,38 +518,51 @@ export class MapComponent implements OnInit, AfterViewInit {
 
 
   showTimeStamps(date1: Date, date2: Date) {
-
     console.log(date1.toISOString().replace('Z', ''), date2.toISOString().replace('Z', ''));
-    var routeArray: google.maps.LatLngLiteral[][] = [];
-
+    const routeArray: google.maps.LatLngLiteral[][] = [];
 
     if (this.activeDeviceIds.length === 0) {
-      console.error('No active device or selected device.');
-      return;
+        console.error('No active device or selected device.');
+        return;
     }
+
+    // Create an array to store observables
+    const observables: Observable<any>[] = [];
 
     // Iterate through each active device
     this.activeDeviceIds.forEach(deviceId => {
+        const filterRequest: LocationFilterRequest = {
+            deviceTimes: {
+                date1: date1.toISOString().replace('Z', ''),
+                date2: date2.toISOString().replace('Z', ''),
+            },
+            deviceIds: [deviceId],
+        };
 
-
-      // Fetch date time stamps for the current device
-      this.deviceService.getDateTimeStamps({ date1: date1.toISOString().replace('Z', ''), date2: date2.toISOString().replace('Z', '') }, deviceId).subscribe(x => {
-        if (x.length === 0) {
-          this.noResult.open('No routes available for the selected time interval.', 'Close', {
-            duration: 4000,
-            horizontalPosition: this.horizontalPosition,
-            verticalPosition: this.verticalPosition,
-          });
-          return;
-        }
-
-        var coordinates: google.maps.LatLngLiteral[] = x.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
-
-        routeArray.push(coordinates);
-      });
-
+        // Push the observable into the array
+        observables.push(this.deviceService.getDateTimeStamps(filterRequest));
     });
-    this.displayRoutes(routeArray);
-  }
+
+    // Use forkJoin to wait for all observables to complete
+    forkJoin(observables).subscribe(results => {
+        results.forEach(x => {
+            if (x.length === 0) {
+                this.noResult.open('No routes available for the selected time interval.', 'Close', {
+                    duration: 4000,
+                    horizontalPosition: this.horizontalPosition,
+                    verticalPosition: this.verticalPosition,
+                });
+                return;
+            }
+
+            const coordinates: google.maps.LatLngLiteral[] = x.map((location: any) => this.parseCoordinates(location)).filter((coord: null) => coord !== null) as google.maps.LatLngLiteral[];
+            routeArray.push(coordinates);
+        });
+
+        console.log("route array");
+        console.log(routeArray);
+        this.displayRoutes(routeArray);
+    });
+}
 }
 
