@@ -79,7 +79,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     date1: this.date1,
     date2: this.date2
   }
-  activeDeviceId: number | null | undefined;
+  activeDeviceIds: number[] = [];
   
   allDevicesSelected: boolean = true;
   mobileDevicesSelected: boolean = false;
@@ -257,9 +257,16 @@ export class MapComponent implements OnInit, AfterViewInit {
   calculateAndDisplayRoute(): void {
     //const selectedDeviceId = (document.getElementById('start') as HTMLSelectElement).value;
     
-    const sortedLocations = this.sortAndFilterLocationsForDevice(this.selectedDevice.deviceID);
-    const routeCoordinates = sortedLocations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
-    this.displayRoute(routeCoordinates);
+    if (!this.activeDeviceIds || this.activeDeviceIds.length === 0) {
+      console.error('No active devices to calculate routes for.');
+      return;
+    }
+  
+    this.activeDeviceIds.forEach(deviceId => {
+      const sortedLocations = this.sortAndFilterLocationsForDevice(deviceId);
+      const routeCoordinates = sortedLocations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
+      this.displayRoute(routeCoordinates);
+    });
     
   }
 
@@ -335,13 +342,24 @@ export class MapComponent implements OnInit, AfterViewInit {
         const { xCoordinate, yCoordinate } = device;
         const newPosition: google.maps.LatLngLiteral = { lat: parseFloat(xCoordinate), lng: parseFloat(yCoordinate) };
 
-        if (this.activeDeviceId === deviceID) {
-            this.activeDeviceId = null;
+        //console.log("aktivni: "+this.activeDeviceIds);
+        //console.log("odabrani: "+this.selectedDevice);
+        const index = this.activeDeviceIds.indexOf(deviceID);
+
+        if (index !== -1) {
+          this.activeDeviceIds.splice(index, 1);
             this.center = this.defaultCenter;
             this.zoom = 15;
-            this.selectedDevice = null;
-            this.initMap()
-            //console.log(this.selectedDevice)
+            this.selectedDevice = this.activeDeviceIds.length > 0 ? this.activeDeviceIds[this.activeDeviceIds.length - 1] : null;
+            if(this.selectedDevice!=null){
+              this.calculateAndDisplayRoute()
+            }
+            else{
+              this.initMap();
+            }
+            
+            
+
             const dateDiv = document.querySelector('.date');
             if (dateDiv) {
                 dateDiv.classList.add('hide');
@@ -349,8 +367,8 @@ export class MapComponent implements OnInit, AfterViewInit {
             
             
         } else {
-            this.activeDeviceId = deviceID;
-            this.center = newPosition;
+          this.activeDeviceIds.push(deviceID);
+          this.center = newPosition;
             this.zoom = 16;
             this.selectedDevice = device;
             this.calculateAndDisplayRoute()
@@ -438,7 +456,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 showTimeStamps(date1: Date, date2: Date) {
   console.log(date1.toISOString().replace('Z', ''), date2.toISOString().replace('Z', '')); 
 
-  var deviceId = this.activeDeviceId ? this.activeDeviceId : this.selectedDevice.deviceID
+  var deviceId = this.activeDeviceIds[0] ? this.activeDeviceIds[0] : this.selectedDevice.deviceID
   this.deviceService.getDateTimeStamps({date1: date1.toISOString().replace('Z', ''), date2: date2.toISOString().replace('Z', '')}, deviceId).subscribe(x => {
     
     if(x.length === 0){

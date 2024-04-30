@@ -24,7 +24,8 @@ export class MapFilterComponent {
   @Output() zoomEvent = new EventEmitter<number>();
   @Output() search = new EventEmitter<DeviceRequest[]>();
 
-  activeDeviceId: number | null = null; 
+  selectedDeviceIds: number[] = [];
+
   beforeFiltered: any[] =[];
   temp: any[] = [];
   searchDevices(): void {
@@ -46,19 +47,22 @@ export class MapFilterComponent {
     
   }
   toggleActiveDevice(deviceId: number) {
-    if (this.activeDeviceId === deviceId) {
-      
-      this.activeDeviceId = null;
+    const index = this.selectedDeviceIds.indexOf(deviceId);
+    if (index !== -1) {
+        // If device is already selected, remove it from the array
+        this.selectedDeviceIds.splice(index, 1);
     } else {
-      
-      this.activeDeviceId = deviceId;
+        // If device is not selected, add it to the array
+        this.selectedDeviceIds.push(deviceId);
     }
-  }
+}
+
 
  
-  isDeviceActive(deviceId: number) {
-    return this.activeDeviceId === deviceId;
-  }
+isDeviceActive(deviceId: number) {
+  return this.selectedDeviceIds.includes(deviceId);
+}
+
 
   constructor(private deviceService: DeviceService, private authService: AuthService){
     this.authService.getCurrentUser().subscribe((res : any) => {
