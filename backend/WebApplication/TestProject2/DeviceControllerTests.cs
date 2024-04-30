@@ -163,10 +163,10 @@ namespace TestProject2
             var companyId = 1; // Sample company ID for testing
             var expectedResult = new ActionResult<DeviceDto>(request); // Define expected result
 
-            deviceServiceMock.Setup(service => service.UpdateDevice(request, companyId)).Returns(Task.CompletedTask);
+            deviceServiceMock.Setup(service => service.UpdateDevice(request)).Returns(Task.CompletedTask);
 
             // Act
-            var result = await controller.UpdateDevice(request, companyId);
+            var result = await controller.UpdateDevice(request);
 
             // Assert
             Assert.IsNotNull(result); // Check if result is not null
@@ -178,10 +178,13 @@ namespace TestProject2
         public async Task FilterDevices_Returns_ListOfDeviceDto()
         {
             // Arrange
+            var deviceIDs = new List<int> { 1, 2 };
             var deviceTypeIDs = new List<int> { 1, 2, 3 }; // Sample device type IDs for testing
-            var expectedResult = new List<DeviceDto>(); // Provide expected data here
 
-            deviceServiceMock.Setup(service => service.GetDevicesByType(It.IsAny<int>(), deviceTypeIDs)).ReturnsAsync(expectedResult);
+            var expectedResult = new List<DeviceDto>(); // Provide expected data here
+            var deviceFilterDto = new DeviceFilterDto { DeviceIds = deviceIDs, DeviceTypeIds= deviceTypeIDs };
+
+            deviceServiceMock.Setup(service => service.GetDevicesByType(It.IsAny<int>(), deviceFilterDto)).ReturnsAsync(expectedResult);
 
             var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmc1NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIwIiwiZXhwIjoxNzEyMzE1NjY4fQ.FKkvIzmtzHnUUEeFrIqQEzc0chQTZhHnbWdAyWsvG2s"; // Generate a valid JWT token
             var httpContext = new DefaultHttpContext();
@@ -193,7 +196,7 @@ namespace TestProject2
                 HttpContext = httpContext
             };
             // Act
-            var result = await controller.FilterDevices(deviceTypeIDs);
+            var result = await controller.FilterDevices(deviceFilterDto);
 
             // Assert
             Assert.IsNotNull(result); // Check if result is not null
