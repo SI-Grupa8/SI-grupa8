@@ -1,5 +1,6 @@
 ﻿using API.Controllers;
 using API.JWTHelpers;
+using BLL.DTOs;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -159,6 +160,33 @@ namespace TestProject2
 
             // Check if the error message matches the expected error message
             Assert.AreEqual(errorMessage, badRequestResult.Value);
+        }
+
+        [TestMethod]
+        public void GetDeviceRoutesFilter_Should_Return_List_Of_LocationStorageDto()
+        {
+            // Arrange
+            var time = new DateTimes { date1 = DateTime.UtcNow.AddDays(-1), date2 = DateTime.UtcNow }; // Provide a sample DateTimes object
+            var deviceId = 1; // Provide a sample deviceId
+
+            // Mock the expected list of LocationStorageDto returned by the service
+            var expectedLocations = new List<LocationStorageDto>{};
+            deviceLocationServiceMock.Setup(x => x.GetDeviceLocationsFilter(deviceId, time.date1, time.date2)).Returns(expectedLocations);
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHJpbmc1NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIwIiwiZXhwIjoxNzEyMzE1NjY4fQ.FKkvIzmtzHnUUEeFrIqQEzc0chQTZhHnbWdAyWsvG2s"; // Generate a valid JWT token
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+
+            // Set up the controller context with the mock HttpContext
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = httpContext
+            };
+            // Act
+            var actionResult = controller.GetDeviceRoutesFilter(time, deviceId);
+
+            // Assert
+            Assert.IsNotNull(actionResult); // Ensure actionResult is not null
+            Assert.IsInstanceOfType(actionResult, typeof(ActionResult<List<LocationStorageDto>>)); // Ensure actionResult is of the correct type
         }
 
     }
