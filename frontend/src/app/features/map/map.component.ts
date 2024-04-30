@@ -261,12 +261,15 @@ export class MapComponent implements OnInit, AfterViewInit {
       console.error('No active devices to calculate routes for.');
       return;
     }
-  
+    var routeArray:google.maps.LatLngLiteral[][]=[];
+  this.directionsRenderer.setMap(null);
     this.activeDeviceIds.forEach(deviceId => {
       const sortedLocations = this.sortAndFilterLocationsForDevice(deviceId);
       const routeCoordinates = sortedLocations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
-      this.displayRoute(routeCoordinates);
+      routeArray.push(routeCoordinates)
     });
+    this.displayRoutes(routeArray);
+
     
   }
 
@@ -350,8 +353,11 @@ export class MapComponent implements OnInit, AfterViewInit {
           this.activeDeviceIds.splice(index, 1);
             this.center = this.defaultCenter;
             this.zoom = 15;
-            this.selectedDevice = this.activeDeviceIds.length > 0 ? this.activeDeviceIds[this.activeDeviceIds.length - 1] : null;
-            if(this.selectedDevice!=null){
+            console.log("aktivni: "+this.activeDeviceIds);
+            var previousDeviceID=this.activeDeviceIds[this.activeDeviceIds.length - 1];
+            this.selectedDevice = this.activeDeviceIds.length > 0 ? this.filteredDevices.find((device) => device.deviceID ===previousDeviceID) : null;
+            console.log("odabrani "+this.selectedDevice.deviceID);
+            if(this.selectedDevice!==null){
               this.calculateAndDisplayRoute()
             }
             else{
@@ -373,6 +379,11 @@ export class MapComponent implements OnInit, AfterViewInit {
             this.selectedDevice = device;
             this.calculateAndDisplayRoute()
         }
+
+        /*console.log("aktivni: "+this.activeDeviceIds);
+        console.log("act[len-1] "+this.activeDeviceIds[this.activeDeviceIds.length - 1]);
+        console.log("len "+this.activeDeviceIds.length);
+        console.log("odabrani "+this.selectedDevice.deviceID);*/
     }
 }
   
@@ -452,6 +463,44 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
     });
 }
+
+
+private displayRoutes(routes: google.maps.LatLngLiteral[][]): void {
+  const map=new google.maps.Map(this.mapContainer.nativeElement, {
+    center: this.center,
+    zoom: this.zoom,
+    mapTypeControl: false
+  });
+
+  routes.forEach((coordinates, index) => {
+    const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16); // Generate random color
+
+    const directionsRenderer = new google.maps.DirectionsRenderer({
+      polylineOptions: {
+        strokeColor: randomColor // Odaberite boju temeljem indeksa
+      }
+    });
+    directionsRenderer.setMap(map);
+    
+    const start = new google.maps.LatLng(coordinates[0].lat, coordinates[0].lng);
+    const end = new google.maps.LatLng(coordinates[coordinates.length - 1].lat, coordinates[coordinates.length - 1].lng);
+    const waypts = coordinates.slice(1, -1).map(coord => ({ location: new google.maps.LatLng(coord.lat, coord.lng) }));
+    const request = {
+      origin: start,
+      destination: end,
+      waypoints: waypts,
+      travelMode: google.maps.TravelMode.DRIVING,
+    };
+    this.directionsService.route(request, (result, status) => {
+      if (status === google.maps.DirectionsStatus.OK) {
+        directionsRenderer.setDirections(result);
+      } else {
+        console.error('Directions request failed due to ' + status);
+      }
+    });
+  });
+}
+
 
 showTimeStamps(date1: Date, date2: Date) {
   console.log(date1.toISOString().replace('Z', ''), date2.toISOString().replace('Z', '')); 

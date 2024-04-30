@@ -38,8 +38,10 @@ export class MapFilterComponent {
       this.filteredDevices = this.beforeFiltered;
     }
   }
+
   zoomToSpecificPoint(deviceID: number) {
-    this.zoomEvent.emit(deviceID);
+          this.zoomEvent.emit(deviceID);
+
   }
   onMarkerClicked(deviceID: number) {
     
