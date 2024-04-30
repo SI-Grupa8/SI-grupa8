@@ -1,13 +1,15 @@
 ﻿using API.Controllers;
+using API.JWTHelpers;
 using BLL.Interfaces;
-using BLL.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace TestProject2
@@ -31,6 +33,11 @@ namespace TestProject2
             {
                 HttpContext = new DefaultHttpContext()
             };
+
+            // Create mock object for IJwtSecurityTokenHandler and set up behavior
+            var tokenHandlerMock = new Mock<IJwtSecurityTokenHandler>();
+            tokenHandlerMock.Setup(handler => handler.ReadToken(It.IsAny<string>())).Returns(new JwtSecurityToken());
+            JWTHelper.SetJwtSecurityTokenHandler(tokenHandlerMock.Object);
         }
 
         [TestMethod]
@@ -87,5 +94,72 @@ namespace TestProject2
             Assert.IsNotNull(result); // Check if result is not null
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult)); // Check if result is Ok
         }
+
+        [TestMethod]
+        public async Task SendCurrentLocation_Should_Return_OkResult_When_LocationSaved()
+        {
+            // Arrange
+            var lat = "12.345secretCodeABC"; // Provide a sample latitude
+            var lg = "123.456secretCodeDEF"; // Provide a sample longitude
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiMDAtQjAtRDAtNjMtQzItMjYiLCJleHAiOjE3MTcwODQ2NDB9.Wux2J7bb6TL4ZW--psf-jjuSnXjJ2CQCujuxTFWiMlU";
+            var macAddress = "3C-55-76-79-00-0D"; // Provide a sample MAC address
+
+            // Mock HttpContext to provide the token in the request header
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + token;
+            controller.ControllerContext.HttpContext = httpContext;
+
+            // Mock behavior of _deviceLocationService to avoid actual saving
+            deviceLocationServiceMock.Setup(x => x.SaveCurrentLocation(lat, lg, macAddress)).Returns(Task.CompletedTask);
+
+            await controller.SendCurrentLocation(lat, lg);
+            
+            var actionResult = await controller.SendCurrentLocation(lat, lg);
+            var okResult = actionResult as OkObjectResult;
+
+            // Assert
+            Assert.IsNotNull(okResult);
+            var anonymousType = okResult.Value.GetType();
+            var messageProperty = anonymousType.GetProperty("Message");
+            var actualMessage = messageProperty?.GetValue(okResult.Value);
+
+            Assert.AreEqual("Location saved", actualMessage);
+        }
+
+        [TestMethod]
+        public async Task SendCurrentLocation_Should_Return_BadRequest_When_UnauthorizedAccessExceptionThrown()
+        {
+            // Arrange
+            var lat = "12.345secretCodeABC"; // Provide a sample latitude
+            var lg = "123.456secretCodeDEF"; // Provide a sample longitude
+            var unauthorizedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiMTIzIiwiZXhwIjoxNzE3MDg1ODkxfQ.cG3JfLJJGkT9fzrKUC1mpoKJ1rUxswPLaYuhKQMCnwA"; // Provide a sample token with an unauthorized MAC address
+            var errorMessage = "Unauthorized access"; // Expected error message
+
+            // Mock HttpContext to provide the token in the request header
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Authorization"] = "Bearer " + unauthorizedToken;
+            controller.ControllerContext.HttpContext = httpContext;
+
+            // Mock behavior of _deviceLocationService to throw UnauthorizedAccessException
+            deviceLocationServiceMock
+                .Setup(x => x.SaveCurrentLocation(lat, lg, It.IsAny<string>()))
+                .ThrowsAsync(new UnauthorizedAccessException(errorMessage));
+
+            // Act and Assert
+            var actionResult = await controller.SendCurrentLocation(lat, lg);
+
+            // Assert
+            Assert.IsNotNull(actionResult); // Ensure actionResult is not null
+
+            // Ensure that the action result is a BadRequestObjectResult
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestObjectResult));
+
+            // Convert the action result to BadRequestObjectResult
+            var badRequestResult = actionResult as BadRequestObjectResult;
+
+            // Check if the error message matches the expected error message
+            Assert.AreEqual(errorMessage, badRequestResult.Value);
+        }
+
     }
 }
