@@ -386,7 +386,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           this.initMap();
         }
 
-      } else {
+      } else  if(this.activeDeviceIds.length < 5) {
         this.activeDeviceIds.push(deviceID);
         this.center = newPosition;
         this.zoom = 16;

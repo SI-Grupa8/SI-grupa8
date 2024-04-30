@@ -57,7 +57,7 @@ export class MapFilterComponent {
     if (index !== -1) {
         // If device is already selected, remove it from the array
         this.selectedDeviceIds.splice(index, 1);
-    } else {
+    } else  if(this.selectedDeviceIds.length<5){
         // If device is not selected, add it to the array
         this.selectedDeviceIds.push(deviceId);
     }
