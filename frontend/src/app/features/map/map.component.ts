@@ -322,12 +322,15 @@ export class MapComponent implements OnInit, AfterViewInit {
       const deviceLatLng =  this.parseCoordinatesNew(device) ;
       console.log(device);
       const markerOptions = this.getMarkerOptions(device);
+      // prikazat ce ga samo ako je highlighted
+      if(device.isHighlighted){
       new google.maps.Marker({
         position: deviceLatLng,
         map: map,
         title: device.deviceName,
         icon: markerOptions.icon
       });
+    }
     });
   }
 
@@ -463,6 +466,48 @@ showTimeStamps(date1: Date, date2: Date) {
     this.displayRoute(coordinates);
 
   })
+  }
+
+  emptyMap(): void {
+    // console.log(this.markers);
+
+    this.filteredDevices.forEach(device => {
+      // Set isHighlighted property to false for each device
+      device.isHighlighted = false;
+  });
+
+    // makes map empty
+    const myLatLng = { lat: 43.8582, lng: 18.3566 };
+  
+    const map = new google.maps.Map(
+      document.getElementById("mapContainer") as HTMLElement,
+      {
+        zoom: 10,
+        center: myLatLng,
+      }
+    );
+  }
+
+  fillMap(){
+    this.filteredDevices.forEach(device =>{
+      device.isHighlighted = true;
+    })
+    this.initMap()
+  }
+
+  updateMap(device: DeviceRequest){
+    // Find the index of the device in the filteredDevices array
+    const index = this.filteredDevices.findIndex(d => d.deviceID === device.deviceID);
+    
+    // If the device is found, update its isHighlighted property
+    if (index !== -1) {
+        this.filteredDevices[index].isHighlighted = device.isHighlighted;
+    } else {
+        console.log(`Device with ID ${device.deviceID} not found in filteredDevices.`);
+    }
+    
+    // Initialize the map again
+    this.initMap();
   }
 }
 

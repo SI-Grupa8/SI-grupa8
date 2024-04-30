@@ -23,6 +23,9 @@ export class MapFilterComponent {
   companyId : number = 0;
   @Output() zoomEvent = new EventEmitter<number>();
   @Output() search = new EventEmitter<DeviceRequest[]>();
+  @Output() emptyMap = new EventEmitter<void>();
+  @Output() fillMap = new EventEmitter<void>();
+  @Output() updateMap = new EventEmitter<DeviceRequest>();
 
   activeDeviceId: number | null = null; 
   beforeFiltered: any[] =[];
@@ -103,6 +106,7 @@ export class MapFilterComponent {
     // Stop propagation to prevent the div click event from being triggered
     device.isHighlighted = !device.isHighlighted;
     console.log("Just button clicked");
+    this.updateMap.emit(device);
     event.stopPropagation();
 }
 
@@ -111,6 +115,7 @@ higlightAllDevices(): void {
   this.filteredDevices.forEach(device => {
       device.isHighlighted = true;
   });
+  this.fillMap.emit();
 }
 
 hideAllDevices(): void {
@@ -118,6 +123,7 @@ hideAllDevices(): void {
   this.filteredDevices.forEach(device => {
     device.isHighlighted = false;
   });
+  this.emptyMap.emit();
 }
   
 }
