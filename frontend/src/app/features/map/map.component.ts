@@ -2,7 +2,7 @@
 //import { Component, ElementRef, OnInit, ViewChild  } from '@angular/core';
 import { GoogleMap, GoogleMapsModule, MapAdvancedMarker } from '@angular/google-maps';
 
-import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Renderer2,ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { catchError, concatMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,8 @@ import { DeviceService } from '../../core/services/http/device.service';
 import { AuthService } from '../../core/services/http/auth.service';
 import { DeviceFilterComponent } from './device-filter/device-filter.component';
 import { UserService } from '../../core/services/http/user.service';
+import jsPDF from 'jspdf';
+import { NgxPrintModule, NgxPrintService } from 'ngx-print';
 
 
 import {  DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -22,6 +24,8 @@ import { DateRequest } from '../../core/models/date-request';
 import { OwlDateTimeFormats, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { DatePipe } from '@angular/common';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import html2canvas from 'html2canvas';
+import jspdf from 'jspdf';
   
 
 @Component({
@@ -30,7 +34,7 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss'],
     providers: [DatePipe],
-    imports: [MapAdvancedMarker, GoogleMapsModule, CommonModule, DeviceFilterComponent, OwlDateTimeModule, OwlNativeDateTimeModule, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent]
+    imports: [MapAdvancedMarker, GoogleMapsModule, CommonModule, DeviceFilterComponent, OwlDateTimeModule, OwlNativeDateTimeModule, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent,NgxPrintModule]
 })
 
 export class MapComponent implements OnInit, AfterViewInit {
@@ -86,6 +90,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   gpsDevicesSelected: boolean = false;
   carDevicesSelected: boolean = false;
   selectedDevice: any;
+  //printService: any;
 
   selectAllDevices() {
     this.allDevicesSelected = true;
@@ -170,10 +175,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     private authService : AuthService,
     private sanitizer: DomSanitizer,
     private datePipe: DatePipe,
-    private noResult: MatSnackBar
+    private noResult: MatSnackBar,
+    private printService: NgxPrintService,
+    private renderer: Renderer2, private elementRef: ElementRef
   ) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
+    this.printService=printService
   }
 
   ngOnInit(): void {
@@ -452,12 +460,60 @@ showTimeStamps(date1: Date, date2: Date) {
     var coordinates : any = []
     coordinates =  x.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
 
-    console.log("x is:" +x);
-    console.log("aa:" + coordinates);
-    console.log("aaaaaaaaaaaaaaa")
+
     this.displayRoute(coordinates);
 
   })
   }
+
+  printMap() {
+    const hostElement = this.elementRef.nativeElement;
+
+    const computedStyle = window.getComputedStyle(hostElement);
+
+    if (computedStyle.marginLeft){
+    
+      this.renderer.setStyle(hostElement, 'margin-left', 'unset');
+    }
+    if(computedStyle.width){     
+       this.renderer.setStyle(hostElement, 'width', 'unset');
+    }
+    if(computedStyle.minHeight){
+      this.renderer.setStyle(hostElement,'min-height', 'unset');
+    }
+    const hideElements = document.querySelectorAll('.home-header, .show-filters, .filtclass, .detclass, .sort, .date, .print, .map-nav');
+    hideElements.forEach((element: Element) => {
+        if ((element as HTMLElement).style) {
+            (element as HTMLElement).style.display = 'none';
+        }
+    });
+
+    const hideElements2 = document.querySelectorAll('app-sidebar, app-header');
+    hideElements2.forEach((element: Element) => {
+        if ((element as HTMLElement).style) {
+            (element as HTMLElement).style.display = 'none';
+        }
+    });
+    window.document.title="Print mape";
+    window.print();
+    setTimeout(() => {
+        hideElements.forEach((element: Element) => {
+            if ((element as HTMLElement).style) {
+                (element as HTMLElement).style.display = '';
+            }
+        });
+        hideElements2.forEach((element: Element) => {
+          if ((element as HTMLElement).style) {
+              (element as HTMLElement).style.display = '';
+          }
+      });
+      this.renderer.setStyle(hostElement, 'margin-left', '200px');
+      this.renderer.setStyle(hostElement, 'width', 'calc(100% - 200px)');
+      this.renderer.setStyle(hostElement, 'min-height', 'calc(100vh - 60px)');
+
+    }, 500); 
+  
+}
+
 }
 

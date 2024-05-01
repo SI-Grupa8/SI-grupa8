@@ -19,10 +19,22 @@
         <owl-date-time [pickerType]="'both'" #dt2 [owlDateTimeTrigger]="dt2"></owl-date-time>
         <button class="show" (click)="showTimeStamps(date1, date2)">SHOW</button>
     </div>
+    <button class="print" (click)="printMap()"><img src="../../../assets/images/file.png" alt="Slika"/></button>
+
+  <!--  <button class="print" [printStyle]="{
+        '@page': { size: 'landscape !important' },
+        'img': { width: '100%', height: '100%' }
+      }" [useExistingCss]="true" [openNewTab]="true" ngxPrint [printSectionId]="'mapContainer'">
+        <img src="../../../assets/images/file.png" alt="Slika"/>
+      </button>
+    -->
 </div>
+
+
     <div  #mapContainer id="mapContainer" class="map-container" style="z-index: 100;" ></div>
+
     @if (showFilterComponent) {
-        <app-map-filter style="z-index: 999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)"></app-map-filter>
+        <app-map-filter class="filtclass" style="z-index: 999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)"></app-map-filter>
     } 
     @else {
         <button (click)="toggleMapFilter()" class="show-filters">
@@ -31,7 +43,7 @@
         </button>
     }
     @if (activeDeviceId != null && selectedDevice != null){
-    <app-device-details (close)="closeDetails()" [selectedDevice]="selectedDevice"></app-device-details>
+    <app-device-details class="detclass" (close)="closeDetails()" [selectedDevice]="selectedDevice"></app-device-details>
     }
     
 
