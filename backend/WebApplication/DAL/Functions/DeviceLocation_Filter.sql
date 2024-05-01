@@ -1,18 +1,20 @@
 CREATE OR REPLACE FUNCTION DeviceLocation_Filter
-	("DeviceId" INT,
-    	"StartDate" TIMESTAMP,
-    	"EndDate" TIMESTAMP
+	("DeviceIds" INT[],
+    "StartDate" TIMESTAMP,
+    "EndDate" TIMESTAMP
 	)
 returns setof "LocationStorages"
 LANGUAGE plpgsql
-	AS $$
+AS $$
+DECLARE
+temp_id INT;
 BEGIN
-
-	RETURN QUERY SELECT ls.* FROM "LocationStorages" as ls
-	WHERE	ls."DeviceID" = "DeviceId"
-		AND ls."Timestamp" >= "StartDate"
-		AND ls."Timestamp" <= "EndDate"
-	ORDER BY ls."Timestamp" asc;
-
+	FOREACH temp_id IN ARRAY "DeviceIds" LOOP
+		RETURN QUERY SELECT ls.* FROM "LocationStorages" as ls
+		WHERE	ls."DeviceID" = temp_id
+				AND ls."Timestamp" >= "StartDate"
+				AND ls."Timestamp" <= "EndDate"
+		ORDER BY ls."Timestamp" asc;
+	END LOOP;
 END;
 $$;

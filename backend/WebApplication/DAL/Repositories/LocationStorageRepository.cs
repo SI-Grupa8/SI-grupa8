@@ -46,7 +46,7 @@ namespace DAL.Repositories
             }
         }
 
-        public List<LocationStorage> GetFilteredLocation(int deviceId, DateTime startDate, DateTime endDate)
+        public List<LocationStorage> GetFilteredLocation(List<int> deviceIds, DateTime startDate, DateTime endDate)
         {
             List<LocationStorage> locationStorages = new List<LocationStorage>();
             var connectionString = _configuration.GetConnectionString("ConnectionDatabase");
@@ -56,10 +56,10 @@ namespace DAL.Repositories
                 conn.Open();
 
 
-                using (var cmd = new NpgsqlCommand("SELECT * FROM DeviceLocation_Filter(@DeviceId, @StartDate, @EndDate)", conn))
+                using (var cmd = new NpgsqlCommand("SELECT * FROM DeviceLocation_Filter(@DeviceIds, @StartDate, @EndDate)", conn))
                 {
 
-                    cmd.Parameters.AddWithValue("@DeviceId", deviceId);
+                    cmd.Parameters.AddWithValue("@DeviceIds", deviceIds);
                     cmd.Parameters.AddWithValue("@StartDate", NpgsqlDbType.Timestamp, startDate);
                     cmd.Parameters.AddWithValue("@EndDate", NpgsqlDbType.Timestamp, endDate);
 

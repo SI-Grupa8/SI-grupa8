@@ -12,7 +12,7 @@
             <mat-chip-option [selected]="carDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('car')">Car&nbsp;&nbsp;(10)</mat-chip-option>
           </mat-chip-listbox>
     </div>
-    <div class="date" [ngClass]="{'hide': !activeDeviceId}" style="z-index: 1000;">
+    <div class="date" [ngClass]="{'hide': !activeDeviceIds}" style="z-index: 1000;">
         <input [owlDateTime]="dt1" [min]="minDateTime" [max]="maxDateTime" placeholder="'From'" [owlDateTimeTrigger]="dt1" [(ngModel)]="date1">
         <owl-date-time [pickerType]="'both'" #dt1 [owlDateTimeTrigger]="dt1"></owl-date-time>
         <input [owlDateTime]="dt2" [min]="minDateTime" [max]="maxDateTime" placeholder="To" [owlDateTimeTrigger]="dt2" [(ngModel)]="date2">
@@ -34,7 +34,9 @@
     <div  #mapContainer id="mapContainer" class="map-container" style="z-index: 100;" ></div>
 
     @if (showFilterComponent) {
+
         <app-map-filter class="filtclass" style="z-index: 999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)"></app-map-filter>
+
     } 
     @else {
         <button (click)="toggleMapFilter()" class="show-filters">
@@ -42,8 +44,10 @@
 
         </button>
     }
+
     @if (activeDeviceId != null && selectedDevice != null){
     <app-device-details class="detclass" (close)="closeDetails()" [selectedDevice]="selectedDevice"></app-device-details>
+
     }
     
 
