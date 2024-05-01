@@ -27,7 +27,8 @@ export class MapFilterComponent {
   @Output() fillMap = new EventEmitter<void>();
   @Output() updateMap = new EventEmitter<DeviceRequest>();
 
-  activeDeviceId: number | null = null; 
+  selectedDeviceIds: number[] = [];
+
   beforeFiltered: any[] =[];
   temp: any[] = [];
 
@@ -49,8 +50,14 @@ export class MapFilterComponent {
       this.filteredDevices = this.beforeFiltered;
     }
   }
+
   zoomToSpecificPoint(deviceID: number) {
-    this.zoomEvent.emit(deviceID);
+    console.log("deviceID:",deviceID);
+    if(deviceID!=0){
+      this.zoomEvent.emit(deviceID);
+    }
+          
+
   }
   onMarkerClicked(deviceID: number) {
     
@@ -58,19 +65,22 @@ export class MapFilterComponent {
     
   }
   toggleActiveDevice(deviceId: number) {
-    if (this.activeDeviceId === deviceId) {
-      
-      this.activeDeviceId = null;
-    } else {
-      
-      this.activeDeviceId = deviceId;
+    const index = this.selectedDeviceIds.indexOf(deviceId);
+    if (index !== -1) {
+        // If device is already selected, remove it from the array
+        this.selectedDeviceIds.splice(index, 1);
+    } else  if(this.selectedDeviceIds.length<5){
+        // If device is not selected, add it to the array
+        this.selectedDeviceIds.push(deviceId);
     }
-  }
+}
+
 
  
-  isDeviceActive(deviceId: number) {
-    return this.activeDeviceId === deviceId;
-  }
+isDeviceActive(deviceId: number) {
+  return this.selectedDeviceIds.includes(deviceId);
+}
+
 
   constructor(private deviceService: DeviceService, private authService: AuthService){
     this.authService.getCurrentUser().subscribe((res : any) => {

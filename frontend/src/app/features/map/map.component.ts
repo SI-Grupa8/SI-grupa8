@@ -3,7 +3,7 @@
 import { GoogleMap, GoogleMapsModule, MapAdvancedMarker } from '@angular/google-maps';
 
 import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { forkJoin, of } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, concatMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { DeviceService } from '../../core/services/http/device.service';
@@ -12,9 +12,9 @@ import { DeviceFilterComponent } from './device-filter/device-filter.component';
 import { UserService } from '../../core/services/http/user.service';
 
 
-import {  DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MapFilterComponent } from "./map-filter/map-filter.component";
-import {MatChipsModule} from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
 import { DeviceRequest } from '../../core/models/device-request';
 import { DeviceDetailsComponent } from "./device-details/device-details.component";
 import { FormsModule } from '@angular/forms';
@@ -22,15 +22,16 @@ import { DateRequest } from '../../core/models/date-request';
 import { OwlDateTimeFormats, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { DatePipe } from '@angular/common';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
-  
+import { LocationFilterRequest } from '../../core/models/location-filter';
+
 
 @Component({
-    selector: 'app-map',
-    standalone: true,
-    templateUrl: './map.component.html',
-    styleUrls: ['./map.component.scss'],
-    providers: [DatePipe],
-    imports: [MapAdvancedMarker, GoogleMapsModule, CommonModule, DeviceFilterComponent, OwlDateTimeModule, OwlNativeDateTimeModule, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent]
+  selector: 'app-map',
+  standalone: true,
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.scss'],
+  providers: [DatePipe],
+  imports: [MapAdvancedMarker, GoogleMapsModule, CommonModule, DeviceFilterComponent, OwlDateTimeModule, OwlNativeDateTimeModule, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent]
 })
 
 export class MapComponent implements OnInit, AfterViewInit {
@@ -58,15 +59,15 @@ export class MapComponent implements OnInit, AfterViewInit {
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
   };
-  
+
   filteredDevices: any[] = [];
   devices: any[] = [];
   locations: any[] = [];
   date1: Date = new Date();
   date2: Date = new Date();
   last24HoursDateTime: string = '';
-  
-  defaultCenter:google.maps.LatLngLiteral = {
+
+  defaultCenter: google.maps.LatLngLiteral = {
     lat: 44.44929,
     lng: 18.64978
   };
@@ -82,8 +83,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     date1: this.date1,
     date2: this.date2
   }
-  activeDeviceId: number | null | undefined;
-  
+  activeDeviceIds: number[] = [];
+
   allDevicesSelected: boolean = true;
   mobileDevicesSelected: boolean = false;
   gpsDevicesSelected: boolean = false;
@@ -100,42 +101,42 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   toggleDeviceSelection(deviceType: string) {
-    switch(deviceType) {
-        case 'mobile':
-            this.mobileDevicesSelected = !this.mobileDevicesSelected;
-            break;
-        case 'gps':
-            this.gpsDevicesSelected = !this.gpsDevicesSelected;
-            break;
-        case 'car':
-            this.carDevicesSelected = !this.carDevicesSelected;
-            break;
-        
+    switch (deviceType) {
+      case 'mobile':
+        this.mobileDevicesSelected = !this.mobileDevicesSelected;
+        break;
+      case 'gps':
+        this.gpsDevicesSelected = !this.gpsDevicesSelected;
+        break;
+      case 'car':
+        this.carDevicesSelected = !this.carDevicesSelected;
+        break;
+
     }
-    
+
     // Use setTimeout to delay the state check
     setTimeout(() => {
-        // Check if all devices are selected
-        if (this.mobileDevicesSelected && this.gpsDevicesSelected && this.carDevicesSelected) {
-            // If all devices are selected, deselect individual devices
-            this.selectAllDevices();
-        } else if (!this.mobileDevicesSelected && !this.gpsDevicesSelected && !this.carDevicesSelected) {
-            // If no individual devices are selected, select the "All devices" option
-            this.selectAllDevices();
-        } else {
-            // If not all devices are selected, deselect the "All devices" option
-            this.allDevicesSelected = false;
-        }
-        // Call getFilteredDevices method with updated selected chips
-        this.getFilteredDevices();
-        this.initMap()
+      // Check if all devices are selected
+      if (this.mobileDevicesSelected && this.gpsDevicesSelected && this.carDevicesSelected) {
+        // If all devices are selected, deselect individual devices
+        this.selectAllDevices();
+      } else if (!this.mobileDevicesSelected && !this.gpsDevicesSelected && !this.carDevicesSelected) {
+        // If no individual devices are selected, select the "All devices" option
+        this.selectAllDevices();
+      } else {
+        // If not all devices are selected, deselect the "All devices" option
+        this.allDevicesSelected = false;
+      }
+      // Call getFilteredDevices method with updated selected chips
+      this.getFilteredDevices();
+      this.initMap()
     });
-}
+  }
 
 
   deselectAllIfAllSelected() {
     if (this.allDevicesSelected) {
-        this.allDevicesSelected = false;
+      this.allDevicesSelected = false;
     }
   }
 
@@ -155,8 +156,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   };
 
   iframeSrc!: SafeResourceUrl | undefined;
-  
-  selectedDeviceTypeId : number[] = [];
+
+  selectedDeviceTypeId: number[] = [];
   markers: any[] = [
     { lat: 43.856430, lng: 18.413029 },
     { lat: 44.53842, lng: 18.66709 }
@@ -171,7 +172,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   constructor(
     private deviceService: DeviceService,
     private userService: UserService,
-    private authService : AuthService,
+    private authService: AuthService,
     private sanitizer: DomSanitizer,
     private datePipe: DatePipe,
     private noResult: MatSnackBar
@@ -182,13 +183,13 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
 
-      /*this.markerOptions = { 
-        
-      icon: { 
-        url: 'assets/images/location-pin-48.png', 
-        scaledSize: { width: 32, height: 32 } } 
-      }; */
+    /*this.markerOptions = { 
       
+    icon: { 
+      url: 'assets/images/location-pin-48.png', 
+      scaledSize: { width: 32, height: 32 } } 
+    }; */
+
 
     this.userService.getUser().pipe(
       concatMap(user => {
@@ -244,54 +245,81 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   display: any;
-  
+
 
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
   }
 
-/*
-  onDeviceTypeSelected(event: any): void {
-    this.deviceService.getFilteredDevices(event).subscribe(devices => {
-      this.devices = devices;
-    });
-  }*/
+  /*
+    onDeviceTypeSelected(event: any): void {
+      this.deviceService.getFilteredDevices(event).subscribe(devices => {
+        this.devices = devices;
+      });
+    }*/
 
 
   calculateAndDisplayRoute(): void {
     //const selectedDeviceId = (document.getElementById('start') as HTMLSelectElement).value;
-    
-    const sortedLocations = this.sortAndFilterLocationsForDevice(this.selectedDevice.deviceID);
-    const routeCoordinates = sortedLocations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
-    this.displayRoute(routeCoordinates);
-    
+
+    if (!this.activeDeviceIds || this.activeDeviceIds.length === 0) {
+      console.error('No active devices to calculate routes for.');
+      return;
+    }
+    var routeArray: google.maps.LatLngLiteral[][] = [];
+    this.directionsRenderer.setMap(null);
+    this.activeDeviceIds.forEach(deviceId => {
+      const sortedLocations = this.sortAndFilterLocationsForDevice(deviceId);
+      console.log("SortedLocations" + sortedLocations);
+      if (sortedLocations.length === 0) {
+        return;
+      }
+      const routeCoordinates = sortedLocations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
+      routeArray.push(routeCoordinates)
+    });
+    if (routeArray.length === 0) {
+      this.selectedDevice = null;
+      this.initMap();
+
+    }
+    else {
+      const dateDiv = document.querySelector('.date');
+
+      if (dateDiv) {
+        dateDiv.classList.remove('hide');
+    }
+      this.displayRoutes(routeArray);
+
+    }
+
+
   }
 
 
 
   getFilteredDevices() {
-    
+
     const selectedDeviceTypeIds: number[] = [];
     if (this.mobileDevicesSelected) {
-        selectedDeviceTypeIds.push(1);
+      selectedDeviceTypeIds.push(1);
     }
     if (this.gpsDevicesSelected) {
-        selectedDeviceTypeIds.push(2);
+      selectedDeviceTypeIds.push(2);
     }
     if (this.carDevicesSelected) {
-        selectedDeviceTypeIds.push(3);
+      selectedDeviceTypeIds.push(3);
     }
 
-    
+
     this.deviceService.getFilteredDevices(selectedDeviceTypeIds, [])
-        .subscribe(devices => {
-            
-            this.filteredDevices = devices;
-            
-            this.initMap()
-            // this.mapFilterComponent.higlightAllDevices()
-            console.log(this.filteredDevices);
-        });
+      .subscribe(devices => {
+
+        this.filteredDevices = devices;
+
+        this.initMap()
+        console.log(this.filteredDevices);
+      });
+
   }
 
   getSearchDevices(deviceRequest: DeviceRequest[]) {
@@ -301,7 +329,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   parseCoordinatesNew(device: any): { lat: number, lng: number } {
-    return { 
+    return {
       lat: parseFloat(device.xCoordinate),
       lng: parseFloat(device.yCoordinate)
     };
@@ -309,7 +337,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   initMap(): void {
     const myLatLng = { lat: 43.8582, lng: 18.3566 };
-  
+
     const map = new google.maps.Map(
       document.getElementById("mapContainer") as HTMLElement,
       {
@@ -317,9 +345,9 @@ export class MapComponent implements OnInit, AfterViewInit {
         center: myLatLng,
       }
     );
-  
+
     this.filteredDevices.forEach(device => {
-      const deviceLatLng =  this.parseCoordinatesNew(device) ;
+      const deviceLatLng = this.parseCoordinatesNew(device);
       console.log(device);
       const markerOptions = this.getMarkerOptions(device);
       // prikazat ce ga samo ako je highlighted
@@ -335,69 +363,85 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   @ViewChild(GoogleMap) map!: GoogleMap;
-  unzoomFromDevice(deviceId: number){}
-  
+  unzoomFromDevice(deviceId: number) { }
+
   zoomToSpecificPoint(deviceID: number) {
     const device = this.filteredDevices.find((device) => device.deviceID === deviceID);
     if (device) {
-        const { xCoordinate, yCoordinate } = device;
-        const newPosition: google.maps.LatLngLiteral = { lat: parseFloat(xCoordinate), lng: parseFloat(yCoordinate) };
+      const { xCoordinate, yCoordinate } = device;
+      const newPosition: google.maps.LatLngLiteral = { lat: parseFloat(xCoordinate), lng: parseFloat(yCoordinate) };
 
-        if (this.activeDeviceId === deviceID) {
-            this.activeDeviceId = null;
-            this.center = this.defaultCenter;
-            this.zoom = 15;
-            this.selectedDevice = null;
-            this.initMap()
-            //console.log(this.selectedDevice)
-            const dateDiv = document.querySelector('.date');
-            if (dateDiv) {
-                dateDiv.classList.add('hide');
-            }
-            
-            
-        } else {
-            this.activeDeviceId = deviceID;
-            this.center = newPosition;
-            this.zoom = 16;
-            this.selectedDevice = device;
-            this.calculateAndDisplayRoute()
+      //console.log("aktivni: "+this.activeDeviceIds);
+      //console.log("odabrani: "+this.selectedDevice);
+      const index = this.activeDeviceIds.indexOf(deviceID);
+
+      if (index !== -1) {
+        this.activeDeviceIds.splice(index, 1);
+        this.center = this.defaultCenter;
+        this.zoom = 15;
+        console.log("aktivni: " + this.activeDeviceIds);
+        var previousDeviceID = this.activeDeviceIds?.[this.activeDeviceIds.length - 1] ?? -1;
+        this.selectedDevice = this.activeDeviceIds.length > 0 ? this.filteredDevices.find((device) => device.deviceID === previousDeviceID) : null;
+
+        if (this.selectedDevice !== null) {
+          this.calculateAndDisplayRoute()
         }
+        else {
+          const dateDiv = document.querySelector('.date');
+
+          if (dateDiv) {
+            dateDiv.classList.add('hide');
+          }
+          this.initMap();
+        }
+
+      } else  if(this.activeDeviceIds.length < 5) {
+        this.activeDeviceIds.push(deviceID);
+        this.center = newPosition;
+        this.zoom = 16;
+        this.selectedDevice = device;
+        this.calculateAndDisplayRoute()
+      }
+
+      /*console.log("aktivni: "+this.activeDeviceIds);
+      console.log("act[len-1] "+this.activeDeviceIds[this.activeDeviceIds.length - 1]);
+      console.log("len "+this.activeDeviceIds.length);
+      console.log("odabrani "+this.selectedDevice.deviceID);*/
     }
-}
-  
+  }
+
   getMarkerOptions(device: DeviceRequest): any {
-    if (device.deviceTypeID == 1){
+    if (device.deviceTypeID == 1) {
       return {
-          icon: {
-              
-              url: 'assets/images/mobile-marker.png',
-              scaledSize: { width: 70, height: 70 } 
-          }
+        icon: {
+
+          url: 'assets/images/mobile-marker.png',
+          scaledSize: { width: 70, height: 70 }
+        }
       };
     }
-    else if (device.deviceTypeID == 2){
+    else if (device.deviceTypeID == 2) {
       return {
-          icon: {
-              
-              url: 'assets/images/gps-marker.png',
-              scaledSize: { width: 70, height: 70 } 
-          }
+        icon: {
+
+          url: 'assets/images/gps-marker.png',
+          scaledSize: { width: 70, height: 70 }
+        }
       };
     }
-    else if (device.deviceTypeID == 3){
+    else if (device.deviceTypeID == 3) {
       return {
-          icon: {
-              
-              url: 'assets/images/car-marker.png',
-              scaledSize: { width: 70, height: 70 } 
-          }
+        icon: {
+
+          url: 'assets/images/car-marker.png',
+          scaledSize: { width: 70, height: 70 }
+        }
       };
     }
   }
   closeDetails() {
     this.selectedDevice = null;
-    
+
     console.log(this.selectedDevice);
   }
 
@@ -407,11 +451,11 @@ export class MapComponent implements OnInit, AfterViewInit {
     return deviceLocations.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }
 
-  private displayRoute(coordinates?: google.maps.LatLngLiteral[]): void {
+  /*private displayRoute(coordinates?: google.maps.LatLngLiteral[]): void {
     console.log("KOO:" + coordinates);
     if (!coordinates || coordinates.length === 0) {
-        console.error('No coordinates provided for displaying route.');
-        return;
+      console.error('No coordinates provided for displaying route.');
+      return;
     }
     let filterCoordinates = coordinates;
     filterCoordinates.forEach(x => {
@@ -419,16 +463,16 @@ export class MapComponent implements OnInit, AfterViewInit {
     })
     const start = new google.maps.LatLng(coordinates[0].lat, coordinates[0].lng);
     const end = new google.maps.LatLng(coordinates[coordinates.length - 1].lat, coordinates[coordinates.length - 1].lng);
-  
+
     const waypts = coordinates.slice(1, -1).map(coord => ({ location: new google.maps.LatLng(coord.lat, coord.lng) }));
-  
+
     const request = {
       origin: start,
       destination: end,
       waypoints: waypts,
       travelMode: google.maps.TravelMode.DRIVING,
     };
-  
+
     this.directionsService.route(request, (result, status) => {
       if (status === google.maps.DirectionsStatus.OK) {
         this.directionsRenderer.setDirections(result);
@@ -441,32 +485,95 @@ export class MapComponent implements OnInit, AfterViewInit {
         console.error('Directions request failed due to ' + status);
       }
     });
+  }
+*/
+
+  private displayRoutes(routes: google.maps.LatLngLiteral[][]): void {
+    const map = new google.maps.Map(this.mapContainer.nativeElement, {
+      center: this.center,
+      zoom: this.zoom,
+      mapTypeControl: false
+    });
+
+    routes.forEach((coordinates, index) => {
+      const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16); // Generate random color
+
+      const directionsRenderer = new google.maps.DirectionsRenderer({
+        polylineOptions: {
+          strokeColor: randomColor // Odaberite boju temeljem indeksa
+        }
+      });
+      directionsRenderer.setMap(map);
+
+      const start = new google.maps.LatLng(coordinates[0].lat, coordinates[0].lng);
+      const end = new google.maps.LatLng(coordinates[coordinates.length - 1].lat, coordinates[coordinates.length - 1].lng);
+      const waypts = coordinates.slice(1, -1).map(coord => ({ location: new google.maps.LatLng(coord.lat, coord.lng) }));
+      const request = {
+        origin: start,
+        destination: end,
+        waypoints: waypts,
+        travelMode: google.maps.TravelMode.DRIVING,
+      };
+      this.directionsService.route(request, (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          directionsRenderer.setDirections(result);
+        } else {
+          console.error('Directions request failed due to ' + status);
+        }
+      });
+    });
+  }
+
+
+  showTimeStamps(date1: Date, date2: Date) {
+    console.log(date1.toISOString().replace('Z', ''), date2.toISOString().replace('Z', ''));
+    const routeArray: google.maps.LatLngLiteral[][] = [];
+
+    if (this.activeDeviceIds.length === 0) {
+        console.error('No active device or selected device.');
+        return;
+    }
+
+    // Create an array to store observables
+    const observables: Observable<any>[] = [];
+
+    // Iterate through each active device
+    this.activeDeviceIds.forEach(deviceId => {
+        const filterRequest: LocationFilterRequest = {
+            deviceTimes: {
+                date1: date1.toISOString().replace('Z', ''),
+                date2: date2.toISOString().replace('Z', ''),
+            },
+            deviceIds: [deviceId],
+        };
+
+        // Push the observable into the array
+        observables.push(this.deviceService.getDateTimeStamps(filterRequest));
+    });
+
+
+    forkJoin(observables).subscribe(results => {
+        results.forEach(x => {
+            if (x.length === 0) {
+                this.noResult.open('No routes available for the selected time interval.', 'Close', {
+                    duration: 4000,
+                    horizontalPosition: this.horizontalPosition,
+                    verticalPosition: this.verticalPosition,
+                });
+                return;
+            }
+
+            const coordinates: google.maps.LatLngLiteral[] = x.map((location: any) => this.parseCoordinates(location)).filter((coord: null) => coord !== null) as google.maps.LatLngLiteral[];
+            routeArray.push(coordinates);
+        });
+
+        console.log("route array");
+        console.log(routeArray);
+        this.displayRoutes(routeArray);
+    });
 }
 
-showTimeStamps(date1: Date, date2: Date) {
-  console.log(date1.toISOString().replace('Z', ''), date2.toISOString().replace('Z', '')); 
-
-  var deviceId = this.activeDeviceId ? this.activeDeviceId : this.selectedDevice.deviceID
-  this.deviceService.getDateTimeStamps({date1: date1.toISOString().replace('Z', ''), date2: date2.toISOString().replace('Z', '')}, deviceId).subscribe(x => {
-    
-    if(x.length === 0){
-      this.noResult.open('No routes available for the selected time interval.', 'Close', {
-        duration: 4000,
-        horizontalPosition: this.horizontalPosition,
-        verticalPosition: this.verticalPosition,
-      });
-      return;
-    }
-    var coordinates : any = []
-    coordinates =  x.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[];
-
-    console.log("x is:" +x);
-    console.log("aa:" + coordinates);
-    console.log("aaaaaaaaaaaaaaa")
-    this.displayRoute(coordinates);
-
-  })
-  }
+ 
 
   emptyMap(): void {
     // console.log(this.markers);

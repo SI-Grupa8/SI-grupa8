@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { DeviceRequest } from '../../models/device-request';
 import { DateRequest } from '../../models/date-request';
 import { LocationStorage } from '../../models/location-storage';
+import { LocationFilterRequest } from '../../models/location-filter';
 
 @Injectable({
   providedIn: 'root'
@@ -82,11 +83,12 @@ export class DeviceService {
     return this.http.get<any[]>(`${this.apiUrl}/LocationStorage/get-device-locations/${deviceId}`, {headers});
   }
 
-  getDateTimeStamps(date: any, deviceId : number):Observable<any[]> {
+  getDateTimeStamps(request : LocationFilterRequest):Observable<any[]> {
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.post<LocationStorage[]>(`${this.apiUrl}/DeviceLocation/locations-filter?deviceId=${deviceId}`, date, { headers });
+    //return this.http.post<LocationStorage[]>(`${this.apiUrl}/DeviceLocation/locations-filter?deviceId=${deviceId}`, date, { headers });
+    return this.http.post<LocationStorage[]>(`${this.apiUrl}/DeviceLocation/locations-filter`, request, { headers });
   }
 }
