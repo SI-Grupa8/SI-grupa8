@@ -75,10 +75,16 @@ namespace API.Controllers
 		}
 
 
-		[HttpPut("change-email")]
+	[HttpPut("change-email")]
     public async Task<ActionResult> ChangeEmail(UserDto request)
     {
       return Ok(await _userService.ChangeEmail(request));
+    }
+
+    [HttpPut("change-phone-number")]
+    public async Task<ActionResult> ChangePhoneNumber(UserDto request)
+    {
+        return Ok(await _userService.ChangePhoneNumber(request));
     }
 
     [HttpPut("change-password")]
