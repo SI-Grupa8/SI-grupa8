@@ -36,10 +36,10 @@ namespace BLL.Services
             }
             );
 
-            companies.ForEach(x =>
-            {
-                x.Users.RemoveAll(x => x.RoleID != 1);
-            });
+            //companies.ForEach(x =>
+            //{
+            //    x.Users.RemoveAll(x => x.RoleID != 1);
+            //});
             return _mapper.Map<List<CompanyDto>>(companies);
         }
 
