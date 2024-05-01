@@ -45,10 +45,11 @@
         </button>
     }
 
-    @if (activeDeviceId != null && selectedDevice != null){
+    @if (activeDeviceIds != null && selectedDevice != null){
     <app-device-details class="detclass" (close)="closeDetails()" [selectedDevice]="selectedDevice"></app-device-details>
 
     }
+    
     
 
 

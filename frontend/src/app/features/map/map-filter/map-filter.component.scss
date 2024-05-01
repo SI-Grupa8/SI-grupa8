@@ -203,6 +203,9 @@
                         fill: rgb(77, 76, 76);
                     }
                 }
+                .trip-button.active {
+                    background-color: rgb(201, 255, 230);
+                }
             }
         }
         .device-filter-card:hover {
