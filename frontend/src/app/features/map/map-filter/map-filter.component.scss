@@ -18,6 +18,7 @@
         //justify-content: center;
         select {
             margin-left: 20px;
+            margin-right: 2px;
             height: 40px;
             width: 200px;
             //font-weight: bold;
@@ -34,6 +35,7 @@
         }
         .esc {
             margin-right: 20px;
+            margin-left: 1px;
             width: 20px;
             height: 20px;
             display: flex;
@@ -46,6 +48,44 @@
                 height: 16px;
                 fill: rgb(178, 177, 177);
             }
+        }
+        .higlight-all {
+            background-color: #1e5631; 
+            border: none;
+            color: white;
+            padding: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 4px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition-duration: 0.4s;
+            width: 35%;
+        }
+        
+        .higlight-all:hover {
+            background-color: #3b7f57; 
+        }
+        .hide-all {
+            background-color: #1e5631; 
+            border: none;
+            color: white;
+            padding: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 4px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition-duration: 0.4s;
+            width: 35%;
+        }
+        
+        .hide-all:hover {
+            background-color: #3b7f57; 
         }
     }
     .filter-subheader {
@@ -88,7 +128,16 @@
             border-bottom: 1px solid rgb(207, 206, 206);
             display: flex;
             align-items: center;
-            
+
+            .img-button {
+                background: none;
+                border: none;
+            }
+
+            .highlighted {
+                background-color: rgb(0, 195, 255);
+            }
+
             .img-container {
                 margin-left: 20px;
                 width: 50px;
