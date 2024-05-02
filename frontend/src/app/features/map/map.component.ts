@@ -3,8 +3,8 @@
 import { GoogleMap, GoogleMapsModule, MapAdvancedMarker } from '@angular/google-maps';
 
 
-import { Component, OnInit, ChangeDetectorRef, Renderer2,ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { forkJoin, of, Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectorRef, Renderer2,ElementRef, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { forkJoin, of, Observable, Subscription } from 'rxjs';
 
 import { catchError, concatMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
@@ -13,8 +13,6 @@ import { AuthService } from '../../core/services/http/auth.service';
 import { DeviceFilterComponent } from './device-filter/device-filter.component';
 import { UserService } from '../../core/services/http/user.service';
 import jsPDF from 'jspdf';
-import { NgxPrintModule, NgxPrintService } from 'ngx-print';
-
 
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MapFilterComponent } from "./map-filter/map-filter.component";
@@ -39,7 +37,7 @@ import jspdf from 'jspdf';
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss'],
     providers: [DatePipe],
-    imports: [MapAdvancedMarker, GoogleMapsModule, CommonModule, DeviceFilterComponent, OwlDateTimeModule, OwlNativeDateTimeModule, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent,NgxPrintModule]
+    imports: [MapAdvancedMarker, GoogleMapsModule, CommonModule, DeviceFilterComponent, OwlDateTimeModule, OwlNativeDateTimeModule, FormsModule, MapFilterComponent, MatChipsModule, DeviceDetailsComponent]
 
 })
 
@@ -49,7 +47,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   currentMap: google.maps.Map | null = null;
 
-  colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff']; 
+  colors = ['#FF00FF', '#0000FF', '#228B22', '#FF4500', '#800080'];
   colorIndex: number = 0; 
 
   @ViewChild(MapFilterComponent)
@@ -104,6 +102,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   gpsDevicesSelected: boolean = false;
   carDevicesSelected: boolean = false;
   selectedDevice: any;
+  mapsAPILoader: any;
   //printService: any;
 
   selectAllDevices() {
@@ -191,12 +190,10 @@ export class MapComponent implements OnInit, AfterViewInit {
     private sanitizer: DomSanitizer,
     private datePipe: DatePipe,
     private noResult: MatSnackBar,
-    private printService: NgxPrintService,
     private renderer: Renderer2, private elementRef: ElementRef
   ) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
-    this.printService=printService
   }
 
   ngOnInit(): void {
@@ -517,11 +514,9 @@ export class MapComponent implements OnInit, AfterViewInit {
       mapTypeControl: false
     });
     this.currentMap = map;
-
     routes.forEach((coordinates, index) => {
       const strokeColor = this.colors[this.colorIndex]; 
       this.colorIndex = (this.colorIndex + 1) % this.colors.length; 
-
       const directionsRenderer = new google.maps.DirectionsRenderer({
         polylineOptions: {
           strokeColor: strokeColor 
@@ -692,9 +687,48 @@ export class MapComponent implements OnInit, AfterViewInit {
     }, 500); 
   
 }
+@Output() active = new EventEmitter<number>();
+
+isDeviceActive(deviceId: number) {
+  this.active.emit(deviceId);  
+}
+public routeCoordinatesSubscription: Subscription | undefined;
+
+zoomRoute(device: any): void {
+  console.log('usoo')
+  // Pretplata na Observable za dobijanje koordinata rute
+  this.routeCoordinatesSubscription = this.deviceService.getDeviceLocations(device.deviceID!).subscribe((routeCoordinates: any[]) => {
+      // Provjera da li postoje koordinate rute
+      if (!routeCoordinates || routeCoordinates.length === 0) {
+          return; // Ne postoji ruta za zumiranje
+      }
+
+      // Kreiranje novog LatLngBounds objekta koji će sadržavati sve tačke na ruti
+      const bounds = new google.maps.LatLngBounds();
+
+      // Dodavanje svih tačaka na ruti u bounds objekat
+      routeCoordinates.forEach(coordinate => {
+          bounds.extend(new google.maps.LatLng(coordinate.lat, coordinate.lng));
+      });
+
+      // Postavljanje centra mape na sredinu rute
+      const center = bounds.getCenter();
+      var centerCoords = { lat: center.lat(), lng: center.lng() };
+
+    // Proslijeđujemo koordinate centra i nivo zumiranja funkciji initMap
+    this.initMap(center.lat(), center.lng(), 12);
+  });
+}
+
+
 
 zoomDevice(device: DeviceRequest): void {
-  console.log("zoomed device:");
+  if (device !== null) {
+    this.calculateAndDisplayRoute()
+    this.zoomToSpecificPoint(device.deviceID!)
+  }
+
+  /*console.log("zoomed device:");
   console.log(device);
   
   // Convert device attributes from string to number
@@ -706,7 +740,7 @@ zoomDevice(device: DeviceRequest): void {
       return;
   }
   // zoom amount (third parameter) can be changed if different view is needed
-  this.initMap(xCoordinate, yCoordinate, 17);
+  this.initMap(xCoordinate, yCoordinate, 17);*/
 }
 
 zoomDefault(){

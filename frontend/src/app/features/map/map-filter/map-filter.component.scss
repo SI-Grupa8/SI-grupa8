@@ -50,42 +50,42 @@
             }
         }
         .higlight-all {
-            background-color: #1e5631; 
+            background-color: #4850b3; 
             border: none;
             color: white;
-            padding: 10px 10px;
+            padding: 7px 6px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
-            font-size: 14px;
+            font-size: 15px;
             margin: 4px 4px;
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: 20px;
             transition-duration: 0.4s;
-            width: 35%;
+            width: 100%;
         }
         
         .higlight-all:hover {
-            background-color: #3b7f57; 
+            background-color: #5c63c2; 
         }
         .hide-all {
-            background-color: #1e5631; 
+            background-color: #4850b3; 
             border: none;
             color: white;
-            padding: 10px 10px;
+            padding: 7px 6px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
-            font-size: 14px;
+            font-size: 15px;
             margin: 4px 4px;
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: 20px;
             transition-duration: 0.4s;
-            width: 35%;
+            width: 100%;
         }
         
         .hide-all:hover {
-            background-color: #3b7f57; 
+            background-color: #5c63c2; 
         }
     }
     .filter-subheader {
@@ -105,7 +105,7 @@
               //background: darken(white,15%);
               border:1px solid lightgray;
               background-color: #fffbfb;
-              border-radius: 3px;
+              border-radius: 20px;
               line-height: 35px;
               width: 250px;
               padding: 0 10px;
@@ -115,7 +115,8 @@
             input[type="search"]::-webkit-input-placeholder { color: #636363; }
           }
           .default-zoom{
-            background-color: rgb(0, 195, 255); 
+            // background-color: rgb(0, 195, 255); 
+            background-color: transparent;
             border: none;
             color: white;
             padding: 8px 8px;
@@ -161,7 +162,7 @@
             }
 
             .highlighted {
-                background-color: rgb(0, 195, 255);
+                background-color: rgb(207, 206, 206);
             }
 
             .img-container {

@@ -27,6 +27,7 @@ export class MapFilterComponent {
   @Output() fillMap = new EventEmitter<void>();
   @Output() updateMap = new EventEmitter<DeviceRequest>();
   @Output() zoomDevice = new EventEmitter<DeviceRequest>();
+  @Output() zoomRoute = new EventEmitter<DeviceRequest>();
   @Output() zoomDefault = new EventEmitter<void>();
 
   selectedDeviceIds: number[] = [];
@@ -144,12 +145,24 @@ hideAllDevices(): void {
 
 zoomToDevice(device: any){
   if(device.isHighlighted){
-  this.zoomDevice.emit(device);
+    this.zoomDevice.emit(device);
   }
+}
+
+zoomToRoute(device: any) {
+  this.zoomEvent.emit(device.deviceID); // Emit the device ID event
+  this.zoomRoute.emit(device); // Emit the device object event
 }
 
 zoomToDefault(): void{
   this.zoomDefault.emit()
+}
+
+checkTripButtonClicked(device: DeviceRequest, event: MouseEvent) {
+  this.zoomEvent.emit(device.deviceID); // Emit the device ID event
+  if (this.isDeviceActive(device.deviceID!)) {
+    this.zoomRoute.emit(device);
+  }
 }
   
 }

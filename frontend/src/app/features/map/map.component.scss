@@ -65,7 +65,7 @@
                 height: 35px;
                 color: white;
                 font-size: 12px;
-                background-color: rgb(55, 55, 192);
+                background-color: #4850b3;
                 border-radius: 20px;
                 border: 1px solid rgb(180, 180, 180);
                 cursor: pointer;
@@ -124,11 +124,13 @@
 .print{
     background-color: white;
     border: none;
-margin-right: 13px;
-img{
-    height: 30px;
-    width: 35px;
-}}
+    cursor: pointer;
+    margin-right: 13px;
+    img{
+        height: 30px;
+        width: 30px;
+    }
+}
 
     .filter{
         display: flex;
