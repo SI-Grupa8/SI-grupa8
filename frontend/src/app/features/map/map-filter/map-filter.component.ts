@@ -53,30 +53,33 @@ export class MapFilterComponent {
     }
   }
 
-  zoomToSpecificPoint(deviceID: number, event: MouseEvent) {
-    console.log("deviceID:",deviceID);
-    if(deviceID!=0){
-      this.zoomEvent.emit(deviceID);
+  zoomToSpecificPoint(device: DeviceRequest, event: MouseEvent) {
+    if(device.isHighlighted){
+    console.log("deviceID:",device.deviceID);
+    if(device.deviceID!=0){
+      this.zoomEvent.emit(device.deviceID);
+    }
     }
     event.stopPropagation();
   }
 
   onMarkerClicked(deviceID: number) {
-    
     console.log('Marker clicked:', deviceID);
-    
   }
-  toggleActiveDevice(deviceId: number, event: MouseEvent) {
-    const index = this.selectedDeviceIds.indexOf(deviceId);
+
+  toggleActiveDevice(device: DeviceRequest, event: MouseEvent) {
+    if(device.isHighlighted){
+    const index = this.selectedDeviceIds.indexOf(device.deviceID!);
     if (index !== -1) {
         // If device is already selected, remove it from the array
         this.selectedDeviceIds.splice(index, 1);
     } else  if(this.selectedDeviceIds.length<5){
         // If device is not selected, add it to the array
-        this.selectedDeviceIds.push(deviceId);
+        this.selectedDeviceIds.push(device.deviceID!);
+    }
     }
     event.stopPropagation();
-}
+  }
 
 
  
@@ -140,8 +143,9 @@ hideAllDevices(): void {
 }
 
 zoomToDevice(device: any){
-  console.log("Clicked on element");
+  if(device.isHighlighted){
   this.zoomDevice.emit(device);
+  }
 }
 
 zoomToDefault(): void{
