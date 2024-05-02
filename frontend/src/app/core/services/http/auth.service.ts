@@ -22,9 +22,12 @@ export class AuthService {
 
   user : BehaviorSubject<UserRequest | null> = new BehaviorSubject<UserRequest | null>(null)
 
+
   private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/Auth';
   private apiUserUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/User'
   //private apiUrl = 'https://localhost:7126/api/Auth';
+  //private apiUserUrl = 'https://localhost:7126/api/User';
+
 
   //private apiUserUrl = 'https://localhost:7126/api/User';
 

@@ -17,6 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.4.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <PackageReference Include="QRCoder" Version="1.4.3" />
@@ -37,9 +38,9 @@
     <ProjectReference Include="..\DAL\DAL.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="JWTHelpers\" />
+    <None Remove="Helpers\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="JWTHelpers\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
 </Project>

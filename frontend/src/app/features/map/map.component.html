@@ -1,20 +1,59 @@
-<div class="home-header">
+<!--<div class="home-header">
     <p class="greeting">Device Location Overview</p>
+
+</div>-->
+<div class="map-nav">
+    <div class="sort">
+        <p>SHOWING: </p>
+        <mat-chip-listbox aria-label="Fish selection" multiple>
+            <mat-chip-option [selected]="allDevicesSelected"  class="mat-chip" (click)="selectAllDevices()" selected>All devices (10)</mat-chip-option>
+            <mat-chip-option [selected]="mobileDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('mobile')">Mobile&nbsp;&nbsp;(10)</mat-chip-option>
+            <mat-chip-option [selected]="gpsDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('gps')">GPS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(10)</mat-chip-option>
+            <mat-chip-option [selected]="carDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('car')">Car&nbsp;&nbsp;(10)</mat-chip-option>
+          </mat-chip-listbox>
+    </div>
+    <div class="date" [ngClass]="{'hide': !activeDeviceIds}" style="z-index: 1000;">
+        <input [owlDateTime]="dt1" [min]="minDateTime" [max]="maxDateTime" placeholder="'From'" [owlDateTimeTrigger]="dt1" [(ngModel)]="date1">
+        <owl-date-time [pickerType]="'both'" #dt1 [owlDateTimeTrigger]="dt1"></owl-date-time>
+        <input [owlDateTime]="dt2" [min]="minDateTime" [max]="maxDateTime" placeholder="To" [owlDateTimeTrigger]="dt2" [(ngModel)]="date2">
+        <owl-date-time [pickerType]="'both'" #dt2 [owlDateTimeTrigger]="dt2"></owl-date-time>
+        <button class="show" (click)="showTimeStamps(date1, date2)">SHOW</button>
+    </div>
+    <button class="print" (click)="printMap()"><img src="../../../assets/images/file.png" alt="Slika"/></button>
+
+  <!--  <button class="print" [printStyle]="{
+        '@page': { size: 'landscape !important' },
+        'img': { width: '100%', height: '100%' }
+      }" [useExistingCss]="true" [openNewTab]="true" ngxPrint [printSectionId]="'mapContainer'">
+        <img src="../../../assets/images/file.png" alt="Slika"/>
+      </button>
+    -->
 </div>
-<div class="filter">
-    <app-device-filter (deviceTypeSelectedId)="onDeviceTypeSelected($event)"></app-device-filter>
-</div>
-<div class="mapa">
-    <google-map 
-                width="1250px"
-                [center]="{ lat: 43.8563, lng: 18.4131 }"
-                [zoom]="15"
-                (mapClick)="moveMap($event)"
-                (mapMousemove)="move($event)">
-                <map-marker *ngFor="let device of devices"
-                [position]="parseCoordinates(device)"
-                [title]="device.deviceName"
-                [options]="markerOptions">
-    </map-marker>
-    </google-map>
-</div>
+
+
+    <div  #mapContainer id="mapContainer" class="map-container" style="z-index: 100;" ></div>
+
+    @if (showFilterComponent) {
+
+        <app-map-filter class="filtclass" style="z-index: 999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)" (emptyMap)="emptyMap()" (fillMap)="fillMap()" (updateMap)="updateMap($event)"></app-map-filter>
+
+    } 
+    @else {
+        <button (click)="toggleMapFilter()" class="show-filters">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg>
+
+        </button>
+    }
+
+    @if (activeDeviceIds != null && selectedDevice != null){
+    <app-device-details class="detclass" (close)="closeDetails()" [selectedDevice]="selectedDevice"></app-device-details>
+
+    }
+    
+    
+
+
+    <!--<select id="start" (change)="calculateAndDisplayRoute()">
+      <option *ngFor="let device of devices" [value]="device.deviceID">{{ device.deviceName }}</option>
+    </select>-->
+

@@ -1,4 +1,6 @@
-﻿using API.JWTHelpers;
+﻿using API.Helpers;
+using API.Helpers;
+using BLL.DTOs;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +44,14 @@ namespace API.Controllers
             }
 
             return Ok(new { Message = "Location saved" });
+        }
+
+        [HttpPost("locations-filter")]
+        [Authorize(Roles ="Admin")]
+        public ActionResult<List<LocationStorageDto>> GetDeviceRoutesFilter(LocationFilterRequest locationFilterRequest)
+        {
+            return _deviceLocationService.GetDeviceLocationsFilter(locationFilterRequest.deviceIds, locationFilterRequest.deviceTimes.date1, locationFilterRequest.deviceTimes.date2);
+
         }
     }
 }

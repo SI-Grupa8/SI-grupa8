@@ -9,5 +9,5 @@ export interface DeviceRequest {
     deviceID?: number;
     deviceTypeID? : number;
     deviceType?: DeviceType;
-    
+    isHighlighted?: string;
 }

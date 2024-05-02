@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\WebApplication",
+    "\\WebApplication\\API",
+    "\\WebApplication\\API\\Controllers",
+    "\\WebApplication\\BLL",
+    "\\WebApplication\\BLL\\Interfaces",
+    "\\WebApplication\\BLL\\Services",
+    "\\WebApplication\\DAL"
+  ],
+  "SelectedNode": "\\WebApplication\\API\\Program.cs",
+  "PreviewInSolutionExplorer": false
+}

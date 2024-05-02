@@ -3,7 +3,7 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using API.JWTHelpers;
+using API.Helpers;
 using System.Security.Claims;
 using BLL.Services;
 

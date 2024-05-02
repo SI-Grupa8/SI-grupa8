@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
+@import "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
 
 html {
     font-family: Montserrat !important;
@@ -10,4 +11,7 @@ body {
 * {
     margin: 0px;
     padding: 0px;
+
 }
+
+

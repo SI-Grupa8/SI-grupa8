@@ -20,7 +20,7 @@ using QRCoder;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Authorization;
-using API.JWTHelpers;
+using API.Helpers;
 using System.Linq;
 
 namespace API.Controllers
