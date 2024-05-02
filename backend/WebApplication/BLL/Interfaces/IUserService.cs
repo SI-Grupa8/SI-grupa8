@@ -34,7 +34,7 @@ namespace BLL.Interfaces
         Task<UserDto> ChangeEmail(UserDto userDto);
         Task<UserDto> ChangePhoneNumber(UserDto userDto);
         Task<UserDto> ChangePassword(ChangePasswordDto changePasswordDto);
-        Task<List<UserDto>> GetDispatchersForNewDevice(int companyId);
+        Task<List<UserDto>> GetDriversForNewDevice(int companyId);
 
     }
 }

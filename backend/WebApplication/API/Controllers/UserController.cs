@@ -94,11 +94,11 @@ namespace API.Controllers
       return Ok(await _userService.ChangePassword(request));
     }
 
-    [HttpGet("get-dispatchers-new-device/{companyId}")]
+    [HttpGet("get-drivers-new-device/{companyId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<List<UserDto>>> GetDispacthersForNewDevice(int companyId)
+    public async Task<ActionResult<List<UserDto>>> GetDriversForNewDevice(int companyId)
 		{
-			return await _userService.GetDispatchersForNewDevice(companyId);
+			return await _userService.GetDriversForNewDevice(companyId);
 		}
 
     }

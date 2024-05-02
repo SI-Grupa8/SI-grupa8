@@ -85,7 +85,7 @@ return this.http.get<any>(`${this.apiUrl}/User/get-current-user`, {headers});
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.get<any[]>(`${this.apiUrl}/User/get-dispatchers-new-device/${companyId}`, {headers});
+    return this.http.get<any[]>(`${this.apiUrl}/User/get-drivers-new-device/${companyId}`, {headers});
   }
   
   changePassword(request: ChangePasswordRequest): Observable<any>{
