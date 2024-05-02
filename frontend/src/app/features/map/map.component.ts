@@ -31,6 +31,7 @@ import { LocationFilterRequest } from '../../core/models/location-filter';
 
 import html2canvas from 'html2canvas';
 import jspdf from 'jspdf';
+import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
   
 
 @Component({
@@ -48,6 +49,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   //zoom = 15;
   map: google.maps.Map | null = null;
   currentMap: google.maps.Map | null = null;
+  markers: google.maps.Marker[] = [];
 
   colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff']; 
   colorIndex: number = 0; 
@@ -105,6 +107,42 @@ export class MapComponent implements OnInit, AfterViewInit {
   carDevicesSelected: boolean = false;
   selectedDevice: any;
   //printService: any;
+
+  addMarker(position: google.maps.LatLng | google.maps.LatLngLiteral, device: DeviceRequest) {
+    const markerOptions = this.getMarkerOptions(device);
+    const marker = new google.maps.Marker({
+      position: position,
+      map: this.map,
+      title: device.deviceName,
+      icon: markerOptions.icon
+    });
+  
+    this.markers.push(marker);
+  }
+  //add map to markers
+  setMapOnAll(map: google.maps.Map | null) {
+    for (let i = 0; i < this.markers.length; i++) {
+      this.markers[i].setMap(map);
+    }
+  }
+
+  // Removes the markers from the map, but keeps them in the array.
+  hideMarkers(): void {
+    this.setMapOnAll(null);
+  }
+
+  // Shows any markers currently in the array.
+  showMarkers(): void {
+    this.setMapOnAll(this.map);
+  }
+
+  // Deletes all markers in the array by removing references to them.
+  deleteMarkers(): void {
+    this.hideMarkers();
+    this.markers = [];
+  }
+
+
 
   selectAllDevices() {
     this.allDevicesSelected = true;
@@ -174,10 +212,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   iframeSrc!: SafeResourceUrl | undefined;
 
   selectedDeviceTypeId: number[] = [];
-  markers: any[] = [
-    { lat: 43.856430, lng: 18.413029 },
-    { lat: 44.53842, lng: 18.66709 }
-  ];
+  
 
   //constructor(private deviceService: DeviceService, private authService : AuthService, private userService: UserService, private sanitizer: DomSanitizer) {}
 
@@ -375,6 +410,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         }
       );
     } else {
+      //this.fillMap();
       this.map.setCenter(myLatLng);
       this.map.setZoom(zoomAmount);
       this.map.setOptions({
@@ -383,21 +419,27 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
     
     this.currentMap = this.map;
-
+    this.deleteMarkers();
     this.filteredDevices.forEach(device => {
       const deviceLatLng = this.parseCoordinatesNew(device);
       console.log(device);
       const markerOptions = this.getMarkerOptions(device);
       // prikazat ce ga samo ako je highlighted
+      
       if(device.isHighlighted){
+        console.log("yes");
+
+        this.addMarker(deviceLatLng,device);
+      /*
       new google.maps.Marker({
         position: deviceLatLng,
         map: this.map,
         title: device.deviceName,
         icon: markerOptions.icon
-      });
+      });*/
     }
     });
+    
   }
 
   //@ViewChild(GoogleMap) map!: GoogleMap;
@@ -629,14 +671,17 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     // makes map empty
     const myLatLng = { lat: 43.8582, lng: 18.3566 };
-  
+    this.deleteMarkers();
+    this.displayRoutes([]);
+    this.zoomDefault()
+    /*
     this.map = new google.maps.Map(
       document.getElementById("mapContainer") as HTMLElement,
       {
         zoom: 10,
         center: myLatLng,
       }
-    );
+    );*/
     this.currentMap = this.map;
   }
 
@@ -661,7 +706,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     
     // Initialize the map again
     this.initMap();
-    this.currentMap = this.map;
+    //this.currentMap = this.map;
   }
 
   printMap() {
