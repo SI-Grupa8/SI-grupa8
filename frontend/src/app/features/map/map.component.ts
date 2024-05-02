@@ -696,26 +696,18 @@ public routeCoordinatesSubscription: Subscription | undefined;
 
 zoomRoute(device: any): void {
   console.log('usoo')
-  // Pretplata na Observable za dobijanje koordinata rute
   this.routeCoordinatesSubscription = this.deviceService.getDeviceLocations(device.deviceID!).subscribe((routeCoordinates: any[]) => {
-      // Provjera da li postoje koordinate rute
       if (!routeCoordinates || routeCoordinates.length === 0) {
-          return; // Ne postoji ruta za zumiranje
+          return; 
       }
 
-      // Kreiranje novog LatLngBounds objekta koji će sadržavati sve tačke na ruti
       const bounds = new google.maps.LatLngBounds();
 
-      // Dodavanje svih tačaka na ruti u bounds objekat
       routeCoordinates.forEach(coordinate => {
           bounds.extend(new google.maps.LatLng(coordinate.lat, coordinate.lng));
       });
 
-      // Postavljanje centra mape na sredinu rute
       const center = bounds.getCenter();
-      var centerCoords = { lat: center.lat(), lng: center.lng() };
-
-    // Proslijeđujemo koordinate centra i nivo zumiranja funkciji initMap
     this.initMap(center.lat(), center.lng(), 12);
   });
 }
