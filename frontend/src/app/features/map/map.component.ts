@@ -353,7 +353,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     };
   }
 
-  initMap(latitude: number = 43.8582, longitude: number = 18.3566, zoomAmount: number = 10): void {
+  initMap(latitude: number = 43.8582, longitude: number = 18.3566, zoomAmount: number = 11): void {
     const myLatLng = { lat: latitude, lng: longitude };
     console.log(myLatLng);
     const map = new google.maps.Map(
@@ -710,7 +710,7 @@ zoomDefault(){
   const myLatLng = { lat: 43.8582, lng: 18.3566 };
 
   this.currentMap?.setCenter(myLatLng)
-  this.currentMap?.setZoom(12);
+  this.currentMap?.setZoom(11);
 }
 
 }
