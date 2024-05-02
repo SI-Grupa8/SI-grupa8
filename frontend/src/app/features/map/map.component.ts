@@ -144,7 +144,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
       // Call getFilteredDevices method with updated selected chips
       this.getFilteredDevices();
-      this.initMap()
+      this.initMap();
+      this.currentMap = this.map;
     });
   }
 
@@ -238,6 +239,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.locations = locations.flat();
         //this.displayRoute(this.locations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[]);
         this.initMap();
+        this.currentMap = this.map;
       }
     });
   }
@@ -298,6 +300,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     if (routeArray.length === 0) {
       this.selectedDevice = null;
       this.initMap();
+      this.currentMap = this.map;
 
     }
     else {
@@ -339,6 +342,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
         this.initMap()
         console.log(this.filteredDevices);
+        this.currentMap = this.map;
       });
 
   }
@@ -347,6 +351,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.filteredDevices = deviceRequest;
 
     this.initMap()
+    this.currentMap = this.map;
   }
 
   parseCoordinatesNew(device: any): { lat: number, lng: number } {
@@ -426,6 +431,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             dateDiv.classList.add('hide');
           }
           this.initMap();
+          this.currentMap = this.map;
         }
 
       } else  if(this.activeDeviceIds.length < 5) {
@@ -434,6 +440,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.zoom = 16;
         this.selectedDevice = device;
         this.calculateAndDisplayRoute()
+        this.currentMap = this.map;
       }
 
       /*console.log("aktivni: "+this.activeDeviceIds);
@@ -522,12 +529,12 @@ export class MapComponent implements OnInit, AfterViewInit {
 */
 
   private displayRoutes(routes: google.maps.LatLngLiteral[][]): void {
-    const map = new google.maps.Map(this.mapContainer.nativeElement, {
+    this.map = new google.maps.Map(this.mapContainer.nativeElement, {
       center: this.center,
       zoom: this.zoom,
       mapTypeControl: false
     });
-    this.currentMap = map;
+    this.currentMap = this.map;
 
     routes.forEach((coordinates, index) => {
       const strokeColor = this.colors[this.colorIndex]; 
@@ -538,7 +545,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           strokeColor: strokeColor 
         }
       });
-      directionsRenderer.setMap(map);
+      directionsRenderer.setMap(this.map);
 
       const start = new google.maps.LatLng(coordinates[0].lat, coordinates[0].lng);
       const end = new google.maps.LatLng(coordinates[coordinates.length - 1].lat, coordinates[coordinates.length - 1].lng);
@@ -623,14 +630,14 @@ export class MapComponent implements OnInit, AfterViewInit {
     // makes map empty
     const myLatLng = { lat: 43.8582, lng: 18.3566 };
   
-    const map = new google.maps.Map(
+    this.map = new google.maps.Map(
       document.getElementById("mapContainer") as HTMLElement,
       {
         zoom: 10,
         center: myLatLng,
       }
     );
-    this.currentMap = map;
+    this.currentMap = this.map;
   }
 
   fillMap(){
@@ -638,6 +645,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       device.isHighlighted = true;
     })
     this.initMap()
+    this.currentMap = this.map;
   }
 
   updateMap(device: DeviceRequest){
@@ -653,6 +661,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     
     // Initialize the map again
     this.initMap();
+    this.currentMap = this.map;
   }
 
   printMap() {
@@ -718,6 +727,7 @@ zoomDevice(device: DeviceRequest): void {
   }
   // zoom amount (third parameter) can be changed if different view is needed
   this.initMap(xCoordinate, yCoordinate, 17);
+  this.currentMap = this.map;
 }
 
 zoomDefault(){
