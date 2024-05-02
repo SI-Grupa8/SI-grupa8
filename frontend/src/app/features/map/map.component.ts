@@ -46,7 +46,7 @@ import jspdf from 'jspdf';
 export class MapComponent implements OnInit, AfterViewInit {
   //center: google.maps.LatLngLiteral = { lat: 43.8563, lng: 18.4131 };
   //zoom = 15;
-
+  map: google.maps.Map | null = null;
   currentMap: google.maps.Map | null = null;
 
   colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff']; 
@@ -359,14 +359,25 @@ export class MapComponent implements OnInit, AfterViewInit {
   initMap(latitude: number = 43.8582, longitude: number = 18.3566, zoomAmount: number = 11): void {
     const myLatLng = { lat: latitude, lng: longitude };
     console.log(myLatLng);
-    const map = new google.maps.Map(
-      document.getElementById("mapContainer") as HTMLElement,
-      {
-        zoom: zoomAmount,
-        center: myLatLng,
-      }
-    );
-    this.currentMap = map;
+
+    if (!this.map) {
+      this.map = new google.maps.Map(
+        document.getElementById("mapContainer") as HTMLElement,
+        {
+          zoom: 10,
+          center: myLatLng,
+          mapTypeControl: false
+        }
+      );
+    } else {
+      this.map.setCenter(myLatLng);
+      this.map.setZoom(10);
+      this.map.setOptions({
+        mapTypeControl: false
+      });
+    }
+    
+    this.currentMap = this.map;
 
     this.filteredDevices.forEach(device => {
       const deviceLatLng = this.parseCoordinatesNew(device);
@@ -376,7 +387,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       if(device.isHighlighted){
       new google.maps.Marker({
         position: deviceLatLng,
-        map: map,
+        map: this.map,
         title: device.deviceName,
         icon: markerOptions.icon
       });
@@ -384,7 +395,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
 
-  @ViewChild(GoogleMap) map!: GoogleMap;
+  //@ViewChild(GoogleMap) map!: GoogleMap;
   unzoomFromDevice(deviceId: number) { }
 
   zoomToSpecificPoint(deviceID: number) {
@@ -716,6 +727,13 @@ zoomDefault(){
   this.currentMap?.setCenter(myLatLng)
   this.currentMap?.setZoom(11);
 }
+  ngOnDestroy(): void {
+    if (this.map) {
+      this.map = null;
+    }
+  }
+
+
 
 }
 
