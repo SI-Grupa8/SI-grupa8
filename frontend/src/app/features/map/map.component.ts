@@ -371,7 +371,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       );
     } else {
       this.map.setCenter(myLatLng);
-      this.map.setZoom(10);
+      this.map.setZoom(zoomAmount);
       this.map.setOptions({
         mapTypeControl: false
       });
