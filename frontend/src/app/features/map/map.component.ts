@@ -388,6 +388,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     const device = this.filteredDevices.find((device) => device.deviceID === deviceID);
     if (device) {
       const { xCoordinate, yCoordinate } = device;
+      console.log("device: ", device);
       const newPosition: google.maps.LatLngLiteral = { lat: parseFloat(xCoordinate), lng: parseFloat(yCoordinate) };
 
       //console.log("aktivni: "+this.activeDeviceIds);
@@ -508,6 +509,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 */
 
   private displayRoutes(routes: google.maps.LatLngLiteral[][]): void {
+    console.log("centar", this.center);
     const map = new google.maps.Map(this.mapContainer.nativeElement, {
       center: this.center,
       zoom: this.zoom,
@@ -704,11 +706,19 @@ zoomRoute(device: any): void {
       const bounds = new google.maps.LatLngBounds();
 
       routeCoordinates.forEach(coordinate => {
-          bounds.extend(new google.maps.LatLng(coordinate.lat, coordinate.lng));
+        console.log("coord: ", coordinate);
+        const xCoordinate = parseFloat(coordinate.xCoordinate!);
+        const yCoordinate = parseFloat(coordinate.yCoordinate!);
+          bounds.extend(new google.maps.LatLng(xCoordinate, yCoordinate));
       });
 
       const center = bounds.getCenter();
-    this.initMap(center.lat(), center.lng(), 12);
+      this.currentMap?.setCenter(center)
+      this.currentMap?.setZoom(14);
+  //   const myLatLng = { lat: routeCoordinates[0].xCoordinate, lng: routeCoordinates[0].yCoordinate };
+
+  // this.currentMap?.setCenter(myLatLng)
+  // this.currentMap?.setZoom(14);
   });
 }
 

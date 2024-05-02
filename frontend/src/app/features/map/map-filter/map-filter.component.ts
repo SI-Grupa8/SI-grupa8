@@ -159,13 +159,14 @@ zoomToDefault(): void{
 }
 
 checkTripButtonClicked(device: DeviceRequest, event: MouseEvent) {
-  this.zoomEvent.emit(device.deviceID); // Emit the device ID event
-  if (this.isDeviceActive(device.deviceID!)) {
+  //this.zoomEvent.emit(device.deviceID); // Emit the device ID event
+  if (this.selectedDeviceIds.length != 0) {
+    if(this.selectedDeviceIds.includes(device.deviceID!)){
     this.zoomRoute.emit(device);
+    }
   }
   else{
-    if(this.isDeviceActive(device.deviceID!))
-   { this.zoomDefault.emit();}
+    this.zoomDevice.emit(device);
   }
 }
   
