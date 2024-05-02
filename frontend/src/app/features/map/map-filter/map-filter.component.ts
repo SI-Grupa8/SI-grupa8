@@ -27,6 +27,7 @@ export class MapFilterComponent {
   @Output() fillMap = new EventEmitter<void>();
   @Output() updateMap = new EventEmitter<DeviceRequest>();
   @Output() zoomDevice = new EventEmitter<DeviceRequest>();
+  @Output() zoomRoute = new EventEmitter<DeviceRequest>();
   @Output() zoomDefault = new EventEmitter<void>();
 
   selectedDeviceIds: number[] = [];
@@ -117,11 +118,11 @@ isDeviceActive(deviceId: number) {
   //isHighlighted: boolean = false;
 
   onDeviceIconClicked(event: MouseEvent, device:any) {
-    // This method will be triggered when the button is clicked
-    // You can handle button click events here, such as triggering a trip
-    // Stop propagation to prevent the div click event from being triggered
     device.isHighlighted = !device.isHighlighted;
     console.log("Just button clicked");
+    // empties the selectedDeviceIds, so the color of trip button changes so that its function doesn't invert
+    // maybe the other option is to check if the selectedDeviceIds is empty, and if it is not just enable the device to be clickable
+    this.selectedDeviceIds = [];
     this.updateMap.emit(device);
     event.stopPropagation();
 }
@@ -144,12 +145,31 @@ hideAllDevices(): void {
 
 zoomToDevice(device: any){
   if(device.isHighlighted){
-  this.zoomDevice.emit(device);
+    this.zoomDevice.emit(device);
   }
+}
+
+zoomToRoute(device: any) {
+  this.zoomEvent.emit(device.deviceID); // Emit the device ID event
+  this.zoomRoute.emit(device); // Emit the device object event
 }
 
 zoomToDefault(): void{
   this.zoomDefault.emit()
+}
+
+checkTripButtonClicked(device: DeviceRequest, event: MouseEvent) {
+  //this.zoomEvent.emit(device.deviceID); // Emit the device ID event
+  if(device.isHighlighted){
+  if (this.selectedDeviceIds.length != 0) {
+    if(this.selectedDeviceIds.includes(device.deviceID!)){
+    this.zoomRoute.emit(device);
+    }
+  }
+  else{
+    this.zoomDevice.emit(device);
+  }
+  }
 }
   
 }

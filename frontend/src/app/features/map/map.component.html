@@ -35,7 +35,7 @@
 
     @if (showFilterComponent) {
 
-        <app-map-filter class="filtclass" style="z-index: 999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)" (emptyMap)="emptyMap()" (fillMap)="fillMap()" (updateMap)="updateMap($event)" (zoomDevice)="zoomDevice($event)" (zoomDefault)="zoomDefault()"></app-map-filter>
+        <app-map-filter class="filtclass" style="z-index: 999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)" (emptyMap)="emptyMap()" (fillMap)="fillMap()" (updateMap)="updateMap($event)" (zoomDevice)="zoomDevice($event)" (zoomDefault)="zoomDefault()" (zoomRoute)="zoomRoute($event)"></app-map-filter>
 
     } 
     @else {
