@@ -706,7 +706,7 @@ zoomRoute(device: any): void {
       const bounds = new google.maps.LatLngBounds();
 
       routeCoordinates.forEach(coordinate => {
-        console.log("coord: ", coordinate);
+        //console.log("coord: ", coordinate);
         const xCoordinate = parseFloat(coordinate.xCoordinate!);
         const yCoordinate = parseFloat(coordinate.yCoordinate!);
           bounds.extend(new google.maps.LatLng(xCoordinate, yCoordinate));
