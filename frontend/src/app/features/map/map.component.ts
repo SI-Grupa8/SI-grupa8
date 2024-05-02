@@ -47,6 +47,11 @@ export class MapComponent implements OnInit, AfterViewInit {
   //center: google.maps.LatLngLiteral = { lat: 43.8563, lng: 18.4131 };
   //zoom = 15;
 
+  currentMap: google.maps.Map | null = null;
+
+  colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff']; 
+  colorIndex: number = 0; 
+
   @ViewChild(MapFilterComponent)
   mapFilterComponent!: MapFilterComponent;
 
@@ -326,7 +331,10 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     this.deviceService.getFilteredDevices(selectedDeviceTypeIds, [])
       .subscribe(devices => {
-
+        // assures that search only looks through the currently selected device types
+        this.mapFilterComponent.beforeFiltered = devices;
+        // empties search query when selected device types changed
+        this.mapFilterComponent.searchQuery= '';
         this.filteredDevices = devices;
 
         this.initMap()
@@ -348,16 +356,17 @@ export class MapComponent implements OnInit, AfterViewInit {
     };
   }
 
-  initMap(): void {
-    const myLatLng = { lat: 43.8582, lng: 18.3566 };
-
+  initMap(latitude: number = 43.8582, longitude: number = 18.3566, zoomAmount: number = 11): void {
+    const myLatLng = { lat: latitude, lng: longitude };
+    console.log(myLatLng);
     const map = new google.maps.Map(
       document.getElementById("mapContainer") as HTMLElement,
       {
-        zoom: 10,
+        zoom: zoomAmount,
         center: myLatLng,
       }
     );
+    this.currentMap = map;
 
     this.filteredDevices.forEach(device => {
       const deviceLatLng = this.parseCoordinatesNew(device);
@@ -507,13 +516,15 @@ export class MapComponent implements OnInit, AfterViewInit {
       zoom: this.zoom,
       mapTypeControl: false
     });
+    this.currentMap = map;
 
     routes.forEach((coordinates, index) => {
-      const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16); // Generate random color
+      const strokeColor = this.colors[this.colorIndex]; 
+      this.colorIndex = (this.colorIndex + 1) % this.colors.length; 
 
       const directionsRenderer = new google.maps.DirectionsRenderer({
         polylineOptions: {
-          strokeColor: randomColor // Odaberite boju temeljem indeksa
+          strokeColor: strokeColor 
         }
       });
       directionsRenderer.setMap(map);
@@ -608,6 +619,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         center: myLatLng,
       }
     );
+    this.currentMap = map;
   }
 
   fillMap(){
@@ -679,6 +691,30 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     }, 500); 
   
+}
+
+zoomDevice(device: DeviceRequest): void {
+  console.log("zoomed device:");
+  console.log(device);
+  
+  // Convert device attributes from string to number
+  const xCoordinate = parseFloat(device.xCoordinate!);
+  const yCoordinate = parseFloat(device.yCoordinate!);
+  
+  if (isNaN(xCoordinate) || isNaN(yCoordinate)) {
+      console.error("Invalid coordinates:", device.xCoordinate, device.yCoordinate);
+      return;
+  }
+  // zoom amount (third parameter) can be changed if different view is needed
+  this.initMap(xCoordinate, yCoordinate, 17);
+}
+
+zoomDefault(){
+  console.log(this.currentMap);
+  const myLatLng = { lat: 43.8582, lng: 18.3566 };
+
+  this.currentMap?.setCenter(myLatLng)
+  this.currentMap?.setZoom(11);
 }
 
 }

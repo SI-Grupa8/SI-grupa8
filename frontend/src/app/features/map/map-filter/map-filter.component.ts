@@ -26,6 +26,8 @@ export class MapFilterComponent {
   @Output() emptyMap = new EventEmitter<void>();
   @Output() fillMap = new EventEmitter<void>();
   @Output() updateMap = new EventEmitter<DeviceRequest>();
+  @Output() zoomDevice = new EventEmitter<DeviceRequest>();
+  @Output() zoomDefault = new EventEmitter<void>();
 
   selectedDeviceIds: number[] = [];
 
@@ -51,29 +53,33 @@ export class MapFilterComponent {
     }
   }
 
-  zoomToSpecificPoint(deviceID: number) {
-    console.log("deviceID:",deviceID);
-    if(deviceID!=0){
-      this.zoomEvent.emit(deviceID);
+  zoomToSpecificPoint(device: DeviceRequest, event: MouseEvent) {
+    if(device.isHighlighted){
+    console.log("deviceID:",device.deviceID);
+    if(device.deviceID!=0){
+      this.zoomEvent.emit(device.deviceID);
     }
-          
+    }
+    event.stopPropagation();
+  }
 
-  }
   onMarkerClicked(deviceID: number) {
-    
     console.log('Marker clicked:', deviceID);
-    
   }
-  toggleActiveDevice(deviceId: number) {
-    const index = this.selectedDeviceIds.indexOf(deviceId);
+
+  toggleActiveDevice(device: DeviceRequest, event: MouseEvent) {
+    if(device.isHighlighted){
+    const index = this.selectedDeviceIds.indexOf(device.deviceID!);
     if (index !== -1) {
         // If device is already selected, remove it from the array
         this.selectedDeviceIds.splice(index, 1);
     } else  if(this.selectedDeviceIds.length<5){
         // If device is not selected, add it to the array
-        this.selectedDeviceIds.push(deviceId);
+        this.selectedDeviceIds.push(device.deviceID!);
     }
-}
+    }
+    event.stopPropagation();
+  }
 
 
  
@@ -134,6 +140,16 @@ hideAllDevices(): void {
     device.isHighlighted = false;
   });
   this.emptyMap.emit();
+}
+
+zoomToDevice(device: any){
+  if(device.isHighlighted){
+  this.zoomDevice.emit(device);
+  }
+}
+
+zoomToDefault(): void{
+  this.zoomDefault.emit()
 }
   
 }
