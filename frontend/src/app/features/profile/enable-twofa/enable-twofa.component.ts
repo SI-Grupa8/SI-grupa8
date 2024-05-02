@@ -6,6 +6,7 @@ import { AuthTfaRequest } from '../../../core/models/auth-tfa-request';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/http/auth.service';
 import { VerifyRequest } from '../../../core/models/verify-request';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-enable-twofa',
@@ -25,7 +26,8 @@ export class EnableTwofaComponent {
 
   constructor(
     private twofaService: OpenEnable2faService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar
     ) {
       this.imageUrl = localStorage.getItem("qrcode") as string; 
       this.key = localStorage.getItem("key") as string; 
@@ -40,30 +42,41 @@ export class EnableTwofaComponent {
   }
 
   loginTfa() {
-    this.authService.loginTfa(this.loginTfaRequest).subscribe((response) => {
-      console.log( 'response: ', response );
-      if (response) {
-         localStorage.setItem('2fa', 'true');
-         this.closeDialog();
-         console.log("Correct pin");
-      } else {
-        console.log("Wrong pin");
-      }
-    })
-  }
+    this.authService.loginTfa(this.loginTfaRequest).subscribe({
+        next: response => {
+            //console.log( 'response: ', response );
+            if (response) {
+                localStorage.setItem('2fa', 'true');
+                this.closeDialog();
+                console.log("Correct pin");
+            } else {
+            }
+        }
+    });
+}
   
-  set2fa(){
-    this.authService.store2fa(this.verifyRequest).subscribe(response => {
-      if(response){
-        console.log("Good pin!");
-        localStorage.setItem("2fa", "true");
-        this.twoFaEnabled = true;
-        this.closeDialog();
-      }
-      else {
-        console.log("Wrong pin!");
-      }
-    })
-  }
+  set2fa() {
+    this.authService.store2fa(this.verifyRequest).subscribe({
+        next: response => {
+            if (response) {
+                console.log("Good pin!");
+                localStorage.setItem("2fa", "true");
+                this.twoFaEnabled = true;
+                this.closeDialog();
+            } else {  
+            }
+        },
+        error: error => {
+          this.showInvalid2FAPopup();
+        }
+    });
+}
   
+  showInvalid2FAPopup() {
+    this.snackBar.open('Wrong pin!', 'Close', {
+      duration: 2000, 
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
+    });
+  }
 }

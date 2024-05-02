@@ -25,5 +25,4 @@ export class OpenEnable2faService {
   closeRemove2fa(): void {
     this.dialog.closeAll();
   }
-  
 }
