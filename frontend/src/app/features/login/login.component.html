@@ -6,16 +6,17 @@
                 <p>DeliverEase</p>
             </div>
             <form  (ngSubmit)="login()" [formGroup]="loginForm">                 
-                <input formControlName="email" name="usermail"  type="text" placeholder="E-mail" style="margin-top: 20px; margin-bottom: 5px;">
-                <!--validation of email-->
-                @if (emailControl?.dirty || emailControl?.touched) {
-                    @if (emailControl?.hasError('required')) {
-                        <span class="error">Email is required</span>
-                    }
-                    @else if (emailControl?.hasError('email')) {
-                        <span class="error">Email not valid</span>
-                    }
-                }               
+                <input formControlName="email" name="usermail"  type="text" placeholder="E-mail or phone number" style="margin-top: 20px; margin-bottom: 5px;">
+                <!-- Display error message for email or phone number validation -->
+                <div *ngIf="(emailControl?.dirty || emailControl?.touched) && emailControl?.hasError('invalidFormat') && !emailControl?.hasError('required')">
+                    <span class="error">Invalid format</span>
+                </div>
+            
+                <!-- Display error message for required field -->
+                <div *ngIf="(emailControl?.dirty || emailControl?.touched) && emailControl?.hasError('required')">
+                    <span class="error">Email or phone number is required</span>
+                </div>
+
                 <input formControlName="pass" name="pass"  type="password" placeholder="Password" style="margin-top: 20px; margin-bottom: 5px;">
                 <!--validation of password-->
                 @if (passControl?.dirty || passControl?.touched) {

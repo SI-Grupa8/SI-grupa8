@@ -25,6 +25,7 @@ export class AddNewUserComponent {
       surname: [''],
       role:[''],
       email: [''],
+      phoneNumber: [''],
       password: ['', [Validators.required, Validators.minLength(8)]]
     });
     
@@ -45,6 +46,7 @@ export class AddNewUserComponent {
       return;
     }
     this.userRequest.email = this.addUserForm.get('email')?.value;
+    this.userRequest.phoneNumber = this.addUserForm.get('phoneNumber')?.value;
     this.userRequest.name = this.addUserForm.get('name')?.value;
     this.userRequest.surname = this.addUserForm.get('surname')?.value;
     this.userRequest.password = this.addUserForm.get('password')?.value;

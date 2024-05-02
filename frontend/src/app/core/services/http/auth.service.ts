@@ -29,7 +29,7 @@ export class AuthService {
   //private apiUserUrl = 'https://localhost:7126/api/User';
 
 
-  //private apiShorterUrl = 'https://localhost:7126/Api';
+  //private apiUserUrl = 'https://localhost:7126/api/User';
 
   constructor(private http: HttpClient, private router: Router) { 
     this.userRole = localStorage.getItem('role') as string;
