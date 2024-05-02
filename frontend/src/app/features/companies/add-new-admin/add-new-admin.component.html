@@ -6,7 +6,8 @@
     <div class="container-flex">
         <input formControlName="name" id="firstname"   name="firstname" type="text" placeholder="First name" >
         <input formControlName="surname" id="lastname"  name="lastname" type="text" placeholder="Last name" >
-        <input formControlName="email" id="email"  name="usermail"type="text" placeholder="E-mail or phone number" >
+        <input formControlName="email" id="email"  name="usermail"type="text" placeholder="E-mail" >
+        <input formControlName="phoneNumber" id="phoneNumber"  name="phoneNumber"type="text" placeholder="Phone number" >
         <input formControlName="password" id="password"  name="pass" type="password" placeholder="Password">
         @if (passControl?.dirty || passControl?.touched) {
             @if (passControl?.hasError('required')) {

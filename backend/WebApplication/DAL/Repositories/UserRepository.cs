@@ -25,7 +25,7 @@ namespace DAL.Repositories
 
         public async Task<User> FindByPhoneNumber(string phoneNumber)
         {
-			return await _context.Users.FirstAsync(x => x.PhoneNumber == phoneNumber);
+			return await _context.Users.Include(u => u.Role).FirstAsync(x => x.PhoneNumber == phoneNumber);
         }
 
         public async Task<User> GetByToken(string token)

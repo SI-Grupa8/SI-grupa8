@@ -447,20 +447,38 @@ namespace BLL.Services
 
         public async Task<UserDto> ChangeEmail(UserDto userDto)
         {
-                var mappedUser = _mapper.Map<User>(userDto);
+            var mappedUser = _mapper.Map<User>(userDto);
 
-                var user = await _userRepository.GetById(userDto.UserID);
+            var user = await _userRepository.GetById(userDto.UserID);
 
-                mappedUser.PasswordHash = user!.PasswordHash;
-                mappedUser.PasswordSalt = user.PasswordSalt;
+            mappedUser.PasswordHash = user!.PasswordHash;
+            mappedUser.PasswordSalt = user.PasswordSalt;
 
-                _userRepository.DetachEntity(user);
-                mappedUser.Role = null;
-                //user = mappedUser;
-                _userRepository.Update(mappedUser);
-                await _userRepository.SaveChangesAsync();
+            _userRepository.DetachEntity(user);
+            mappedUser.Role = null;
+            //user = mappedUser;
+            _userRepository.Update(mappedUser);
+            await _userRepository.SaveChangesAsync();
 
-                return userDto;
+            return userDto;
+        }
+
+        public async Task<UserDto> ChangePhoneNumber(UserDto userDto)
+        {
+            var mappedUser = _mapper.Map<User>(userDto);
+
+            var user = await _userRepository.GetById(userDto.UserID);
+
+            mappedUser.PasswordHash = user!.PasswordHash;
+            mappedUser.PasswordSalt = user.PasswordSalt;
+
+            _userRepository.DetachEntity(user);
+            mappedUser.Role = null;
+            //user = mappedUser;
+            _userRepository.Update(mappedUser);
+            await _userRepository.SaveChangesAsync();
+
+            return userDto;
         }
 
         public async Task<UserDto> ChangePassword(ChangePasswordDto changePasswordDto)

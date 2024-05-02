@@ -37,6 +37,7 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
       name: [''],
       surname: [''],
       email: [''],
+      phoneNumber: [''],
       password: ['', [Validators.required, Validators.minLength(8)]],
       companyId:[''],
       role: new FormControl(this.roles),
@@ -62,6 +63,7 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
       return;
     }
     this.userRequest.email = this.addAdminForm.get('email')?.value;
+    this.userRequest.phoneNumber = this.addAdminForm.get('phoneNumber')?.value;
     this.userRequest.name = this.addAdminForm.get('name')?.value;
     this.userRequest.surname = this.addAdminForm.get('surname')?.value;
     this.userRequest.password = this.addAdminForm.get('password')?.value;
