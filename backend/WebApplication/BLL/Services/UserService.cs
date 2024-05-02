@@ -501,9 +501,9 @@ namespace BLL.Services
             return _mapper.Map<UserDto>(user);
         }
 
-        public async Task<List<UserDto>> GetDispatchersForNewDevice(int companyId)
+        public async Task<List<UserDto>> GetDriversForNewDevice(int companyId)
         {
-            var users = await _userRepository.GetDispatchersForNewDevice(companyId);
+            var users = await _userRepository.GetDriversForNewDevice(companyId);
 
             return _mapper.Map<List<UserDto>>(users);
 
