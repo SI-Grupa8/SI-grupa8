@@ -29,6 +29,7 @@ import { LocationFilterRequest } from '../../core/models/location-filter';
 
 import html2canvas from 'html2canvas';
 import jspdf from 'jspdf';
+import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
   
 
 @Component({
@@ -44,8 +45,9 @@ import jspdf from 'jspdf';
 export class MapComponent implements OnInit, AfterViewInit {
   //center: google.maps.LatLngLiteral = { lat: 43.8563, lng: 18.4131 };
   //zoom = 15;
-
+  map: google.maps.Map | null = null;
   currentMap: google.maps.Map | null = null;
+  markers: google.maps.Marker[] = [];
 
   colors = ['#FF00FF', '#0000FF', '#228B22', '#FF4500', '#800080'];
   colorIndex: number = 0; 
@@ -105,6 +107,42 @@ export class MapComponent implements OnInit, AfterViewInit {
   mapsAPILoader: any;
   //printService: any;
 
+  addMarker(position: google.maps.LatLng | google.maps.LatLngLiteral, device: DeviceRequest) {
+    const markerOptions = this.getMarkerOptions(device);
+    const marker = new google.maps.Marker({
+      position: position,
+      map: this.map,
+      title: device.deviceName,
+      icon: markerOptions.icon
+    });
+  
+    this.markers.push(marker);
+  }
+  //add map to markers
+  setMapOnAll(map: google.maps.Map | null) {
+    for (let i = 0; i < this.markers.length; i++) {
+      this.markers[i].setMap(map);
+    }
+  }
+
+  // Removes the markers from the map, but keeps them in the array.
+  hideMarkers(): void {
+    this.setMapOnAll(null);
+  }
+
+  // Shows any markers currently in the array.
+  showMarkers(): void {
+    this.setMapOnAll(this.map);
+  }
+
+  // Deletes all markers in the array by removing references to them.
+  deleteMarkers(): void {
+    this.hideMarkers();
+    this.markers = [];
+  }
+
+
+
   selectAllDevices() {
     this.allDevicesSelected = true;
     this.mobileDevicesSelected = false;
@@ -143,7 +181,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
       // Call getFilteredDevices method with updated selected chips
       this.getFilteredDevices();
-      this.initMap()
+      this.initMap();
+      this.currentMap = this.map;
     });
   }
 
@@ -172,10 +211,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   iframeSrc!: SafeResourceUrl | undefined;
 
   selectedDeviceTypeId: number[] = [];
-  markers: any[] = [
-    { lat: 43.856430, lng: 18.413029 },
-    { lat: 44.53842, lng: 18.66709 }
-  ];
+  
 
   //constructor(private deviceService: DeviceService, private authService : AuthService, private userService: UserService, private sanitizer: DomSanitizer) {}
 
@@ -235,6 +271,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.locations = locations.flat();
         //this.displayRoute(this.locations.map(location => this.parseCoordinates(location)).filter(coord => coord !== null) as google.maps.LatLngLiteral[]);
         this.initMap();
+        this.currentMap = this.map;
       }
     });
   }
@@ -295,6 +332,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     if (routeArray.length === 0) {
       this.selectedDevice = null;
       this.initMap();
+      this.currentMap = this.map;
 
     }
     else {
@@ -336,6 +374,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
         this.initMap()
         console.log(this.filteredDevices);
+        this.currentMap = this.map;
       });
 
   }
@@ -344,6 +383,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.filteredDevices = deviceRequest;
 
     this.initMap()
+    this.currentMap = this.map;
   }
 
   parseCoordinatesNew(device: any): { lat: number, lng: number } {
@@ -356,32 +396,50 @@ export class MapComponent implements OnInit, AfterViewInit {
   initMap(latitude: number = 43.8582, longitude: number = 18.3566, zoomAmount: number = 11): void {
     const myLatLng = { lat: latitude, lng: longitude };
     console.log(myLatLng);
-    const map = new google.maps.Map(
-      document.getElementById("mapContainer") as HTMLElement,
-      {
-        zoom: zoomAmount,
-        center: myLatLng,
-      }
-    );
-    this.currentMap = map;
 
+    if (!this.map) {
+      this.map = new google.maps.Map(
+        document.getElementById("mapContainer") as HTMLElement,
+        {
+          zoom: 10,
+          center: myLatLng,
+          mapTypeControl: false
+        }
+      );
+    } else {
+      //this.fillMap();
+      this.map.setCenter(myLatLng);
+      this.map.setZoom(zoomAmount);
+      this.map.setOptions({
+        mapTypeControl: false
+      });
+    }
+    
+    this.currentMap = this.map;
+    this.deleteMarkers();
     this.filteredDevices.forEach(device => {
       const deviceLatLng = this.parseCoordinatesNew(device);
       console.log(device);
       const markerOptions = this.getMarkerOptions(device);
       // prikazat ce ga samo ako je highlighted
+      
       if(device.isHighlighted){
+        console.log("yes");
+
+        this.addMarker(deviceLatLng,device);
+      /*
       new google.maps.Marker({
         position: deviceLatLng,
-        map: map,
+        map: this.map,
         title: device.deviceName,
         icon: markerOptions.icon
-      });
+      });*/
     }
     });
+    
   }
 
-  @ViewChild(GoogleMap) map!: GoogleMap;
+  //@ViewChild(GoogleMap) map!: GoogleMap;
   unzoomFromDevice(deviceId: number) { }
 
   zoomToSpecificPoint(deviceID: number) {
@@ -413,6 +471,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             dateDiv.classList.add('hide');
           }
           this.initMap();
+          this.currentMap = this.map;
         }
 
       } else  if(this.activeDeviceIds.length < 5) {
@@ -421,6 +480,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.zoom = 16;
         this.selectedDevice = device;
         this.calculateAndDisplayRoute()
+        this.currentMap = this.map;
       }
 
       /*console.log("aktivni: "+this.activeDeviceIds);
@@ -509,13 +569,15 @@ export class MapComponent implements OnInit, AfterViewInit {
 */
 
   private displayRoutes(routes: google.maps.LatLngLiteral[][]): void {
-    console.log("centar", this.center);
-    const map = new google.maps.Map(this.mapContainer.nativeElement, {
+
+    this.map = new google.maps.Map(this.mapContainer.nativeElement, {
       center: this.center,
       zoom: this.zoom,
       mapTypeControl: false
     });
-    this.currentMap = map;
+
+    this.currentMap = this.map;
+
     routes.forEach((coordinates, index) => {
       const strokeColor = this.colors[this.colorIndex]; 
       this.colorIndex = (this.colorIndex + 1) % this.colors.length; 
@@ -524,7 +586,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           strokeColor: strokeColor 
         }
       });
-      directionsRenderer.setMap(map);
+      directionsRenderer.setMap(this.map);
 
       const start = new google.maps.LatLng(coordinates[0].lat, coordinates[0].lng);
       const end = new google.maps.LatLng(coordinates[coordinates.length - 1].lat, coordinates[coordinates.length - 1].lng);
@@ -608,15 +670,18 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     // makes map empty
     const myLatLng = { lat: 43.8582, lng: 18.3566 };
-  
-    const map = new google.maps.Map(
+    this.deleteMarkers();
+    this.displayRoutes([]);
+    this.zoomDefault()
+    /*
+    this.map = new google.maps.Map(
       document.getElementById("mapContainer") as HTMLElement,
       {
         zoom: 10,
         center: myLatLng,
       }
-    );
-    this.currentMap = map;
+    );*/
+    this.currentMap = this.map;
   }
 
   fillMap(){
@@ -624,6 +689,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       device.isHighlighted = true;
     })
     this.initMap()
+    this.currentMap = this.map;
   }
 
   updateMap(device: DeviceRequest){
@@ -639,6 +705,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     
     // Initialize the map again
     this.initMap();
+    //this.currentMap = this.map;
   }
 
   printMap() {
@@ -738,6 +805,7 @@ zoomDevice(device: DeviceRequest): void {
   }
   // zoom amount (third parameter) can be changed if different view is needed
   this.initMap(xCoordinate, yCoordinate, 17);
+  this.currentMap = this.map;
 }
 
 zoomDefault(){
@@ -747,6 +815,13 @@ zoomDefault(){
   this.currentMap?.setCenter(myLatLng)
   this.currentMap?.setZoom(11);
 }
+  ngOnDestroy(): void {
+    if (this.map) {
+      this.map = null;
+    }
+  }
+
+
 
 }
 
