@@ -23,7 +23,7 @@
     <mat-tab label="ALL">
         <div class="devices-filter-list">
             @for (device of filteredDevices; track $index) {
-                <div class="device-filter-card" (click)="checkTripButtonClicked(device, $event)">
+                <div class="device-filter-card" (click)="checkTripButtonClicked(device, $event)" (click)="zoomToDevice(device)">
                     <button class="img-button" (click)="onDeviceIconClicked($event, device)">
                     <div class="img-container" [class.highlighted]="device.isHighlighted">
                         @if (device.deviceTypeID == 1){
@@ -42,7 +42,7 @@
     
                     </div>
                 </button>
-                    <div [class.active]="isDeviceActive(device.deviceID)" class="card-data" (click)="checkTripButtonClicked(device, $event)">
+                    <div [class.active]="isDeviceActive(device.deviceID)" class="card-data" (click)="checkTripButtonClicked(device, $event)" (click)="zoomToDevice(device)">
                         <p class="device-name">{{device.deviceName}}</p>
                         <p class="device-src">{{device.reference}}</p>
                     </div>

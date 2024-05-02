@@ -723,12 +723,7 @@ zoomRoute(device: any): void {
 
 
 zoomDevice(device: DeviceRequest): void {
-  if (device !== null) {
-    this.calculateAndDisplayRoute()
-    this.zoomToSpecificPoint(device.deviceID!)
-  }
-
-  /*console.log("zoomed device:");
+  console.log("zoomed device:");
   console.log(device);
   
   // Convert device attributes from string to number
@@ -740,7 +735,7 @@ zoomDevice(device: DeviceRequest): void {
       return;
   }
   // zoom amount (third parameter) can be changed if different view is needed
-  this.initMap(xCoordinate, yCoordinate, 17);*/
+  this.initMap(xCoordinate, yCoordinate, 17);
 }
 
 zoomDefault(){
