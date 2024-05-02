@@ -326,7 +326,10 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     this.deviceService.getFilteredDevices(selectedDeviceTypeIds, [])
       .subscribe(devices => {
-
+        // assures that search only looks through the currently selected device types
+        this.mapFilterComponent.beforeFiltered = devices;
+        // empties search query when selected device types changed
+        this.mapFilterComponent.searchQuery= '';
         this.filteredDevices = devices;
 
         this.initMap()
