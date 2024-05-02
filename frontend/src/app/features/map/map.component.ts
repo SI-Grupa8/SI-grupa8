@@ -47,6 +47,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   //center: google.maps.LatLngLiteral = { lat: 43.8563, lng: 18.4131 };
   //zoom = 15;
 
+  currentMap: google.maps.Map | null = null;
+
   @ViewChild(MapFilterComponent)
   mapFilterComponent!: MapFilterComponent;
 
@@ -361,6 +363,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         center: myLatLng,
       }
     );
+    this.currentMap = map;
 
     this.filteredDevices.forEach(device => {
       const deviceLatLng = this.parseCoordinatesNew(device);
@@ -510,6 +513,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       zoom: this.zoom,
       mapTypeControl: false
     });
+    this.currentMap = map;
 
     routes.forEach((coordinates, index) => {
       const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16); // Generate random color
@@ -611,6 +615,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         center: myLatLng,
       }
     );
+    this.currentMap = map;
   }
 
   fillMap(){
@@ -698,6 +703,14 @@ zoomDevice(device: DeviceRequest): void {
   }
   // zoom amount (third parameter) can be changed if different view is needed
   this.initMap(xCoordinate, yCoordinate, 17);
+}
+
+zoomDefault(){
+  console.log(this.currentMap);
+  const myLatLng = { lat: 43.8582, lng: 18.3566 };
+
+  this.currentMap?.setCenter(myLatLng)
+  this.currentMap?.setZoom(12);
 }
 
 }
