@@ -14,6 +14,7 @@
     <form action="">
         <input [ngModelOptions]="{standalone: true}" type="search" class="search" placeholder="Search devices" [(ngModel)]="searchQuery" (input)="searchDevices()" />
       </form>
+      <button class="default-zoom" (click)="zoomToDefault()">Default zoom</button>
 </div>
 <mat-tab-group animationDuration="0">
     <mat-tab label="ALL">

@@ -27,6 +27,7 @@ export class MapFilterComponent {
   @Output() fillMap = new EventEmitter<void>();
   @Output() updateMap = new EventEmitter<DeviceRequest>();
   @Output() zoomDevice = new EventEmitter<DeviceRequest>();
+  @Output() zoomDefault = new EventEmitter<void>();
 
   selectedDeviceIds: number[] = [];
 
@@ -141,6 +142,10 @@ hideAllDevices(): void {
 zoomToDevice(device: any){
   console.log("Clicked on element");
   this.zoomDevice.emit(device);
+}
+
+zoomToDefault(): void{
+  this.zoomDefault.emit()
 }
   
 }
