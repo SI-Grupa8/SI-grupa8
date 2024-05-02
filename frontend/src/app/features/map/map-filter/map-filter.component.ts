@@ -163,6 +163,10 @@ checkTripButtonClicked(device: DeviceRequest, event: MouseEvent) {
   if (this.isDeviceActive(device.deviceID!)) {
     this.zoomRoute.emit(device);
   }
+  else{
+    if(this.isDeviceActive(device.deviceID!))
+   { this.zoomDefault.emit();}
+  }
 }
   
 }
