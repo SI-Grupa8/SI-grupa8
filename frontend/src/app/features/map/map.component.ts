@@ -351,13 +351,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     };
   }
 
-  initMap(): void {
-    const myLatLng = { lat: 43.8582, lng: 18.3566 };
-
+  initMap(latitude: number = 43.8582, longitude: number = 18.3566, zoomAmount: number = 10): void {
+    const myLatLng = { lat: latitude, lng: longitude };
+    console.log(myLatLng);
     const map = new google.maps.Map(
       document.getElementById("mapContainer") as HTMLElement,
       {
-        zoom: 10,
+        zoom: zoomAmount,
         center: myLatLng,
       }
     );
@@ -682,6 +682,22 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     }, 500); 
   
+}
+
+zoomDevice(device: DeviceRequest): void {
+  console.log("zoomed device:");
+  console.log(device);
+  
+  // Convert device attributes from string to number
+  const xCoordinate = parseFloat(device.xCoordinate!);
+  const yCoordinate = parseFloat(device.yCoordinate!);
+  
+  if (isNaN(xCoordinate) || isNaN(yCoordinate)) {
+      console.error("Invalid coordinates:", device.xCoordinate, device.yCoordinate);
+      return;
+  }
+  // zoom amount (third parameter) can be changed if different view is needed
+  this.initMap(xCoordinate, yCoordinate, 17);
 }
 
 }
