@@ -49,6 +49,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   currentMap: google.maps.Map | null = null;
 
+  colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff']; 
+  colorIndex: number = 0; 
+
   @ViewChild(MapFilterComponent)
   mapFilterComponent!: MapFilterComponent;
 
@@ -516,11 +519,12 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.currentMap = map;
 
     routes.forEach((coordinates, index) => {
-      const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16); // Generate random color
+      const strokeColor = this.colors[this.colorIndex]; 
+      this.colorIndex = (this.colorIndex + 1) % this.colors.length; 
 
       const directionsRenderer = new google.maps.DirectionsRenderer({
         polylineOptions: {
-          strokeColor: randomColor // Odaberite boju temeljem indeksa
+          strokeColor: strokeColor 
         }
       });
       directionsRenderer.setMap(map);
