@@ -396,7 +396,31 @@ export class MapComponent implements OnInit, AfterViewInit {
     };
   }
 
-  initMap(latitude: number = 43.8582, longitude: number = 18.3566, zoomAmount: number = 11): void {
+
+  calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; 
+    return distance;
+  }
+  
+  determineZoomLevel(distance: number): number {
+    const maxDistance = 10000; 
+    const minDistance = 0.1; 
+    const maxZoom = 15; 
+    const minZoom = 1; 
+  
+    const zoomLevel = maxZoom - ((distance - minDistance) / (maxDistance - minDistance)) * (maxZoom - minZoom);
+    return Math.max(minZoom, Math.min(maxZoom, zoomLevel));
+  }
+
+  initMap(latitude: number = 43.8582, longitude: number = 18.3566, zoomAmount: number = 7): void {
     const myLatLng = { lat: latitude, lng: longitude };
     console.log(myLatLng);
 
@@ -411,8 +435,28 @@ export class MapComponent implements OnInit, AfterViewInit {
       );
     } else {
       //this.fillMap();
-      this.map.setCenter(myLatLng);
-      this.map.setZoom(zoomAmount);
+      let minLat = Infinity;
+      let maxLat = -Infinity;
+      let minLng = Infinity;
+      let maxLng = -Infinity;
+      this.filteredDevices.forEach(device => {
+        minLat = Math.min(minLat, this.parseCoordinatesNew(device).lat);
+        maxLat = Math.max(maxLat, this.parseCoordinatesNew(device).lat);
+        minLng = Math.min(minLng, this.parseCoordinatesNew(device).lng);
+        maxLng = Math.max(maxLng, this.parseCoordinatesNew(device).lng);
+      });
+      
+      
+      const distance = this.calculateDistance(minLat, minLng, maxLat, maxLng);
+      const calculatedZoomLevel = this.determineZoomLevel(distance);
+      const finalZoomLevel = Math.max(calculatedZoomLevel, zoomAmount);
+
+      const centerLat = (minLat + maxLat) / 2;
+      const centerLng = (minLng + maxLng) / 2;
+
+      //this.map.setCenter(myLatLng);
+      this.map.setCenter({lat: centerLat, lng: centerLng});
+      this.map.setZoom(finalZoomLevel * 0.9);
       this.map.setOptions({
         mapTypeControl: false
       });
@@ -441,6 +485,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
     
   }
+     
 
   //@ViewChild(GoogleMap) map!: GoogleMap;
   unzoomFromDevice(deviceId: number) { }
