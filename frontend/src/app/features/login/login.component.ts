@@ -8,6 +8,7 @@ import { AuthResponse } from '../../core/models/auth-response';
 import { Route, Router } from '@angular/router';
 import { AuthTfaRequest } from '../../core/models/auth-tfa-request';
 import { AuthTfaResponse } from '../../core/models/auth-tfa-response';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 function emailOrPhoneValidator(control: FormControl) {
@@ -40,7 +41,7 @@ export class LoginComponent {
 
   
 
-  constructor(private f: FormBuilder, private authService: AuthService, private router: Router){
+  constructor(private f: FormBuilder, private authService: AuthService, private router: Router, private snackBar: MatSnackBar){
     this.loginForm = this.f.group({
       email: ['', [Validators.required, emailOrPhoneValidator]],
       pass:['', [Validators.required, Validators.minLength(8)]]
@@ -111,9 +112,11 @@ export class LoginComponent {
           else {
             this.showLoginForm = false;
             this.authRequestTfa.email = this.authRequest.email;
-
           }
-        }
+        },
+        error: error => {
+          this.showInvalid2FAPopup("Wrong password!");
+      }
       });
       
   }
@@ -144,9 +147,18 @@ export class LoginComponent {
 
         this.router.navigate(['']);
             
+      },
+        error: error => {
+          this.showInvalid2FAPopup("Wrong pin!");
       }
     })
   }
 
-
+  showInvalid2FAPopup(str: string) {
+    this.snackBar.open(str, 'Close', {
+      duration: 2000, 
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
+    });
+  }
 }
