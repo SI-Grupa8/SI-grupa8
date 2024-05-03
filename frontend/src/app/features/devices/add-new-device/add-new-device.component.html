@@ -25,6 +25,9 @@
                   </option>
             </select>
         </div>
+        <div *ngIf="addDeviceForm.get('userId')?.errors?.['required'] && (addDeviceForm.get('userId')?.dirty || addDeviceForm.get('userId')?.touched)">
+            <span class="error">Please select a user</span>
+        </div>
         <div class="dropdown">
             <select formControlName="deviceTypeId" name="deviceTypeId">
                 <option *ngFor="let deviceType of deviceTypes" [value]="deviceType.deviceTypeID">
@@ -32,6 +35,9 @@
                 </option>
             </select>
         </div>
-        <button type="submit">ADD DEVICE</button>
+        <div *ngIf="addDeviceForm.get('deviceTypeId')?.errors?.['required'] && (addDeviceForm.get('deviceTypeId')?.dirty || addDeviceForm.get('deviceTypeId')?.touched)">
+            <span class="error">Please select a device type</span>
+        </div>
+        <button type="submit" [disabled]="!addDeviceForm.valid">ADD DEVICE</button>
     </div>
 </form> 
