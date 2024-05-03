@@ -302,9 +302,17 @@ export class MapComponent implements OnInit, AfterViewInit {
   display: any;
 
 
-  moveMap(event: google.maps.MapMouseEvent) {
+  /*moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
+  }*/
+
+  moveMap(event: google.maps.MapMouseEvent) {
+    if (event.latLng != null) {
+        const newCenter = event.latLng.toJSON();
+        if (this.map) this.map.panTo(newCenter);
+    }
   }
+
 
   /*
     onDeviceTypeSelected(event: any): void {

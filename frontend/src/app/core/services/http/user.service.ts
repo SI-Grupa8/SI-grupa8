@@ -8,8 +8,8 @@ import { ChangePasswordRequest } from '../../models/change-password-request';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
-  //private apiUrl = 'https://localhost:7126/api';
+  //private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
+  private apiUrl = 'https://localhost:7126/api';
 
   constructor(private http: HttpClient) { }
 
