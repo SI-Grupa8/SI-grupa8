@@ -8,8 +8,8 @@ import { ChangePasswordRequest } from '../../models/change-password-request';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
-  //private apiUrl = 'https://localhost:7126/api';
+  //private apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
+  private apiUrl = 'https://localhost:7126/api';
 
   constructor(private http: HttpClient) { }
 
@@ -71,12 +71,21 @@ return this.http.get<any>(`${this.apiUrl}/User/get-current-user`, {headers});
     return this.http.put<any>(`${this.apiUrl}/User/change-email`, request, { headers });
   }
 
+  changePhoneNumber(request: UserRequest): Observable<any>{
+    //console.log(request)
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.put<any>(`${this.apiUrl}/User/change-phone-number`, request, { headers });
+  }
+
   getDispatchersForNewDevice(companyId : number ) : Observable<any[]> {
     const token = localStorage.getItem("token");
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.get<any[]>(`${this.apiUrl}/User/get-dispatchers-new-device/${companyId}`, {headers});
+    return this.http.get<any[]>(`${this.apiUrl}/User/get-drivers-new-device/${companyId}`, {headers});
   }
   
   changePassword(request: ChangePasswordRequest): Observable<any>{

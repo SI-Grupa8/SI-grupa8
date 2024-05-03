@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace API.JWTHelpers
+namespace API.Helpers
 {
 	public static class JWTHelper
 	{

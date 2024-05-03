@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { DeviceRequest } from '../../../core/models/device-request';
 import { DeviceService } from '../../../core/services/http/device.service';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
 import { CodeInputModule } from 'angular-code-input';
 import { UserRequest } from '../../../core/models/user-request';
@@ -10,6 +10,7 @@ import { CompanyService } from '../../../core/services/http/company.service';
 import { UserService } from '../../../core/services/http/user.service';
 import { DeviceType } from '../../../core/models/device-type';
 import { AuthService } from '../../../core/services/http/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-new-device',
@@ -28,15 +29,15 @@ export class AddNewDeviceComponent {
   users : UserRequest[] = []
   deviceTypes : DeviceType[] = []
 
-  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<AddNewDeviceComponent>, private deviceService: DeviceService, private userService : UserService,
+  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<AddNewDeviceComponent>, private deviceService: DeviceService, private userService : UserService, private snackBar: MatSnackBar,
     private authService : AuthService
   ) {
     this.addDeviceForm = this.f.group({
       deviceName: [''],
       user: [''],
-      ref: [''],
-      xcoord: [''], 
-      ycoord: [''],
+      ref: ['', Validators.pattern(/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/)], 
+      xcoord: ['', Validators.pattern(/^(\-?\d+(\.\d+)?)$/)], 
+      ycoord: ['', Validators.pattern(/^(\-?\d+(\.\d+)?)$/)], 
       userId: [''],
       deviceTypeId: ['']
     });
@@ -63,16 +64,21 @@ export class AddNewDeviceComponent {
       event.preventDefault();
     this.deviceService.createDevice(this.deviceRequest).subscribe(()=>{
       this.deviceAdded.emit();
-      console.log('Device added successfully');
+      console.log("Device added successfully");
       this.closeDialog();
     });
   }
 
-  getAllUsers(companyID : number){
-    this.userService.getDispatchersForNewDevice(companyID).subscribe(x => {
-      this.users = x;
-    })
-  }
+  getAllUsers(companyID: number) {
+    this.userService.getDispatchersForNewDevice(companyID).subscribe(users => {
+        this.users = users;
+        if (this.users && this.users.length > 0) {
+            console.log("Users found:", this.users);
+        } else {
+            this.showInvalid2FAPopup("No employees available for company devices!");
+        }
+    });
+}
 
   getAllDeviceTypes(){
     this.deviceService.getDeviceTypes().subscribe(x => {
@@ -80,4 +86,11 @@ export class AddNewDeviceComponent {
     })
   }
 
+  showInvalid2FAPopup(str: string) {
+    this.snackBar.open(str, 'Close', {
+      duration: 2000, 
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
+    });
+  }
 }

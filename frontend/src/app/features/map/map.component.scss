@@ -1,12 +1,12 @@
 :host {
     width: calc(100% - 200px);
     margin-top: 60px;
-    margin-left: 200px;
     min-height: calc(100vh - 60px);
     background-color: #f0f1f3;
     margin-left: 200px;
     display: flex;  
     flex-direction: column; /* Change to column layout */
+ 
     .home-header {
         display: none;
         width: 100%;
@@ -65,7 +65,7 @@
                 height: 35px;
                 color: white;
                 font-size: 12px;
-                background-color: rgb(55, 55, 192);
+                background-color: #4850b3;
                 border-radius: 20px;
                 border: 1px solid rgb(180, 180, 180);
                 cursor: pointer;
@@ -120,8 +120,17 @@
                 fill: rgb(92, 91, 91);
             }
         }
-    
-
+      
+.print{
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    margin-right: 13px;
+    img{
+        height: 30px;
+        width: 30px;
+    }
+}
 
     .filter{
         display: flex;

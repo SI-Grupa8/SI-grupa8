@@ -81,10 +81,10 @@ namespace BLL.Services
             }
         }
 
-        public List<LocationStorageDto> GetDeviceLocationsFilter(int deviceId, DateTime startTime, DateTime endTime)
+        public List<LocationStorageDto> GetDeviceLocationsFilter(List<int> deviceIds, DateTime startTime, DateTime endTime)
         {
 
-            var locations = _locationStorageRepository.GetFilteredLocation(deviceId, startTime, endTime);
+            var locations = _locationStorageRepository.GetFilteredLocation(deviceIds, startTime, endTime);
 
             return _mapper.Map<List<LocationStorageDto>>(locations);
         }

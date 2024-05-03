@@ -1,5 +1,5 @@
 ﻿using System;
-using API.JWTHelpers;
+using API.Helpers;
 using BLL.DTOs;
 using BLL.Interfaces;
 using BLL.Services;

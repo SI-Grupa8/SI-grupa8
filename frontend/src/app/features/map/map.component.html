@@ -12,17 +12,31 @@
             <mat-chip-option [selected]="carDevicesSelected" class="mat-chip" (click)="toggleDeviceSelection('car')">Car&nbsp;&nbsp;(10)</mat-chip-option>
           </mat-chip-listbox>
     </div>
-    <div class="date" [ngClass]="{'hide': !activeDeviceId}" style="z-index: 1000;">
+    <div class="date" [ngClass]="{'hide': !activeDeviceIds}" style="z-index: 1000;">
         <input [owlDateTime]="dt1" [min]="minDateTime" [max]="maxDateTime" placeholder="'From'" [owlDateTimeTrigger]="dt1" [(ngModel)]="date1">
         <owl-date-time [pickerType]="'both'" #dt1 [owlDateTimeTrigger]="dt1"></owl-date-time>
         <input [owlDateTime]="dt2" [min]="minDateTime" [max]="maxDateTime" placeholder="To" [owlDateTimeTrigger]="dt2" [(ngModel)]="date2">
         <owl-date-time [pickerType]="'both'" #dt2 [owlDateTimeTrigger]="dt2"></owl-date-time>
         <button class="show" (click)="showTimeStamps(date1, date2)">SHOW</button>
     </div>
+    <button class="print" (click)="printMap()"><img src="../../../assets/images/file.png" alt="Slika"/></button>
+
+  <!--  <button class="print" [printStyle]="{
+        '@page': { size: 'landscape !important' },
+        'img': { width: '100%', height: '100%' }
+      }" [useExistingCss]="true" [openNewTab]="true" ngxPrint [printSectionId]="'mapContainer'">
+        <img src="../../../assets/images/file.png" alt="Slika"/>
+      </button>
+    -->
 </div>
+
+
     <div  #mapContainer id="mapContainer" class="map-container" style="z-index: 100;" ></div>
+
     @if (showFilterComponent) {
-        <app-map-filter style="z-index: 999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)"></app-map-filter>
+
+        <app-map-filter class="filtclass" style="z-index: 999;" [filteredDevices]="filteredDevices" (zoomEvent)="zoomToSpecificPoint($event)" (closedFilter)="toggleMapFilter()" (search)="getSearchDevices($event)" (emptyMap)="emptyMap()" (fillMap)="fillMap()" (updateMap)="updateMap($event)" (zoomDevice)="zoomDevice($event)" (zoomDefault)="zoomDefault()" (zoomRoute)="zoomRoute($event)"></app-map-filter>
+
     } 
     @else {
         <button (click)="toggleMapFilter()" class="show-filters">
@@ -30,9 +44,12 @@
 
         </button>
     }
-    @if (activeDeviceId != null && selectedDevice != null){
-    <app-device-details (close)="closeDetails()" [selectedDevice]="selectedDevice"></app-device-details>
+
+    @if (activeDeviceIds != null && selectedDevice != null){
+    <app-device-details class="detclass" (close)="closeDetails()" [selectedDevice]="selectedDevice"></app-device-details>
+
     }
+    
     
 
 

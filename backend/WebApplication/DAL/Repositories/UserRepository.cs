@@ -25,7 +25,7 @@ namespace DAL.Repositories
 
         public async Task<User> FindByPhoneNumber(string phoneNumber)
         {
-			return await _context.Users.FirstAsync(x => x.PhoneNumber == phoneNumber);
+			return await _context.Users.Include(u => u.Role).FirstAsync(x => x.PhoneNumber == phoneNumber);
         }
 
         public async Task<User> GetByToken(string token)
@@ -54,7 +54,7 @@ namespace DAL.Repositories
             return await _context.Users.Where(x => (x.RoleID == 1 && x.CompanyID == null) || (x.RoleID == 0)).ToListAsync();
         }
 
-        public async Task<List<User>> GetDispatchersForNewDevice(int companyId)
+        public async Task<List<User>> GetDriversForNewDevice(int companyId)
         {
             var devices = await _context.Devices
                 .Include(x => x!.User)
@@ -64,7 +64,7 @@ namespace DAL.Repositories
             var usersList = devices.Select(x => x.UserID).ToList();
 
             return await _context.Users.Where(x =>
-                x.RoleID == 3 &&
+                x.RoleID == 5 &&
                 x.CompanyID == companyId &&
                 !usersList.Contains(x.UserID))
                 .ToListAsync();

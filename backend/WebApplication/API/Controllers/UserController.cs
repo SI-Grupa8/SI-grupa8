@@ -3,7 +3,7 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using API.JWTHelpers;
+using API.Helpers;
 using System.Security.Claims;
 using BLL.Services;
 
@@ -75,10 +75,16 @@ namespace API.Controllers
 		}
 
 
-		[HttpPut("change-email")]
+	[HttpPut("change-email")]
     public async Task<ActionResult> ChangeEmail(UserDto request)
     {
       return Ok(await _userService.ChangeEmail(request));
+    }
+
+    [HttpPut("change-phone-number")]
+    public async Task<ActionResult> ChangePhoneNumber(UserDto request)
+    {
+        return Ok(await _userService.ChangePhoneNumber(request));
     }
 
     [HttpPut("change-password")]
@@ -88,11 +94,11 @@ namespace API.Controllers
       return Ok(await _userService.ChangePassword(request));
     }
 
-    [HttpGet("get-dispatchers-new-device/{companyId}")]
+    [HttpGet("get-drivers-new-device/{companyId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<List<UserDto>>> GetDispacthersForNewDevice(int companyId)
+    public async Task<ActionResult<List<UserDto>>> GetDriversForNewDevice(int companyId)
 		{
-			return await _userService.GetDispatchersForNewDevice(companyId);
+			return await _userService.GetDriversForNewDevice(companyId);
 		}
 
     }

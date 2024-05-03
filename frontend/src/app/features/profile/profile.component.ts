@@ -14,6 +14,7 @@ import { UserService } from '../../core/services/http/user.service';
 import { UserRequest } from '../../core/models/user-request';
 import { ChangeEmailComponent } from './change-email/change-email.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { ChangePhoneNumberComponent } from './change-phone-number/change-phone-number.component';
 
 @Component({
   selector: 'app-profile',
@@ -87,6 +88,26 @@ ngOnInit(): void{
 
   editEmailDialog(user: UserRequest): void {
     const dialogRef = this.dialog.open(ChangeEmailComponent, {
+      disableClose: true ,
+      data: { user: user }
+      // scrollStrategy: new NoopScrollStrategy()
+    });
+    console.log(user)
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+     dialogRef.componentInstance.userEdited.subscribe(() => {
+      console.log("evo update")
+       // Refresh after user is edited
+       this.userService.getUser().subscribe((userData) => {
+        this.userData = userData;
+      });
+     });
+
+  }
+
+  editPhoneNumberDialog(user: UserRequest): void {
+    const dialogRef = this.dialog.open(ChangePhoneNumberComponent, {
       disableClose: true ,
       data: { user: user }
       // scrollStrategy: new NoopScrollStrategy()

@@ -78,6 +78,20 @@
             transition: border-bottom 0.3s;
             height: 30px;
         }
+        input[name="phoneNumber"] {
+            padding: 8px 10px;
+            padding-left: 40px;
+            background: url("../../../../assets/images/phone.png") no-repeat; 
+            background-size: 25px; 
+            background-position: 10px center; 
+            margin: 8px 15px;
+            border: none;
+            border-bottom: 1px solid #1e5631;
+            outline: none;
+            background-color: transparent;
+            transition: border-bottom 0.3s;
+            height: 30px;
+        }
         input[name="password"] {
             padding: 8px 10px;
             padding-left: 40px;

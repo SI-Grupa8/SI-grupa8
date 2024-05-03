@@ -8,16 +8,17 @@ import { AuthResponse } from '../../core/models/auth-response';
 import { Route, Router } from '@angular/router';
 import { AuthTfaRequest } from '../../core/models/auth-tfa-request';
 import { AuthTfaResponse } from '../../core/models/auth-tfa-response';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 function emailOrPhoneValidator(control: FormControl) {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const phonePattern = /^\d{10}$/;
+  const phonePattern = /^\d{9}$/;
 
   if (!emailPattern.test(control.value) && !phonePattern.test(control.value)) {
     return { invalidFormat: true };
   }
-  return null;
+  return null; 
 }
 @Component({
   selector: 'app-login',
@@ -29,7 +30,9 @@ function emailOrPhoneValidator(control: FormControl) {
 export class LoginComponent {
   showLoginForm=true;
   refreshToken = '';
-  authRequest: AuthRequest = {};
+  authRequest: AuthRequest = {
+    phoneNumber: ''
+  };
   authRequestTfa: AuthTfaRequest = {};
   authResponseTfa: AuthTfaResponse = {};
   loginForm: FormGroup;
@@ -38,9 +41,9 @@ export class LoginComponent {
 
   
 
-  constructor(private f: FormBuilder, private authService: AuthService, private router: Router){
+  constructor(private f: FormBuilder, private authService: AuthService, private router: Router, private snackBar: MatSnackBar){
     this.loginForm = this.f.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, emailOrPhoneValidator]],
       pass:['', [Validators.required, Validators.minLength(8)]]
     });
     this.loginTwofaForm = this.f.group({
@@ -66,6 +69,13 @@ export class LoginComponent {
   }
 
   login() {
+
+    const input = this.loginForm.get('email')?.value;
+    if (input.match(/^\d{9}$/)) { 
+      this.authRequest.phoneNumber = input;
+    } else {
+      this.authRequest.email = input;
+    } 
     // Mark all form controls as touched to display errors
     if (this.loginForm.invalid) {
       Object.values(this.loginForm.controls).forEach(control => {
@@ -73,7 +83,6 @@ export class LoginComponent {
       });
       return;
     }
-    this.authRequest.email = this.loginForm.get('email')?.value;
     this.authRequest.password = this.loginForm.get('pass')?.value;
 
     this.authService.login(this.authRequest)
@@ -103,9 +112,11 @@ export class LoginComponent {
           else {
             this.showLoginForm = false;
             this.authRequestTfa.email = this.authRequest.email;
-
           }
-        }
+        },
+        error: error => {
+          this.showInvalid2FAPopup("Wrong password!");
+      }
       });
       
   }
@@ -136,9 +147,18 @@ export class LoginComponent {
 
         this.router.navigate(['']);
             
+      },
+        error: error => {
+          this.showInvalid2FAPopup("Wrong pin!");
       }
     })
   }
 
-
+  showInvalid2FAPopup(str: string) {
+    this.snackBar.open(str, 'Close', {
+      duration: 2000, 
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
+    });
+  }
 }

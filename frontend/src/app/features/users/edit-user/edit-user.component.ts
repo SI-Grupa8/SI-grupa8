@@ -27,6 +27,7 @@ export class EditUserComponent {
       name: [data.user?.name || ' '],
       surname: [data.user?.surname || ''],
       email: [data.user?.email || ''],
+      phoneNumber: [data.user?.phoneNumber || ''],
       password: [data.user?.password || '', [Validators.minLength(8)]],
       role: [this.getRoleName(data.user?.roleID) || '']
     });
@@ -73,6 +74,7 @@ export class EditUserComponent {
     }
 
     this.userRequest.email = this.editUserForm.get('email')?.value;
+    this.userRequest.phoneNumber = this.editUserForm.get('phoneNumber')?.value;
     this.userRequest.name = this.editUserForm.get('name')?.value;
     this.userRequest.surname = this.editUserForm.get('surname')?.value;
     this.userRequest.companyID = this.data.user.companyID;
