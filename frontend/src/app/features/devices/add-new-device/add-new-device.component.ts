@@ -38,8 +38,8 @@ export class AddNewDeviceComponent {
       ref: ['', Validators.pattern(/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/)], 
       xcoord: ['', Validators.pattern(/^(\-?\d+(\.\d+)?)$/)], 
       ycoord: ['', Validators.pattern(/^(\-?\d+(\.\d+)?)$/)], 
-      userId: [''],
-      deviceTypeId: ['']
+      userId: ['', Validators.required],
+      deviceTypeId: ['', Validators.required]
     });
     this.userService.getUser().subscribe((res: any) => {
       this.getAllUsers(res.companyID);
@@ -75,7 +75,8 @@ export class AddNewDeviceComponent {
         if (this.users && this.users.length > 0) {
             console.log("Users found:", this.users);
         } else {
-            this.showInvalid2FAPopup("No employees available for company devices!");
+            this.closeDialog();
+            this.showInvalid2FAPopup("No driver available for device!");
         }
     });
 }
@@ -90,7 +91,7 @@ export class AddNewDeviceComponent {
     this.snackBar.open(str, 'Close', {
       duration: 2000, 
       horizontalPosition: 'center',
-      verticalPosition: 'bottom'
+      verticalPosition: 'top'
     });
   }
 }
