@@ -154,5 +154,11 @@
             transition: background-color 0.3s;
             white-space: nowrap;
         }
-    } 
+        .error {
+        color: red;
+        display: flex;
+        margin-left: 15px;
+    }
 }
+} 
+    
