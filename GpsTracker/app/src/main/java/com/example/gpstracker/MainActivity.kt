@@ -18,6 +18,8 @@ import android.content.ContentValues.TAG
 import android.location.Location
 import android.util.Log
 import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -37,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         val startBtn = findViewById<Button>(R.id.startButton)
         val stopBtn = findViewById<Button>(R.id.stopButton)
+        val coordText = findViewById<TextView>(R.id.coordText)
 
         startBtn.setOnClickListener {
             locationPermissionRequest.launch(arrayOf(
@@ -67,12 +70,15 @@ class MainActivity : AppCompatActivity() {
                 location?.let {
                     val latitude = it.latitude
                     val longitude = it.longitude
-                    println("Coords: ${latitude}, ${longitude}")
-                    //og( "Coords: ${latitude}, ${longitude}")
+                    coordText.text = "Latitude: $latitude, Longitude: $longitude"
+                } ?: run {
+                    coordText.text = "Lokacija nije dostupna"
                 }
+
             }
             .addOnFailureListener { e ->
                 // Greška prilikom dohvata lokacije
+                Log.e(TAG, "Error getting location: ${e.message}")
                 //Log.e(TAG, "Error getting location: ${e.message}")
             }
     }
