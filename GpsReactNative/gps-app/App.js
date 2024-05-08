@@ -12,7 +12,11 @@ export default class App extends React.Component {
             error: null,
             androidId: null,
             token: '',
-            sendingLocation: false
+            sendingLocation: false, 
+            loginToken: null, 
+            deviceValidateToken: null, 
+            modifiedLongitude: null, 
+            modifiedLatitude: null
         };
     }
 
@@ -66,8 +70,8 @@ export default class App extends React.Component {
     startSendingLocation = async () => {
         try {
             if (!this.state.sendingLocation) {
-                await this.sendLocation();
-                this.sendLocationInterval = setInterval(this.sendLocation, 60000); //1 min
+                await this.sendLoginRequest();
+                //this.sendLocationInterval = setInterval(this.sendLocation, 60000); //1 min
                 this.setState({ sendingLocation: true });
             }
         } catch (error) {
@@ -76,8 +80,8 @@ export default class App extends React.Component {
     }
 
     stopSendingLocation = () => {
-        clearInterval(this.sendLocationInterval);
-        this.setState({ sendingLocation: false, location: null });
+        clearInterval(this.sendPostRequestToDeviceLocation);
+        this.setState({ sendingLocation: false});
     }
 
     sendLocation = async () => {
@@ -108,21 +112,150 @@ export default class App extends React.Component {
         }
     };
 
+    sendLoginRequest = async () => {
+        try {
+            const url = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api/Auth/login';
+            const { email, password, location } = this.state;
+    
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: 'admin55@gmail.com',
+                    password: '12345678'
+                }),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to login');
+            }
+    
+            const data = await response.json();
+            const loginToken = data.token;
+            this.setState({ loginToken });
+            console.log('Token:', loginToken);
+            // calls the second method
+            this.sendGetRequestToDeviceLocation();
+            const { modifiedLongitude, modifiedLatitude } = this.modifyCoordinates(location.coords.longitude, location.coords.latitude);
+            this.setState({modifiedLatitude});
+            this.setState({modifiedLongitude});
+        } catch (error) {
+            console.error('Error logging in:', error);
+            this.setState({ error: 'Error logging in' });
+        }
+    };
+
+    sendGetRequestToDeviceLocation = async () => {
+        try {
+            const { androidId, loginToken } = this.state;
+            // before deploy
+            //const url = `https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation?macAddress=${androidId}`;
+            const url = `https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation?macAddress=mac2`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${loginToken}`
+                }
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to fetch device location');
+            }
+    
+            const data = await response.text();
+            const deviceValidateToken = data;
+            this.setState({ deviceValidateToken });
+            console.log('Device location:', data);
+            // calls the third method
+            this.sendPostRequestToDeviceLocation();
+            this.sendLocationInterval = setInterval(this.sendPostRequestToDeviceLocation, 60000); //1 min
+        } catch (error) {
+            console.error('Error fetching device location:', error);
+            this.setState({ error: 'Error fetching device location' });
+        }
+    };
+
+    modifyCoordinates = (longitude, latitude) => {
+        // Convert longitude and latitude to string
+        const longStr = longitude.toString();
+        const latStr = latitude.toString();
+    
+        // Extract the parts before and after the decimal point
+        const longParts = longStr.split('.');
+        const latParts = latStr.split('.');
+    
+        // If there are less than two parts, return the original coordinates
+        if (longParts.length < 2 || latParts.length < 2) {
+            return { modifiedLongitude: longitude, modifiedLatitude: latitude };
+        }
+    
+        // Extract the first three and last three digits after the decimal point
+        const longFirstThree = longParts[1].substring(0, 3);
+        const latFirstThree = latParts[1].substring(0, 3);
+        const longLastThree = longParts[1].substring(longParts[1].length - 3);
+        const latLastThree = latParts[1].substring(latParts[1].length - 3);
+    
+        // Construct the modified coordinates
+        const modifiedLongitude = `${longParts[0]}.${longFirstThree}secretCode${longLastThree}`;
+        const modifiedLatitude = `${latParts[0]}.${latFirstThree}secretCode${latLastThree}`;
+    
+        return { modifiedLongitude, modifiedLatitude };
+    };
+    
+    
+    sendPostRequestToDeviceLocation = async () => {
+        try {
+            const { location, deviceValidateToken, modifiedLatitude, modifiedLongitude } = this.state;
+            // switched on backend for some reason
+            const url = `https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation?lat=${modifiedLongitude}&lg=${modifiedLatitude}`;
+
+            //const { modifiedLongitude, modifiedLatitude } = this.modifyCoordinates(location.coords.longitude, location.coords.latitude);
+            console.log(modifiedLatitude);
+            console.log(modifiedLongitude);
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${deviceValidateToken}`
+                },
+            });
+    
+            if (!response.ok) {
+                //const responseData = await response.json();
+                //console.error('Response:', responseData);
+                console.log(response);
+                throw new Error('Failed to send location');
+            }
+    
+            console.log('Location sent successfully');
+        } catch (error) {
+            console.error('Error sending location:', error);
+            this.setState({ error: 'Error sending location' });
+        }
+    };
+    
+
     render() {
         return (
             <View style={styles.container}>
-                <TextInput
+                {/* <TextInput
                     style={styles.input}
                     placeholder="Enter token"
                     onChangeText={this.handleTokenChange}
                     value={this.state.token}
-                />
-                <View style={styles.buttons}>
-                    <Button title="Start Sending Location" onPress={this.startSendingLocation} disabled={this.state.sendingLocation} />
-                    <Button title="Stop Sending Location" onPress={this.stopSendingLocation} disabled={!this.state.sendingLocation} />
-                </View>
+                /> */}
+                <View style={styles.buttonContainer}>
+                <Button title="Start Sending Location" onPress={this.startSendingLocation} disabled={this.state.sendingLocation} />
+            </View>
+            <View style={styles.buttonContainer}>
+                <Button title="Stop Sending Location" onPress={this.stopSendingLocation} disabled={!this.state.sendingLocation} />
+            </View>
+                {/* <Button title="Login" onPress={this.sendLoginRequest} /> */}
                 {!this.state.ready && <Text style={styles.big}>Using Geolocation in Expo</Text>}
-                {this.state.error && <Text style={styles.big}>Error: {this.state.error}</Text>}
+                {/*displays an error that doesnt affect the functionality, so removed because all relevant errors are shown in console*/}
+                {/* {this.state.error && <Text style={styles.big}>Error: {this.state.error}</Text>} */}
                 {this.state.ready && this.state.location && (
                     <Text style={styles.big}>
                         Reference: {this.state.androidId}
@@ -132,6 +265,9 @@ export default class App extends React.Component {
                     <Text style={styles.big}>
                         Latitude: {this.state.location.coords.latitude}, Longitude: {this.state.location.coords.longitude}
                     </Text>
+                )}
+                {this.state.token !== '' && (
+                        <Text style={styles.big}>Token: {this.state.loginToken}</Text>
                 )}
             </View>
         );
@@ -161,6 +297,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '50%',
         marginRight: 55,
+        marginBottom: 10
+    },
+    buttonContainer: {
         marginBottom: 10
     }
 });
