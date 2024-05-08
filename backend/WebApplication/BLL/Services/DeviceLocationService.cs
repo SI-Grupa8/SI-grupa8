@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using AutoMapper;
 using BLL.DTOs;
 using BLL.Interfaces;
+using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Configuration;
@@ -74,6 +75,18 @@ namespace BLL.Services
                 device.YCoordinate = decodedLat;
 
                 await _deviceRepository.SaveChangesAsync();
+
+                var locationStorageDto = new LocationStorageDto
+                {
+                    DeviceID = device.DeviceID, 
+                    XCoordinate = decodedLng,
+                    YCoordinate = decodedLat, // these should actually be swapped but it will be changed later
+                    Timestamp = DateTime.UtcNow 
+                };
+
+                var location = _mapper.Map<LocationStorage>(locationStorageDto);
+                _locationStorageRepository.Add(location);
+                await _locationStorageRepository.SaveChangesAsync();
             }
             else
             {
