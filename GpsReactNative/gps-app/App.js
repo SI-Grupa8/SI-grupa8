@@ -152,7 +152,7 @@ export default class App extends React.Component {
             const { androidId, loginToken } = this.state;
             // before deploy
             //const url = `https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation?macAddress=${androidId}`;
-            const url = `https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation?macAddress=mac2`;
+            const url = `https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation?macAddress=3C-55-76-79-00-0D`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
