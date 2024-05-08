@@ -35,7 +35,7 @@ export class AddNewDeviceComponent {
     this.addDeviceForm = this.f.group({
       deviceName: [''],
       user: [''],
-      ref: ['', Validators.pattern(/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/)], 
+      ref: [''], //['', Validators.pattern(/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/)], 
       xcoord: ['', Validators.pattern(/^(\-?\d+(\.\d+)?)$/)], 
       ycoord: ['', Validators.pattern(/^(\-?\d+(\.\d+)?)$/)], 
       userId: ['', Validators.required],

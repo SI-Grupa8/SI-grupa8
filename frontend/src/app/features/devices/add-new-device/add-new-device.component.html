@@ -7,8 +7,8 @@
     <div class="container-flex">
         <input formControlName="deviceName" name="deviceName" type="text" placeholder="Device name" >
         <input formControlName="ref" name="ref" type="text" placeholder="Reference" >
-        <div *ngIf="(addDeviceForm.get('ref')?.dirty || addDeviceForm.get('ref')?.touched) && addDeviceForm.get('ref')?.errors?.['pattern']">
-            <span class="error">Invalid reference format</span>
+        <div *ngIf="(addDeviceForm.get('ref')?.dirty || addDeviceForm.get('ref')?.touched)">
+            <span class="error">Insert reference</span>
         </div>
         <input formControlName="xcoord" name="xcoord" type="text" placeholder="X coordinate">
         <div *ngIf="(addDeviceForm.get('xcoord')?.dirty || addDeviceForm.get('xcoord')?.touched) && addDeviceForm.get('xcoord')?.errors?.['pattern']">
