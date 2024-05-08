@@ -15,7 +15,8 @@
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
     "react-native": "0.73.6",
-    "react-native-permissions": "^4.1.5"
+    "react-native-permissions": "^4.1.5",
+    "expo-application": "~5.8.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

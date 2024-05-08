@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import * as Location from 'expo-location';
+import * as Application from 'expo-application';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -8,12 +9,14 @@ export default class App extends React.Component {
         this.state = {
             ready: false,
             location: null,
-            error: null
+            error: null,
+            androidId: null
         };
     }
 
     componentDidMount() {
         this.getLocationPermission();
+        this.getAndroidId();
     }
 
     getLocationPermission = async () => {
@@ -40,6 +43,16 @@ export default class App extends React.Component {
         }
     };
 
+    getAndroidId = async () => {
+        try {
+            const androidId = await Application.getAndroidId();
+            this.setState({ androidId });
+        } catch (error) {
+            console.error('Error getting Android ID:', error);
+            this.setState({ error: 'Error getting Android ID' });
+        }
+    };
+
     render() {
         return (
             <View style={styles.container}>
@@ -47,7 +60,7 @@ export default class App extends React.Component {
                 {this.state.error && <Text style={styles.big}>Error: {this.state.error}</Text>}
                 {this.state.ready && (
                     <Text style={styles.big}>
-                        Latitude: {this.state.location.coords.latitude}, Longitude: {this.state.location.coords.longitude}
+                        Latitude: {this.state.location.coords.latitude}, Longitude: {this.state.location.coords.longitude}, Reference: {this.state.androidId}
                     </Text>
                 )}
             </View>
