@@ -2,10 +2,12 @@
 FROM node:latest as node
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --force
 COPY . .
 RUN npm run build --prod
 
 # Stage 2: Serve the application with Nginx
 FROM nginx:alpine
-COPY --from=node /app/dist/frontend /usr/share/nginx/html
+EXPOSE 80
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=node /app/dist/frontend/browser /usr/share/nginx/html
