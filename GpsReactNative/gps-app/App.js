@@ -46,7 +46,8 @@ export default class App extends React.Component {
     getLocation = async () => {
         try {
             const location = await Location.getCurrentPositionAsync({});
-            this.setState({ ready: true, location });
+            console.log("location taken: ", location)
+            this.setState({ ready: true, location: location });
         } catch (error) {
             console.error('Error getting location:', error);
             this.setState({ error: 'Error getting location' });
@@ -86,8 +87,9 @@ export default class App extends React.Component {
 
     sendLocation = async () => {
         try {
-            const location = await Location.getCurrentPositionAsync({});
-            this.setState({ location });
+            //const location = await Location.getCurrentPositionAsync({});
+            //this.setState({ location });
+            const location = this.state.location;
             url='https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation'
             
             const { token } = this.state;
@@ -136,11 +138,11 @@ export default class App extends React.Component {
             const loginToken = data.token;
             this.setState({ loginToken });
             console.log('Token:', loginToken);
-            // calls the second method
-            this.sendGetRequestToDeviceLocation();
-            const { modifiedLongitude, modifiedLatitude } = this.modifyCoordinates(location.coords.longitude, location.coords.latitude);
+            const { modifiedLongitude, modifiedLatitude } = await this.modifyCoordinates(location.coords.longitude, location.coords.latitude);
             this.setState({modifiedLatitude});
             this.setState({modifiedLongitude});
+            // calls the second method
+            this.sendGetRequestToDeviceLocation();
         } catch (error) {
             console.error('Error logging in:', error);
             this.setState({ error: 'Error logging in' });
@@ -151,8 +153,8 @@ export default class App extends React.Component {
         try {
             const { androidId, loginToken } = this.state;
             // before deploy
-            //const url = `https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation?macAddress=${androidId}`;
-            const url = `https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation?macAddress=mac2`;
+            const url = `https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation?macAddress=${androidId}`;
+            //const url = `https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation?macAddress=mac2`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -171,13 +173,16 @@ export default class App extends React.Component {
             // calls the third method
             this.sendPostRequestToDeviceLocation();
             this.sendLocationInterval = setInterval(this.sendPostRequestToDeviceLocation, 60000); //1 min
+            //this.sendLocationInterval = setInterval(this.sendPostRequestToDeviceLocation, 20000); //20 sec(testing)
+
         } catch (error) {
             console.error('Error fetching device location:', error);
             this.setState({ error: 'Error fetching device location' });
         }
     };
 
-    modifyCoordinates = (longitude, latitude) => {
+    modifyCoordinates = async (longitude, latitude) => {
+        console.log("MODIFYING COORDS");
         // Convert longitude and latitude to string
         const longStr = longitude.toString();
         const latStr = latitude.toString();
@@ -194,8 +199,8 @@ export default class App extends React.Component {
         // Extract the first three and last three digits after the decimal point
         const longFirstThree = longParts[1].substring(0, 3);
         const latFirstThree = latParts[1].substring(0, 3);
-        const longLastThree = longParts[1].substring(longParts[1].length - 3);
-        const latLastThree = latParts[1].substring(latParts[1].length - 3);
+        const longLastThree = longParts[1].substring(3,6);
+        const latLastThree = latParts[1].substring(3,6);
     
         // Construct the modified coordinates
         const modifiedLongitude = `${longParts[0]}.${longFirstThree}secretCode${longLastThree}`;
@@ -207,11 +212,14 @@ export default class App extends React.Component {
     
     sendPostRequestToDeviceLocation = async () => {
         try {
-            const { location, deviceValidateToken, modifiedLatitude, modifiedLongitude } = this.state;
+            //const { location, deviceValidateToken, modifiedLatitude, modifiedLongitude } = this.state;
+            const { location, deviceValidateToken } = this.state;
             // switched on backend for some reason
+            //const url = `https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation?lat=${modifiedLongitude}&lg=${modifiedLatitude}`;
+
+            const { modifiedLongitude, modifiedLatitude } = await this.modifyCoordinates(location.coords.longitude, location.coords.latitude);
             const url = `https://vehicle-tracking-system-dev-api.azurewebsites.net/api/DeviceLocation?lat=${modifiedLongitude}&lg=${modifiedLatitude}`;
 
-            //const { modifiedLongitude, modifiedLatitude } = this.modifyCoordinates(location.coords.longitude, location.coords.latitude);
             console.log(modifiedLatitude);
             console.log(modifiedLongitude);
             const response = await fetch(url, {
@@ -230,6 +238,8 @@ export default class App extends React.Component {
             }
     
             console.log('Location sent successfully');
+            //this.getLocation(); 
+            this.getLocationPermission();
         } catch (error) {
             console.error('Error sending location:', error);
             this.setState({ error: 'Error sending location' });
