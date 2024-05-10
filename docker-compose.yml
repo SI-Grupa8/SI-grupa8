@@ -8,6 +8,8 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 7126:7126
+    depends_on:
+      - postgres
   angular:
     image: angular
     build:
@@ -15,4 +17,16 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 4200:80
+  postgres:
+    image: postgres:latest
+    container_name: vehicle-tracking-db
+    ports:
+      - 5435:5435
+    environment:
+      - POSTGRES_PASSWORD=baza1234
+      - POSTGRES_DB=Vehicletrackingsystem
+      - POSTGRES_USER=postgres
+    volumes:
+      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+  
 
