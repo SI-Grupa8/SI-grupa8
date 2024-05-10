@@ -12,6 +12,6 @@ WORKDIR /publish
 ENV ASPNETCORE_URLS=https://+:7126/
 EXPOSE 7126
 
-HEALTHCHECK CMD curl --fail http://localhost || exit 1
+HEALTHCHECK CMD curl --fail https://localhost || exit 1
 
 CMD ["./API"]

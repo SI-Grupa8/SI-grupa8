@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  msnet6:
+    image: msnet6
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    ports:
+      - 7126:7126
+  angular:
+    image: angular
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - 4200:80
+
