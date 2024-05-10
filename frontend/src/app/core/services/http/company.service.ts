@@ -10,7 +10,7 @@ import { UserRequest } from '../../models/user-request';
 })
 export class CompanyService {
   //apiUrl = 'https://vehicle-tracking-system-dev-api.azurewebsites.net/api'
-  apiUrl = 'https://localhost:7126/api';
+  apiUrl = 'http://localhost:7126/api';
 
   constructor(private http: HttpClient) { }
 
