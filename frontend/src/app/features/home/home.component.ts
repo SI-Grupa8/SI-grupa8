@@ -38,7 +38,6 @@ export class HomeComponent implements OnInit {
   usersCount: number = 0;
   devicesCount: number = 0;
   activeRoutesCount: number = 0;
-  alertsCount: number = 0;
 
   constructor(private http: HttpClient, private companyService: CompanyService, private authService: AuthService, private deviceService: DeviceService) {}
 
