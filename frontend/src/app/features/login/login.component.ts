@@ -104,7 +104,12 @@ export class LoginComponent {
             console.log(this.authResponse.email)
             console.log(this.authResponse.token);
             this.authService.setUserRole(response.role);
-            this.router.navigate(['']);
+            if (response.role == 'SuperAdmin') {
+              this.router.navigate(['/companies']);
+            }
+            else {
+              this.router.navigate(['']);
+            }
             this.authService.getCurrentUser().subscribe((res  : any)=> {
               this.authService.user.next(res);
             })

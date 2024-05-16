@@ -23,11 +23,11 @@
                     @if (passControl?.hasError('required')) {
                         <span class="error">Password is required</span>
                     }
-                    @else if (passControl?.hasError('minlength')) {
-                        <span class="error">Password has to be atleast 8 chars</span>
+                    @else if (passControl?.invalid) {
+                        <span class="error">Wrong password</span>
                     }
                 }  
-
+                
                 <button   type="submit" style="margin-top: 40px; margin-bottom: 5px;">LOGIN</button>
             </form>
         </div>
