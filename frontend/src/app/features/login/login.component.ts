@@ -88,6 +88,10 @@ export class LoginComponent {
     this.authService.login(this.authRequest)
       .subscribe({
         next: (response) => {
+          setTimeout(() => {
+            this.router.navigate(['login']); ///logout after 30 minutes 
+            localStorage.clear();
+          }, 1000 * 30 * 60);
           this.authResponse = response;
           console.log(response);
           if (!this.authResponse.twoFaEnabled) {
