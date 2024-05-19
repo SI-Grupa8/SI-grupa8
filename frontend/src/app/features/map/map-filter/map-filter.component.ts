@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {MatTabsModule} from '@angular/material/tabs';
 import { DeviceService } from '../../../core/services/http/device.service';
@@ -13,7 +13,7 @@ import { DeviceRequest } from '../../../core/models/device-request';
   templateUrl: './map-filter.component.html',
   styleUrl: './map-filter.component.scss'
 })
-export class MapFilterComponent {
+export class MapFilterComponent implements OnInit {
   searchQuery: string = '';
   allDevices: any[] = [];
   searchedDevices: any[] = [];
@@ -34,14 +34,17 @@ export class MapFilterComponent {
 
   beforeFiltered: any[] =[];
   temp: any[] = [];
-
+  toggled: boolean = false;
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['filteredDevices'] && changes['filteredDevices'].currentValue) {
       console.log('Filtered devices changed:', changes['filteredDevices'].currentValue);
-      this.higlightAllDevices();
+      // this.higlightAllDevices();
     }
   }
 
+  ngOnInit(): void {
+    
+  }
 
   searchDevices(): void {
     if (this.searchQuery.trim() !== '') {
@@ -77,9 +80,11 @@ export class MapFilterComponent {
     } else  if(this.selectedDeviceIds.length<5){
         // If device is not selected, add it to the array
         this.selectedDeviceIds.push(device.deviceID!);
+        this.tripButtonList.push(device.deviceID);
     }
     }
     event.stopPropagation();
+    this.toggled = true;
   }
 
 
@@ -106,12 +111,15 @@ isDeviceActive(deviceId: number) {
     this.closedFilter.emit();
   }
 
+  tripButtonList: any[] = [];
+
   getAll(companyId : number): void {
     this.deviceService.getCompanyDevices(companyId).subscribe(devices => {
-      this.filteredDevices = devices;
       this.beforeFiltered = devices;
+      // this.filteredDevices = devices;
       // The method is called here to ensure devices are selected in the checkbox when being loaded
-      this.higlightAllDevices();
+      // this.higlightAllDevices();
+      this.selectedDeviceIds = this.tripButtonList;
     });
   }
 
@@ -139,6 +147,7 @@ hideAllDevices(): void {
   // Loop through each device and set its isHighlighted property to false
   this.filteredDevices.forEach(device => {
     device.isHighlighted = false;
+    this.selectedDeviceIds = [];
   });
   this.emptyMap.emit();
 }

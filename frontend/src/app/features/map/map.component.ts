@@ -199,6 +199,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   toggleMapFilter() {
     this.showFilterComponent = !this.showFilterComponent;
   }
+
   markerOptions: any = {
     // Default marker options here
   };
@@ -348,7 +349,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   }
 
-
+  lista: any[] = [];
 
   getFilteredDevices() {
 
@@ -371,7 +372,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         // empties search query when selected device types changed
         this.mapFilterComponent.searchQuery= '';
         this.filteredDevices = devices;
-
+        this.mapFilterComponent.selectedDeviceIds = this.activeDeviceIds;
         this.initMap()
         console.log(this.filteredDevices);
         this.currentMap = this.map;
@@ -669,7 +670,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   });
 
     // makes map empty
-    const myLatLng = { lat: 43.8582, lng: 18.3566 };
+    const myLatLng = { lat: 43.8563, lng: 18.4131 };
     this.deleteMarkers();
     this.displayRoutes([]);
     this.zoomDefault()
