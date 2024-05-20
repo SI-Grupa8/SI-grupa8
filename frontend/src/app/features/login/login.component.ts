@@ -91,7 +91,8 @@ export class LoginComponent {
           setTimeout(() => {
             this.router.navigate(['login']); ///logout after 30 minutes 
             localStorage.clear();
-          }, 1000 * 30 * 60);
+            this.expiredSessionPopup();
+          }, 1000 * 60 * 30);
           this.authResponse = response;
           console.log(response);
           if (!this.authResponse.twoFaEnabled) {
@@ -156,6 +157,15 @@ export class LoginComponent {
           this.showInvalid2FAPopup("Wrong pin!");
       }
     })
+  }
+
+  expiredSessionPopup(str: string = "Your session has expired!") {
+    this.snackBar.open(str, 'Close', {
+      duration: 4000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      politeness: 'assertive'
+    });
   }
 
   showInvalid2FAPopup(str: string) {
