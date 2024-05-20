@@ -37,8 +37,8 @@ export class MapFilterComponent implements OnInit {
   toggled: boolean = false;
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['filteredDevices'] && changes['filteredDevices'].currentValue) {
-      console.log('Filtered devices changed:', changes['filteredDevices'].currentValue);
-      // this.higlightAllDevices();
+      //console.log('Filtered devices changed:', changes['filteredDevices'].currentValue);
+       this.higlightAllDevices();
     }
   }
 
@@ -59,7 +59,7 @@ export class MapFilterComponent implements OnInit {
 
   zoomToSpecificPoint(device: DeviceRequest, event: MouseEvent) {
     if(device.isHighlighted){
-    console.log("deviceID:",device.deviceID);
+    //console.log("deviceID:",device.deviceID);
     if(device.deviceID!=0){
       this.zoomEvent.emit(device.deviceID);
     }
@@ -68,10 +68,11 @@ export class MapFilterComponent implements OnInit {
   }
 
   onMarkerClicked(deviceID: number) {
-    console.log('Marker clicked:', deviceID);
+    //console.log('Marker clicked:', deviceID);
   }
 
   toggleActiveDevice(device: DeviceRequest, event: MouseEvent) {
+    //console.log("selectovani: ", this.selectedDeviceIds)
     if(device.isHighlighted){
     const index = this.selectedDeviceIds.indexOf(device.deviceID!);
     if (index !== -1) {
@@ -85,6 +86,7 @@ export class MapFilterComponent implements OnInit {
     }
     event.stopPropagation();
     this.toggled = true;
+    //console.log("selectovani2: ", this.selectedDeviceIds)
   }
 
 
@@ -116,10 +118,10 @@ isDeviceActive(deviceId: number) {
   getAll(companyId : number): void {
     this.deviceService.getCompanyDevices(companyId).subscribe(devices => {
       this.beforeFiltered = devices;
-      // this.filteredDevices = devices;
+       this.filteredDevices = devices;
       // The method is called here to ensure devices are selected in the checkbox when being loaded
-      // this.higlightAllDevices();
-      this.selectedDeviceIds = this.tripButtonList;
+       this.higlightAllDevices();
+      //this.selectedDeviceIds = this.tripButtonList;
     });
   }
 
@@ -127,7 +129,7 @@ isDeviceActive(deviceId: number) {
 
   onDeviceIconClicked(event: MouseEvent, device:any) {
     device.isHighlighted = !device.isHighlighted;
-    console.log("Just button clicked");
+    //console.log("Just button clicked");
     // empties the selectedDeviceIds, so the color of trip button changes so that its function doesn't invert
     // maybe the other option is to check if the selectedDeviceIds is empty, and if it is not just enable the device to be clickable
     this.selectedDeviceIds = [];
