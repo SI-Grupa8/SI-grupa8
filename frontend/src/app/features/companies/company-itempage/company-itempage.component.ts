@@ -13,17 +13,20 @@ import { EditUserComponent } from '../../users/edit-user/edit-user.component';
 import { DeleteUserComponent } from '../../users/delete-user/delete-user.component';
 import { FullNamePipe } from "../../../core/pipes/full-name.pipe";
 import { NoopScrollStrategy } from '@angular/cdk/overlay';
+import { UsersComponent } from "../../users/users.component";
+import { DevicesComponent } from "../../devices/devices.component";
+import { MapComponent } from "../../map/map.component";
 
 @Component({
     selector: 'app-company-itempage',
     standalone: true,
     templateUrl: './company-itempage.component.html',
     styleUrl: './company-itempage.component.scss',
-    imports: [MatTabsModule, RouterModule, MatPaginatorModule, CommonModule, FullNamePipe]
+    imports: [MatTabsModule, RouterModule, MatPaginatorModule, CommonModule, FullNamePipe, UsersComponent, DevicesComponent, MapComponent]
 })
 export class CompanyItempageComponent implements OnInit {
 
-  @Input() tabsArray: string[] = ['Overview', 'Members'];
+  @Input() tabsArray: string[] = ['Overview', 'Members', 'Devices', 'Map'];
   @Output() onTabChange = new EventEmitter<number>();
   activatedTab: number = 1;
 

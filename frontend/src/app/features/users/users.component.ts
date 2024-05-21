@@ -9,6 +9,7 @@ import { UserService } from '../../core/services/http/user.service';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { AuthService } from '../../core/services/http/auth.service';
 import { NoopScrollStrategy } from '@angular/cdk/overlay';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -30,12 +31,33 @@ export class UsersComponent {
   userRequest: UserRequest = {
   }
 
-  constructor(public dialog: MatDialog, private userService: UserService, private authService : AuthService) {}
+  constructor(public dialog: MatDialog, private userService: UserService, private authService : AuthService,private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.authService.getCurrentUser().subscribe((res : any) => {
-      this.companyId = res.companyID;
-      this.getAll(res.companyID);
+      console.log("adadadadadadada" + res.companyID);
+      //if user is super admin
+      if(res.companyID == null || res.companyID == undefined || res.companyID == 0)  {
+        /*
+        this.route.params.subscribe(params => {
+
+          const companyId = params['id'];
+          this.companyId = companyId;
+          this.getAll(companyId);
+        })*/
+        //console.log("adadadadadadada" + this.companyId);
+        const idParam = this.route.snapshot.paramMap.get('id');
+        //console.log("adadadadadadada" + idParam);
+        if (idParam != null) {
+          this.companyId = +idParam;
+          //console.log("adadadadadadada" + this.companyId);
+          this.getAll(this.companyId);
+        }
+      }
+      else {
+        this.companyId = res.companyID;
+        this.getAll(res.companyID);
+      }
     })
   }
 

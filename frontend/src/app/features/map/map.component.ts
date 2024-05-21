@@ -30,6 +30,7 @@ import { LocationFilterRequest } from '../../core/models/location-filter';
 import html2canvas from 'html2canvas';
 import jspdf from 'jspdf';
 import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
+import { ActivatedRoute } from '@angular/router';
   
 
 @Component({
@@ -227,7 +228,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     private sanitizer: DomSanitizer,
     private datePipe: DatePipe,
     private noResult: MatSnackBar,
-    private renderer: Renderer2, private elementRef: ElementRef
+    private renderer: Renderer2, private elementRef: ElementRef,
+    private route: ActivatedRoute
   ) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
@@ -242,10 +244,18 @@ export class MapComponent implements OnInit, AfterViewInit {
       scaledSize: { width: 32, height: 32 } } 
     }; */
 
-
     this.userService.getUser().pipe(
       concatMap(user => {
         if (user) {
+          console.log("greskaaaa" + user.companyID);
+          if(user.companyID == 0) {
+            const idParam = this.route.snapshot.paramMap.get('id');
+            //console.log("adadadadadadada" + idParam);
+            if (idParam != null) {
+              user.companyID = +idParam;
+          
+        }
+          }
           return this.deviceService.getCompanyDevices(user.companyID).pipe(
             concatMap(devices => {
               this.filteredDevices = devices;
