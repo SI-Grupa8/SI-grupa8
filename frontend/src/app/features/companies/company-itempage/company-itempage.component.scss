@@ -106,6 +106,7 @@
             display: flex;
             margin-left: 100px;
             list-style-type: none;
+            z-index: 999;
             .nav-item {
                 margin-right: 30px;
                 .nav-link {
@@ -119,6 +120,8 @@
     }
     .map-tab {
         margin-left: -200px;
+        //padding-top: -40px;
+        //background-color: red;
         margin-top: -60px;
     }
     .devices-tab {
