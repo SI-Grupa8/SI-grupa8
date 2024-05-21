@@ -2,7 +2,9 @@
     width: 350px;
     display: flex;
     flex-direction: column;
-    min-height: calc(100% - 50px);
+    min-height: calc(100vh - 110px) !important;
+    height: calc(100vh - 110px);
+
     margin-top: calc(60px - 100vh + 50px);
     //margin-top: -100%;
     background-color: rgb(255, 255, 255);
