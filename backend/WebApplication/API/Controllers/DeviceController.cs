@@ -54,11 +54,12 @@ namespace API.Controllers
         }
 
         [HttpPost("get-company-devices-v1")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<DeviceDto>>> FilterDevices(DeviceFilterDto deviceFilterDto)
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<List<DeviceDto>>> FilterDevices(DeviceFilterDto deviceFilterDto, int companyId)
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
             var adminId = JWTHelper.GetUserIDFromClaims(token);
+            Console.WriteLine($"Admin ID: {adminId}");
             return await _deviceService.GetDevicesByType(adminId, deviceFilterDto);
         }
     }

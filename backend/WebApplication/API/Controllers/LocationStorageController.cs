@@ -27,7 +27,7 @@ namespace API.Controllers
         }
 
         [HttpGet("get-device-locations/{deviceId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<List<LocationStorageDto>>> GetLocationsByDeviceId(int deviceId)
         {
             return Ok(await _locationStorageService.GetLocationsByDeviceId(deviceId));
