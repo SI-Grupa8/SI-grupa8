@@ -5,6 +5,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { DeviceService } from '../../../core/services/http/device.service';
 import { AuthService } from '../../../core/services/http/auth.service';
 import { DeviceRequest } from '../../../core/models/device-request';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-map-filter',
@@ -96,11 +97,29 @@ isDeviceActive(deviceId: number) {
 }
 
 
-  constructor(private deviceService: DeviceService, private authService: AuthService){
+  constructor(private deviceService: DeviceService, private authService: AuthService, private route: ActivatedRoute){
     this.authService.getCurrentUser().subscribe((res : any) => {
-      this.companyId = res.companyID;
-      this.getAll(res.companyID);
-      
+      if(res.companyId == null || res.companyId == undefined)  {
+        /*
+        this.route.params.subscribe(params => {
+
+          const companyId = params['id'];
+          this.companyId = companyId;
+          this.getAll(companyId);
+        })*/
+        //console.log("adadadadadadada" + this.companyId);
+        const idParam = this.route.snapshot.paramMap.get('id');
+        //console.log("adadadadadadada" + idParam);
+        if (idParam != null) {
+          this.companyId = +idParam;
+          //console.log("adadadadadadada" + this.companyId);
+          this.getAll(this.companyId);
+        }
+      }
+      else {
+        this.companyId = res.companyID;
+        this.getAll(res.companyID);
+      }
     })
     //this.searchedDevices = this.filteredDevices;
   }
