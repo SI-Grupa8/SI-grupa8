@@ -28,86 +28,18 @@
     <div class="overview-tab"></div>
 }
 @else if (activatedTab == 1) {
-<div class="members-tab">
-    <div class="members-nav">
-        <div class="searchbar"></div>
-    <button type="submit" id="add-company" (click)="openDialogAdmin()" class="add-button" style="margin-bottom: 25px;" >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
-        <p>ADD USER</p>
-    </button>
+    <div class="members-tab">
+        <app-users></app-users>
     </div>
-    <table class="members-table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone number</th>
-                <th>Role</th>
-                <th>Actions</th>
-            </tr>        
-        </thead>
-        <tbody>
-            @for (member of members; track $index) {
-            <tr >
-                <td>{{member.userID}}</td>
-                <td>
-                    <!-- <div class="member-img"></div> -->
-                    <p class="member-name">{{ member | fullName }}</p>                
-                </td>
-                <td>
-                    <p class="member-mail">{{member.email}}</p>
-                </td>
-                <td>
-                    <p class="member-phone-number">{{member.phoneNumber}}</p>
-                </td>
-                <td>
-                    <!--
-                        this catastrophe of code must be removed LATERRR
-                    -->
-                    <div [ngClass]="{
-                        'role-tag': true,
-                        'admin': member.roleID === 1,
-                        'dispatcher': member.roleID === 3,
-                        'fleet-manager': member.roleID === 4,
-                        'user': member.roleID === 5,
-                    
-                      }" class="role-tag">
-                        @if (member.roleID ==1) {
-                            <p>Admin</p>
-                        }  
-                        @else if (member.roleID ==3) {
-                            <p>Dispatcher</p>
-                        } 
-                        @else if (member.roleID ==4) {
-                            <p>FleetManager</p>
-                        } 
-                        @else if (member.roleID ==5) {
-                            <p>User</p>
-                        } 
-                        @else {
-                            <p>None</p>
-                        }
-                    </div>           
-                </td>
-                <td>
-                    <button (click)="openUpdateUser(member)" class="edit-member">Edit</button>
-                    
-                </td>
-                <td>
-                    <button (click)="openDeleteMember(member, $event)" class="delete-member">Delete</button>
-                </td>
-                
-            </tr>
-        }
-        </tbody>
-    </table>
-    <mat-paginator class="paginator" [length]="100"
-        [pageSize]="10"
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        aria-label="Select page">
-    </mat-paginator>
-    
-    
-</div>
 }
+@else if (activatedTab == 2) {
+    <div class="devices-tab">
+        <app-devices></app-devices>
+    </div>
+}
+<!--
+@else if (activatedTab == 3) {
+    <div class="map-tab">
+        <app-map></app-map>
+    </div>
+}-->

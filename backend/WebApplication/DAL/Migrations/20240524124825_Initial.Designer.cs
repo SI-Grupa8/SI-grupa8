@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240502202903_CompanyUpdate")]
-    partial class CompanyUpdate
+    [Migration("20240524124825_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -266,6 +266,24 @@ namespace DAL.Migrations
                     b.HasIndex("RoleID");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserID = 1,
+                            Email = "superAdmin@gmail.com",
+                            Name = "Vin",
+                            PasswordHash = new byte[] { 36, 50, 97, 36, 49, 49, 36, 102, 73, 108, 80, 105, 50, 90, 48, 99, 107, 109, 116, 70, 46, 103, 66, 98, 116, 77, 122, 56, 101, 75, 116, 103, 111, 80, 100, 122, 84, 67, 50, 89, 50, 77, 54, 80, 52, 57, 99, 51, 55, 121, 107, 110, 86, 82, 112, 50, 106, 57, 99, 67 },
+                            PasswordSalt = new byte[0],
+                            PhoneNumber = "061123456",
+                            RefreshToken = "",
+                            RoleID = 2,
+                            Surname = "Diesel",
+                            TokenCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TokenExpires = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TwoFactorEnabled = false,
+                            TwoFactorKey = ""
+                        });
                 });
 
             modelBuilder.Entity("DAL.Entities.Device", b =>

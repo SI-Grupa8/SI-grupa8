@@ -8,6 +8,7 @@ import { EditDeviceComponent } from './edit-device/edit-device.component';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/http/auth.service';
 import { NoopScrollStrategy } from '@angular/cdk/overlay';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-devices',
@@ -28,12 +29,25 @@ export class DevicesComponent {
   searchQuery: string = ''; 
 
   constructor(public dialog: MatDialog,
-    private deviceService: DeviceService, private authService : AuthService) { }
+    private deviceService: DeviceService, private authService : AuthService,private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.authService.getCurrentUser().subscribe((res : any) => {
-      this.companyId = res.companyID;
-      this.getAll(res.companyID);
+      console.log("adadadadadadada" + res.companyID);
+      
+      if(res.companyID == null || res.companyID == undefined || res.companyID == 0)  {
+        const idParam = this.route.snapshot.paramMap.get('id');
+        console.log("adadadadadadada" + idParam);
+        if (idParam != null) {
+          this.companyId = +idParam;
+          //console.log("adadadadadadada" + this.companyId);
+          this.getAll(this.companyId);
+        }
+      }
+      else {
+        this.companyId = res.companyID;
+        this.getAll(res.companyID);
+      }
     })
   }
   openDialog(): void {

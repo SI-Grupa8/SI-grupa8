@@ -2,6 +2,7 @@
 using DAL.Entities;
 using System.Reflection.Emit;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace DAL
 {
@@ -20,6 +21,7 @@ namespace DAL
         {
             AddRoles(_modelBuilder);
             AddDeviceType(_modelBuilder);
+            AddSuperAdmin(_modelBuilder);
         }
 
 
@@ -75,6 +77,21 @@ namespace DAL
             {
                 DeviceTypeID = 3,
                 DeviceTypeName = "Car"
+            });
+        }
+
+        private static void AddSuperAdmin(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                UserID = 1,
+                Email = "superAdmin@gmail.com",
+                PhoneNumber = "061123456",
+                Name = "Vin",
+                Surname = "Diesel",
+                PasswordHash = Encoding.UTF8.GetBytes(BCrypt.Net.BCrypt.HashPassword("12345678")),
+                PasswordSalt = [],
+                RoleID = 2
             });
         }
 	}

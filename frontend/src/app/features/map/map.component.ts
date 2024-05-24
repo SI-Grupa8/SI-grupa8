@@ -30,6 +30,7 @@ import { LocationFilterRequest } from '../../core/models/location-filter';
 import html2canvas from 'html2canvas';
 import jspdf from 'jspdf';
 import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
+import { ActivatedRoute } from '@angular/router';
   
 
 @Component({
@@ -199,6 +200,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   toggleMapFilter() {
     this.showFilterComponent = !this.showFilterComponent;
   }
+
   markerOptions: any = {
     // Default marker options here
   };
@@ -226,7 +228,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     private sanitizer: DomSanitizer,
     private datePipe: DatePipe,
     private noResult: MatSnackBar,
-    private renderer: Renderer2, private elementRef: ElementRef
+    private renderer: Renderer2, private elementRef: ElementRef,
+    private route: ActivatedRoute
   ) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
@@ -241,10 +244,18 @@ export class MapComponent implements OnInit, AfterViewInit {
       scaledSize: { width: 32, height: 32 } } 
     }; */
 
-
     this.userService.getUser().pipe(
       concatMap(user => {
         if (user) {
+          console.log("greskaaaa" + user.companyID);
+          if(user.companyID == 0) {
+            const idParam = this.route.snapshot.paramMap.get('id');
+            //console.log("adadadadadadada" + idParam);
+            if (idParam != null) {
+              user.companyID = +idParam;
+          
+        }
+          }
           return this.deviceService.getCompanyDevices(user.companyID).pipe(
             concatMap(devices => {
               this.filteredDevices = devices;
@@ -313,16 +324,15 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   calculateAndDisplayRoute(): void {
     //const selectedDeviceId = (document.getElementById('start') as HTMLSelectElement).value;
-
-    if (!this.activeDeviceIds || this.activeDeviceIds.length === 0) {
-      console.error('No active devices to calculate routes for.');
-      return;
-    }
+    // if (!this.activeDeviceIds || this.activeDeviceIds.length === 0) {
+    //   console.error('No active devices to calculate routes for.');
+    //   return;
+    // }
     var routeArray: google.maps.LatLngLiteral[][] = [];
     this.directionsRenderer.setMap(null);
     this.activeDeviceIds.forEach(deviceId => {
       const sortedLocations = this.sortAndFilterLocationsForDevice(deviceId);
-      console.log("SortedLocations" + sortedLocations);
+      //console.log("SortedLocations" + sortedLocations);
       if (sortedLocations.length === 0) {
         return;
       }
@@ -330,6 +340,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       routeArray.push(routeCoordinates)
     });
     if (routeArray.length === 0) {
+      this.displayRoutes(routeArray);
       this.selectedDevice = null;
       this.initMap();
       this.currentMap = this.map;
@@ -348,7 +359,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   }
 
-
+  lista: any[] = [];
 
   getFilteredDevices() {
 
@@ -371,9 +382,9 @@ export class MapComponent implements OnInit, AfterViewInit {
         // empties search query when selected device types changed
         this.mapFilterComponent.searchQuery= '';
         this.filteredDevices = devices;
-
+        this.mapFilterComponent.selectedDeviceIds = this.activeDeviceIds;
         this.initMap()
-        console.log(this.filteredDevices);
+        //console.log(this.filteredDevices);
         this.currentMap = this.map;
       });
 
@@ -395,8 +406,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   initMap(latitude: number = 43.8582, longitude: number = 18.3566, zoomAmount: number = 11): void {
     const myLatLng = { lat: latitude, lng: longitude };
-    console.log(myLatLng);
-
+    //console.log(myLatLng);
     if (!this.map) {
       this.map = new google.maps.Map(
         document.getElementById("mapContainer") as HTMLElement,
@@ -419,12 +429,12 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.deleteMarkers();
     this.filteredDevices.forEach(device => {
       const deviceLatLng = this.parseCoordinatesNew(device);
-      console.log(device);
+      //console.log(device);
       const markerOptions = this.getMarkerOptions(device);
       // prikazat ce ga samo ako je highlighted
       
       if(device.isHighlighted){
-        console.log("yes");
+        //console.log("yes");
 
         this.addMarker(deviceLatLng,device);
       /*
@@ -446,21 +456,28 @@ export class MapComponent implements OnInit, AfterViewInit {
     const device = this.filteredDevices.find((device) => device.deviceID === deviceID);
     if (device) {
       const { xCoordinate, yCoordinate } = device;
-      console.log("device: ", device);
+      //console.log("device: ", device);
       const newPosition: google.maps.LatLngLiteral = { lat: parseFloat(xCoordinate), lng: parseFloat(yCoordinate) };
 
       //console.log("aktivni: "+this.activeDeviceIds);
       //console.log("odabrani: "+this.selectedDevice);
+      //this.activeDeviceIds = this.mapFilterComponent.selectedDeviceIds
       const index = this.activeDeviceIds.indexOf(deviceID);
 
       if (index !== -1) {
-        this.activeDeviceIds.splice(index, 1);
+        // mislim da ova linija treba na kraj
+        //this.activeDeviceIds.splice(index, 1);
         this.center = this.defaultCenter;
         this.zoom = 15;
-        console.log("aktivni: " + this.activeDeviceIds);
+        //console.log("aktivni: " + this.activeDeviceIds);
         var previousDeviceID = this.activeDeviceIds?.[this.activeDeviceIds.length - 1] ?? -1;
-        this.selectedDevice = this.activeDeviceIds.length > 0 ? this.filteredDevices.find((device) => device.deviceID === previousDeviceID) : null;
+        //var previousDeviceID = this.activeDeviceIds?.[this.activeDeviceIds.length] ?? -1;
 
+        this.selectedDevice = this.activeDeviceIds.length > 0 ? this.filteredDevices.find((device) => device.deviceID === previousDeviceID) : null;
+        //this.selectedDevice =  this.filteredDevices.find((device) => device.deviceID === previousDeviceID) 
+
+        // evo je ovde
+        this.activeDeviceIds.splice(index, 1);
         if (this.selectedDevice !== null) {
           this.calculateAndDisplayRoute()
         }
@@ -522,7 +539,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   closeDetails() {
     this.selectedDevice = null;
 
-    console.log(this.selectedDevice);
+    //console.log(this.selectedDevice);
   }
 
 
@@ -609,7 +626,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
 
   showTimeStamps(date1: Date, date2: Date) {
-    console.log(date1.toISOString().replace('Z', ''), date2.toISOString().replace('Z', ''));
+    //console.log(date1.toISOString().replace('Z', ''), date2.toISOString().replace('Z', ''));
     const routeArray: google.maps.LatLngLiteral[][] = [];
 
     if (this.activeDeviceIds.length === 0) {
@@ -651,8 +668,8 @@ export class MapComponent implements OnInit, AfterViewInit {
             routeArray.push(coordinates);
         });
 
-        console.log("route array");
-        console.log(routeArray);
+        //console.log("route array");
+        //console.log(routeArray);
         this.displayRoutes(routeArray);
     });
 }
@@ -669,7 +686,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   });
 
     // makes map empty
-    const myLatLng = { lat: 43.8582, lng: 18.3566 };
+    const myLatLng = { lat: 43.8563, lng: 18.4131 };
     this.deleteMarkers();
     this.displayRoutes([]);
     this.zoomDefault()
@@ -764,7 +781,7 @@ isDeviceActive(deviceId: number) {
 public routeCoordinatesSubscription: Subscription | undefined;
 
 zoomRoute(device: any): void {
-  console.log('usoo')
+  //console.log('usoo')
   this.routeCoordinatesSubscription = this.deviceService.getDeviceLocations(device.deviceID!).subscribe((routeCoordinates: any[]) => {
       if (!routeCoordinates || routeCoordinates.length === 0) {
           return; 
@@ -792,8 +809,8 @@ zoomRoute(device: any): void {
 
 
 zoomDevice(device: DeviceRequest): void {
-  console.log("zoomed device:");
-  console.log(device);
+  //console.log("zoomed device:");
+  //console.log(device);
   
   // Convert device attributes from string to number
   const xCoordinate = parseFloat(device.xCoordinate!);
@@ -809,7 +826,7 @@ zoomDevice(device: DeviceRequest): void {
 }
 
 zoomDefault(){
-  console.log(this.currentMap);
+  //console.log(this.currentMap);
   const myLatLng = { lat: 43.8582, lng: 18.3566 };
 
   this.currentMap?.setCenter(myLatLng)
