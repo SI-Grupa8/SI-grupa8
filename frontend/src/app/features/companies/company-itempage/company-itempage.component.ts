@@ -26,7 +26,7 @@ import { MapComponent } from "../../map/map.component";
 })
 export class CompanyItempageComponent implements OnInit {
 
-  @Input() tabsArray: string[] = ['Overview', 'Members', 'Devices', 'Map'];
+  @Input() tabsArray: string[] = ['Overview', 'Members', 'Devices'];
   @Output() onTabChange = new EventEmitter<number>();
   activatedTab: number = 1;
 
