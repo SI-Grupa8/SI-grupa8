@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class novaMigracija : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,10 @@ namespace DAL.Migrations
                 {
                     CompanyID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CompanyName = table.Column<string>(type: "text", nullable: false)
+                    CompanyName = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    ImageUrl = table.Column<string>(type: "text", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -118,6 +121,28 @@ namespace DAL.Migrations
                         principalColumn: "UserID");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "LocationStorages",
+                columns: table => new
+                {
+                    LocationStorageID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DeviceID = table.Column<int>(type: "integer", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    XCoordinate = table.Column<string>(type: "text", nullable: false),
+                    YCoordinate = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocationStorages", x => x.LocationStorageID);
+                    table.ForeignKey(
+                        name: "FK_LocationStorages_Devices_DeviceID",
+                        column: x => x.DeviceID,
+                        principalTable: "Devices",
+                        principalColumn: "DeviceID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "DeviceTypes",
                 columns: new[] { "DeviceTypeID", "DeviceTypeName" },
@@ -140,6 +165,11 @@ namespace DAL.Migrations
                     { 5, "User" }
                 });
 
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "UserID", "CompanyID", "Email", "Name", "PasswordHash", "PasswordSalt", "PhoneNumber", "RefreshToken", "RoleID", "Surname", "TokenCreated", "TokenExpires", "TwoFactorEnabled", "TwoFactorKey" },
+                values: new object[] { 1, null, "superAdmin@gmail.com", "Vin", new byte[] { 36, 50, 97, 36, 49, 49, 36, 102, 73, 108, 80, 105, 50, 90, 48, 99, 107, 109, 116, 70, 46, 103, 66, 98, 116, 77, 122, 56, 101, 75, 116, 103, 111, 80, 100, 122, 84, 67, 50, 89, 50, 77, 54, 80, 52, 57, 99, 51, 55, 121, 107, 110, 86, 82, 112, 50, 106, 57, 99, 67 }, new byte[0], "061123456", "", 2, "Diesel", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Devices_DeviceTypeID",
                 table: "Devices",
@@ -149,6 +179,11 @@ namespace DAL.Migrations
                 name: "IX_Devices_UserID",
                 table: "Devices",
                 column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocationStorages_DeviceID",
+                table: "LocationStorages",
+                column: "DeviceID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_CompanyID",
@@ -164,6 +199,9 @@ namespace DAL.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "LocationStorages");
+
             migrationBuilder.DropTable(
                 name: "Devices");
 
