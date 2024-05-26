@@ -6,6 +6,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormControl,Validators,ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CodeInputModule } from 'angular-code-input';
 import { NgIf } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 @Component({
   selector: 'app-add-new-user',
   standalone: true,
@@ -19,7 +21,7 @@ export class AddNewUserComponent {
   userRequest: UserRequest = {
   };
 
-  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<AddNewUserComponent>, private userService: UserService) {
+  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<AddNewUserComponent>, private userService: UserService, private snackBar: MatSnackBar) {
     this.addUserForm = this.f.group({
       name: [''],
       surname: [''],
@@ -53,12 +55,33 @@ export class AddNewUserComponent {
     this.userRequest.roleID=this.addUserForm.get('role')?.value;
 
     event.preventDefault();
-    this.userService.addUser(this.userRequest).subscribe(() => {
-      this.userAdded.emit();
-      console.log('User added successfully');
-      this.closeDialog();
+    this.userService.getUserByEmail(this.userRequest.email as string).subscribe({
+      next: response => {
+        this.fieldTakenPopup("This email is already taken.");
+      },
+      error: err => {
+        this.userService.getUserByPhoneNumber(this.userRequest.phoneNumber as string).subscribe({
+          next: response => {
+            this.fieldTakenPopup("This phone number is already taken.");
+          },
+          error: err => {
+            this.userService.addUser(this.userRequest).subscribe(() => {
+              this.userAdded.emit();
+              console.log('User added successfully');
+              this.closeDialog();
+            });
+          }
+        });
+      }
     });
-
-    
+  }
+  fieldTakenPopup(str: string) {
+    this.snackBar.open(str, 'Close', {
+      duration: 4000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      politeness: 'assertive'
+    });
   }
 }
+
