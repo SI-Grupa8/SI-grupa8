@@ -108,6 +108,12 @@ namespace API.Controllers
 			return await _userService.GetUserByEmail(email);
         }
 
+		[HttpGet("get-user-by-phone-number{phoneNumber}")]
+		public async Task<User> GetUserByPhoneNumber(string phoneNumber)
+		{
+			return await _userService.GetUserByPhoneNumber(phoneNumber);
+		}
+
     }
 }
 
