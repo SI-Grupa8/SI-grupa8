@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormControl,Validators,ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CodeInputModule } from 'angular-code-input';
 import { CommonModule, NgIf } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-user',
@@ -22,7 +23,7 @@ export class EditUserComponent {
 
   roles: string[] = ['Admin', 'Dispatcher', 'FleetManager', 'User'];
 
-  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<EditUserComponent>, private userService: UserService, @Inject(MAT_DIALOG_DATA) public data: { user: UserRequest, companyId: number}) {
+  constructor(public f: FormBuilder,public dialogRef: MatDialogRef<EditUserComponent>, private userService: UserService, @Inject(MAT_DIALOG_DATA) public data: { user: UserRequest, companyId: number}, private snackBar: MatSnackBar) {
     this.editUserForm = this.f.group({
       name: [data.user?.name || ' '],
       surname: [data.user?.surname || ''],
@@ -72,14 +73,6 @@ export class EditUserComponent {
       });
       return;
     }
-
-    this.userRequest.email = this.editUserForm.get('email')?.value;
-    this.userRequest.phoneNumber = this.editUserForm.get('phoneNumber')?.value;
-    this.userRequest.name = this.editUserForm.get('name')?.value;
-    this.userRequest.surname = this.editUserForm.get('surname')?.value;
-    this.userRequest.companyID = this.data.user.companyID;
-    this.userRequest.password = this.data.user.password;
-    this.userRequest.userID = this.data.user.userID;
     
     const selectedRole = this.editUserForm.get('role')?.value;
     console.log("Iz forme je:"+ selectedRole);
@@ -108,13 +101,47 @@ export class EditUserComponent {
             break;
     }
 
-    event.preventDefault();
-    this.userService.updateUser(this.userRequest).subscribe(() => {
-      this.userEdited.emit();
-      console.log("Edited:");
-      console.log(this.userRequest);
-      console.log('User edited successfully');
-      this.closeDialog();
+    let phoneNumber = this.editUserForm.get('phoneNumber')?.value;
+    let email = this.editUserForm.get('email')?.value;
+    this.userService.getUserByEmail(email as string).subscribe({
+      next: response => {
+        this.fieldTakenPopup("This email is already taken.");
+      },
+      error: err => {
+        this.userService.getUserByPhoneNumber(phoneNumber as string).subscribe({
+          next: response => {
+            this.fieldTakenPopup("This phone number is already taken.");
+          },
+          error: err => {
+            if (err.status === 500) {
+              this.userRequest.email = this.editUserForm.get('email')?.value;
+              this.userRequest.phoneNumber = this.editUserForm.get('phoneNumber')?.value;
+              this.userRequest.name = this.editUserForm.get('name')?.value;
+              this.userRequest.surname = this.editUserForm.get('surname')?.value;
+              this.userRequest.companyID = this.data.user.companyID;
+              this.userRequest.password = this.data.user.password;
+              this.userRequest.userID = this.data.user.userID;
+              event.preventDefault();
+              this.userService.updateUser(this.userRequest).subscribe(() => {
+                this.userEdited.emit();
+                console.log("Edited:");
+                console.log(this.userRequest);
+                console.log('User edited successfully');
+                this.closeDialog();
+              });
+            }
+          }
+        });
+      }
+    });
+  }
+
+  fieldTakenPopup(str: string) {
+    this.snackBar.open(str, 'Close', {
+      duration: 4000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      politeness: 'assertive'
     });
   }
 }

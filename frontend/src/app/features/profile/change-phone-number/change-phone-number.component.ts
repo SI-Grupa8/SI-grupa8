@@ -40,6 +40,7 @@ export class ChangePhoneNumberComponent {
       error: err => {
         this.userRequest.phoneNumber = phoneNumber;
         if (err.status === 500) {
+          event.preventDefault();///////
           this.userService.changePhoneNumber(this.userRequest).subscribe(() => {
             this.userEdited.emit();
             console.log("Edited:");

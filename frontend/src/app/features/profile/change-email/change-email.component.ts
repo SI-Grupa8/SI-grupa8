@@ -35,11 +35,12 @@ export class ChangeEmailComponent {
     let email = this.editUserForm.get('email')?.value;
     this.userService.getUserByEmail(email as string).subscribe({
       next: response2 => {
-        this.fieldTakenPopup("This phone number is already taken.");
+        this.fieldTakenPopup("This email is already taken.");
       },
       error: err => {
         this.userRequest.email = this.editUserForm.get('email')?.value
         if (err.status === 500) {
+          event.preventDefault(); //////
           this.userService.changeEmail(this.userRequest).subscribe(() => {
             this.userEdited.emit();
             console.log("Edited:");
