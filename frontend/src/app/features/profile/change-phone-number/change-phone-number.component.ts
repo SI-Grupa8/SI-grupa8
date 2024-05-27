@@ -52,29 +52,6 @@ export class ChangePhoneNumberComponent {
         }
       }
     });
-    
-    /*this.userService.changePhoneNumber(this.userRequest).subscribe(() => {
-      this.userEdited.emit();
-      console.log("Edited:");
-      console.log(this.userRequest);
-      console.log('User edited successfully');
-      this.closeDialog();
-    });*/
-
-    /*this.userService.getUserByPhoneNumber(this.userRequest.phoneNumber as string).subscribe({
-      next: response => {
-        this.fieldTakenPopup("This phone number is already taken.");
-      },
-      error: err => {
-        this.userService.changePhoneNumber(this.userRequest).subscribe(() => {
-          this.userEdited.emit();
-          console.log("Edited:");
-          console.log(this.userRequest);
-          console.log('User edited successfully');
-          this.closeDialog();
-        });
-      }
-    });*/
   }
 
   fieldTakenPopup(str: string) {
