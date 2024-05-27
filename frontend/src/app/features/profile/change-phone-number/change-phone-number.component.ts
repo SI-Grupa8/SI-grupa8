@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { UserRequest } from '../../../core/models/user-request';
 import { CommonModule, NgIf } from '@angular/common';
 import { CodeInputModule } from 'angular-code-input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-change-phone-number',
@@ -19,7 +20,7 @@ export class ChangePhoneNumberComponent {
   userRequest: UserRequest = {
   };
 
-  constructor(public f: FormBuilder, public dialogRef: MatDialogRef<ChangePhoneNumberComponent>, private userService: UserService,  @Inject(MAT_DIALOG_DATA) public data: { user: UserRequest, companyId: number}) {
+  constructor(public f: FormBuilder, public dialogRef: MatDialogRef<ChangePhoneNumberComponent>, private userService: UserService,  @Inject(MAT_DIALOG_DATA) public data: { user: UserRequest, companyId: number}, private snackBar: MatSnackBar) {
     this.editUserForm = this.f.group({
       phoneNumber: [data.user?.phoneNumber || '']
     });
@@ -31,31 +32,57 @@ export class ChangePhoneNumberComponent {
   }
 
   edit(event: Event) {
-    // if (this.editUserForm.invalid) {
-    //   Object.values(this.editUserForm.controls).forEach(control => {
-    //     control.markAsTouched();
-    //   });
-    //   return;
-    // }
-
-    this.userRequest.phoneNumber = this.editUserForm.get('phoneNumber')?.value;
-    // this.userRequest.name = this.editUserForm.get('name')?.value;
-    // this.userRequest.surname = this.editUserForm.get('surname')?.value;
-    // this.userRequest.companyID = this.data.user.companyID;
-    // this.userRequest.password = this.data.user.password;
-    // this.userRequest.userID = this.data.user.userID;
+    let phoneNumber = this.editUserForm.get('phoneNumber')?.value
+    this.userService.getUserByPhoneNumber(phoneNumber).subscribe({
+      next: response2 => {
+        this.fieldTakenPopup("This phone number is already taken.");
+      },
+      error: err => {
+        this.userRequest.phoneNumber = phoneNumber;
+        if (err.status === 500) {
+          this.userService.changePhoneNumber(this.userRequest).subscribe(() => {
+            this.userEdited.emit();
+            console.log("Edited:");
+            console.log(this.userRequest);
+            console.log('User edited successfully');
+            this.closeDialog();
+          });
+        } else {
+          console.error("An unexpected error occurred:", err);
+        }
+      }
+    });
     
-    // const selectedRole = this.editUserForm.get('role')?.value;
-    // console.log("Iz forme je:"+ selectedRole);
-
-    
-    this.userService.changePhoneNumber(this.userRequest).subscribe(() => {
+    /*this.userService.changePhoneNumber(this.userRequest).subscribe(() => {
       this.userEdited.emit();
       console.log("Edited:");
       console.log(this.userRequest);
       console.log('User edited successfully');
       this.closeDialog();
-    });
+    });*/
+
+    /*this.userService.getUserByPhoneNumber(this.userRequest.phoneNumber as string).subscribe({
+      next: response => {
+        this.fieldTakenPopup("This phone number is already taken.");
+      },
+      error: err => {
+        this.userService.changePhoneNumber(this.userRequest).subscribe(() => {
+          this.userEdited.emit();
+          console.log("Edited:");
+          console.log(this.userRequest);
+          console.log('User edited successfully');
+          this.closeDialog();
+        });
+      }
+    });*/
   }
 
+  fieldTakenPopup(str: string) {
+    this.snackBar.open(str, 'Close', {
+      duration: 4000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      politeness: 'assertive'
+    });
+  }
 }
