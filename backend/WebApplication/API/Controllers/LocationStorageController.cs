@@ -33,5 +33,12 @@ namespace API.Controllers
             return Ok(await _locationStorageService.GetLocationsByDeviceId(deviceId));
         }
 
+        [HttpGet("get-location-statistics/{companyId}")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<object>> GetLocationStatistics(int companyId)
+        {
+            return Ok(await _locationStorageService.GetLocationStatistics(companyId));
+        }
+
     }
 }

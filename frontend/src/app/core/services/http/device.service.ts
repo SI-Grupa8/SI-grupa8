@@ -91,4 +91,12 @@ export class DeviceService {
     //return this.http.post<LocationStorage[]>(`${this.apiUrl}/DeviceLocation/locations-filter?deviceId=${deviceId}`, date, { headers });
     return this.http.post<LocationStorage[]>(`${this.apiUrl}/DeviceLocation/locations-filter`, request, { headers });
   }
+
+  getLocationStatistics(id: number): Observable<any[]>{
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any>(`${this.apiUrl}/LocationStorage/get-location-statistics/${id}`,{headers});
+  }
 }
