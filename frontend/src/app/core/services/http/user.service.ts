@@ -96,4 +96,20 @@ return this.http.get<any>(`${this.apiUrl}/User/get-current-user`, {headers});
     });
     return this.http.put<any>(`${this.apiUrl}/User/change-password`, request, { headers });
   }
+
+  getUserByEmail(email: string): Observable<any>{
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any>(`${this.apiUrl}/User/get-user-by-email/${email}`, {headers});
+  }
+
+  getUserByPhoneNumber(phoneNumber: string): Observable<any>{
+    const token = localStorage.getItem("token");
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any>(`${this.apiUrl}/User/get-user-by-phone-number/${phoneNumber}`, {headers});
+  }
 }

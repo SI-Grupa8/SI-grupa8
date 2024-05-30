@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { UserRequest } from '../../../core/models/user-request';
 import { CommonModule, NgIf } from '@angular/common';
 import { CodeInputModule } from 'angular-code-input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-change-email',
@@ -19,7 +20,7 @@ export class ChangeEmailComponent {
   userRequest: UserRequest = {
   };
 
-  constructor(public f: FormBuilder, public dialogRef: MatDialogRef<ChangeEmailComponent>, private userService: UserService,  @Inject(MAT_DIALOG_DATA) public data: { user: UserRequest, companyId: number}) {
+  constructor(public f: FormBuilder, public dialogRef: MatDialogRef<ChangeEmailComponent>, private userService: UserService,  @Inject(MAT_DIALOG_DATA) public data: { user: UserRequest, companyId: number}, private snackBar: MatSnackBar) {
     this.editUserForm = this.f.group({
       email: [data.user?.email || '']
     });
@@ -30,32 +31,36 @@ export class ChangeEmailComponent {
     this.dialogRef.close();
   }
 
-  edit(event: Event) {
-    // if (this.editUserForm.invalid) {
-    //   Object.values(this.editUserForm.controls).forEach(control => {
-    //     control.markAsTouched();
-    //   });
-    //   return;
-    // }
-
-    this.userRequest.email = this.editUserForm.get('email')?.value;
-    // this.userRequest.name = this.editUserForm.get('name')?.value;
-    // this.userRequest.surname = this.editUserForm.get('surname')?.value;
-    // this.userRequest.companyID = this.data.user.companyID;
-    // this.userRequest.password = this.data.user.password;
-    // this.userRequest.userID = this.data.user.userID;
-    
-    // const selectedRole = this.editUserForm.get('role')?.value;
-    // console.log("Iz forme je:"+ selectedRole);
-
-    
-    this.userService.changeEmail(this.userRequest).subscribe(() => {
-      this.userEdited.emit();
-      console.log("Edited:");
-      console.log(this.userRequest);
-      console.log('User edited successfully');
-      this.closeDialog();
+  edit(event: Event) {;
+    let email = this.editUserForm.get('email')?.value;
+    this.userService.getUserByEmail(email as string).subscribe({
+      next: response2 => {
+        this.fieldTakenPopup("This email is already taken.");
+      },
+      error: err => {
+        this.userRequest.email = this.editUserForm.get('email')?.value
+        if (err.status === 500) {
+          event.preventDefault(); //////
+          this.userService.changeEmail(this.userRequest).subscribe(() => {
+            this.userEdited.emit();
+            console.log("Edited:");
+            console.log(this.userRequest);
+            console.log('User edited successfully');
+            this.closeDialog();
+          });
+        } else {
+          console.error("An unexpected error occurred:", err);
+        }
+      }
     });
   }
 
+  fieldTakenPopup(str: string) {
+    this.snackBar.open(str, 'Close', {
+      duration: 4000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      politeness: 'assertive'
+    });
+  }
 }

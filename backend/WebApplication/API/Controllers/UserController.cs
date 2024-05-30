@@ -1,6 +1,7 @@
 ﻿using System;
 using BLL.DTOs;
 using BLL.Interfaces;
+using DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using API.Helpers;
@@ -75,30 +76,42 @@ namespace API.Controllers
 		}
 
 
-	[HttpPut("change-email")]
-    public async Task<ActionResult> ChangeEmail(UserDto request)
-    {
-      return Ok(await _userService.ChangeEmail(request));
-    }
-
-    [HttpPut("change-phone-number")]
-    public async Task<ActionResult> ChangePhoneNumber(UserDto request)
-    {
-        return Ok(await _userService.ChangePhoneNumber(request));
-    }
-
-    [HttpPut("change-password")]
-    [Authorize]
-    public async Task<ActionResult> ChangePassword(ChangePasswordDto request)
-    {
-      return Ok(await _userService.ChangePassword(request));
-    }
-
-    [HttpGet("get-drivers-new-device/{companyId}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<List<UserDto>>> GetDriversForNewDevice(int companyId)
+		[HttpPut("change-email")]
+		public async Task<ActionResult> ChangeEmail(UserDto request)
 		{
-			return await _userService.GetDriversForNewDevice(companyId);
+		  return Ok(await _userService.ChangeEmail(request));
+		}
+
+		[HttpPut("change-phone-number")]
+		public async Task<ActionResult> ChangePhoneNumber(UserDto request)
+		{
+			return Ok(await _userService.ChangePhoneNumber(request));
+		}
+
+		[HttpPut("change-password")]
+		[Authorize]
+		public async Task<ActionResult> ChangePassword(ChangePasswordDto request)
+		{
+		  return Ok(await _userService.ChangePassword(request));
+		}
+
+		[HttpGet("get-drivers-new-device/{companyId}")]
+		[Authorize(Roles = "Admin")]
+		public async Task<ActionResult<List<UserDto>>> GetDriversForNewDevice(int companyId)
+			{
+				return await _userService.GetDriversForNewDevice(companyId);
+			}
+
+        [HttpGet("get-user-by-email/{email}")]
+        public async Task<User> GetUserByEmail(string email)
+        {
+			return await _userService.GetUserByEmail(email);
+        }
+
+		[HttpGet("get-user-by-phone-number/{phoneNumber}")]
+		public async Task<User> GetUserByPhoneNumber(string phoneNumber)
+		{
+			return await _userService.GetUserByPhoneNumber(phoneNumber);
 		}
 
     }
