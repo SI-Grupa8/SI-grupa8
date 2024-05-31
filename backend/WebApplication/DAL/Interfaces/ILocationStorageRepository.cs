@@ -15,5 +15,7 @@ namespace DAL.Interfaces
 
         List<LocationStorage> GetFilteredLocation(List<int> deviceIds, DateTime startDate, DateTime endDate);
 
+        Task<object> GetLocationStatisticsLast24HoursGrouped(int companyId);
+
     }
 }

@@ -29,7 +29,8 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
     public dialogRef: MatDialogRef<AddNewAdminComponent>,
     private userService: UserService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private addedUserMessage: MatSnackBar
+    private addedUserMessage: MatSnackBar,
+    private snackBar: MatSnackBar
   ) {
 
 
@@ -62,14 +63,7 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
       });
       return;
     }
-    this.userRequest.email = this.addAdminForm.get('email')?.value;
-    this.userRequest.phoneNumber = this.addAdminForm.get('phoneNumber')?.value;
-    this.userRequest.name = this.addAdminForm.get('name')?.value;
-    this.userRequest.surname = this.addAdminForm.get('surname')?.value;
-    this.userRequest.password = this.addAdminForm.get('password')?.value;
-    this.userRequest.companyID=this.companyId;
     
-
     const selectedRole = this.addAdminForm.get('role')?.value;
     console.log("Iz forme je:"+ selectedRole);
 
@@ -96,14 +90,38 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
             break;
     }
 
-    //this.userRequest.roleID=1;
-    event.preventDefault();
-    this.userService.addUser(this.userRequest).subscribe(() => {
-      this.userAdded.emit();
-      console.log('Admin added successfully');
-      this.closeDialog();
-      this.openAddedUserMessage();
+    let phoneNumber = this.addAdminForm.get('phoneNumber')?.value;
+    let email = this.addAdminForm.get('email')?.value;
+    this.userService.getUserByEmail(email as string).subscribe({
+      next: response => {
+        this.fieldTakenPopup("This email is already taken.");
+      },
+      error: err => {
+        this.userService.getUserByPhoneNumber(phoneNumber as string).subscribe({
+          next: response => {
+            this.fieldTakenPopup("This phone number is already taken.");
+          },
+          error: err => {
+            if (err.status === 500) {
+              this.userRequest.email = this.addAdminForm.get('email')?.value;
+              this.userRequest.phoneNumber = this.addAdminForm.get('phoneNumber')?.value;
+              this.userRequest.name = this.addAdminForm.get('name')?.value;
+              this.userRequest.surname = this.addAdminForm.get('surname')?.value;
+              this.userRequest.password = this.addAdminForm.get('password')?.value;
+              this.userRequest.companyID=this.companyId;
+              event.preventDefault();
+              this.userService.addUser(this.userRequest).subscribe(() => {
+                this.userAdded.emit();
+                console.log('Admin added successfully');
+                this.closeDialog();
+                this.openAddedUserMessage();
+              });
+            }
+          }
+        });
+      }
     });
+
   }
 
   durationInSeconds = 5;
@@ -114,6 +132,14 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
       duration: this.durationInSeconds * 1000,
       horizontalPosition: this.horizontalPosition,
       verticalPosition: this.verticalPosition,
+    });
+  }
+  fieldTakenPopup(str: string) {
+    this.snackBar.open(str, 'Close', {
+      duration: 4000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      politeness: 'assertive'
     });
   }
 }

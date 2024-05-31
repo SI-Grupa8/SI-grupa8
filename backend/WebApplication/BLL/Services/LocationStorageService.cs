@@ -41,5 +41,10 @@ namespace BLL.Services
         {
             await _locationStorageRepository.DeleteOldRecords(threshold);
         }
+
+        public async Task<object> GetLocationStatistics(int companyId)
+        {
+            return await _locationStorageRepository.GetLocationStatisticsLast24HoursGrouped(companyId);
+        }
     }
 }

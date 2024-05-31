@@ -84,6 +84,94 @@ namespace DAL.Repositories
 
             return locationStorages;
         }
+
+        public async Task<object> GetLocationStatisticsLast24HoursGrouped(int companyId)
+        {
+            var now = DateTime.UtcNow;
+            var last24Hours = now.AddHours(-24);
+
+            var recentLocations = await _context.LocationStorages
+                .Join(_context.Devices,
+                    loc => loc.DeviceID,
+                    dev => dev.DeviceID,
+                    (loc, dev) => new { Location = loc, Device = dev })
+                .Join(_context.Users,
+                    ld => ld.Device.UserID,
+                    user => user.UserID,
+                    (ld, user) => new { ld.Location, ld.Device, User = user })
+                .Where(ldu => ldu.User.CompanyID == companyId &&
+                               ldu.Location.Timestamp >= last24Hours &&
+                               ldu.Location.Timestamp <= now)
+                .Select(ldu => new
+                {
+                    Location = ldu.Location,
+                    AdjustedTimestamp = ldu.Location.Timestamp.AddHours(4) // dodaje 4 sata zbog vremenske zone
+                })
+                .ToListAsync();
+
+            if (!recentLocations.Any())
+            {
+                Console.WriteLine("No records found within the last 24 hours.");
+                return GenerateEmptyStatistics();
+            }
+            foreach( var location in recentLocations )
+            {
+                Console.WriteLine(location.AdjustedTimestamp.ToString() );
+            }
+
+            var locationData = recentLocations
+                .GroupBy(loc => ((loc.AdjustedTimestamp.Hour / 3) * 3) % 24)
+                .Select(g => new
+                {
+                    TimeInterval = $"{g.Key:00}:00 - {(g.Key + 3) % 24:00}:00",
+                    Count = g.Count()
+                })
+                .OrderBy(g => g.TimeInterval)
+                .ToList();
+
+            var totalCount = locationData.Sum(ld => ld.Count);
+
+            var allIntervals = Enumerable.Range(0, 24 / 3)
+                .Select(i => $"{i * 3:00}:00 - {(i * 3 + 3) % 24:00}:00")
+                .ToList();
+
+            var statistics = allIntervals
+            .GroupJoin(locationData,
+                interval => interval,
+                data => data.TimeInterval,
+                (interval, data) => new
+                {
+                    TimeInterval = interval,
+                    Percentage = data.Select(d => d.Count == 0 ? 0 : (double)d.Count / totalCount * 100).FirstOrDefault()
+                })
+            .Select(x => new { x.TimeInterval, Percentage = Math.Round(x.Percentage, 2) }) 
+            .ToList();
+
+            return statistics;
+        }
+
+        // Helper method to generate empty statistics
+        private List<object> GenerateEmptyStatistics()
+        {
+            return Enumerable.Range(0, 24 / 3)
+                .Select(i => new
+                {
+                    TimeInterval = $"{i * 3:00}:00 - {(i * 3 + 3) % 24:00}:00",
+                    Percentage = 0.0 
+                })
+                .Cast<object>()
+                .ToList();
+        }
+
+
+
+
+
+
+
+
+
+
     }
-    
+
 }

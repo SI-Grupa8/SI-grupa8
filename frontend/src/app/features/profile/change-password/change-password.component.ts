@@ -47,17 +47,8 @@ export class ChangePasswordComponent {
       return;
     }
 
-    //this.userRequest.email = this.editUserForm.get('email')?.value;
     this.changePasswordRequest.currentPassword = this.editUserForm.get('currentPassword')?.value;
     this.changePasswordRequest.newPassword = this.editUserForm.get('newPassword')?.value;
-    // this.userRequest.name = this.editUserForm.get('name')?.value;
-    // this.userRequest.surname = this.editUserForm.get('surname')?.value;
-    // this.userRequest.companyID = this.data.user.companyID;
-    // this.userRequest.password = this.data.user.password;
-    // this.userRequest.userID = this.data.user.userID;
-    
-    // const selectedRole = this.editUserForm.get('role')?.value;
-    // console.log("Iz forme je:"+ selectedRole);
 
     console.log(this.changePasswordRequest);
 

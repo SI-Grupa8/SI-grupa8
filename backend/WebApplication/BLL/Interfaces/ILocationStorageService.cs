@@ -12,5 +12,6 @@ namespace BLL.Interfaces
         Task<List<LocationStorageDto>> GetLocationsByDeviceId(int deviceId);
         Task SaveLocation(LocationStorageDto locationStorageDto);
         Task DeleteOldRecords(DateTime threshold);
+        Task<object> GetLocationStatistics(int companyId);
     }
 }
